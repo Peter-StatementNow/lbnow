@@ -47,15 +47,20 @@ export async function submitReferral(
     questionAndUrgency: input.questionAndUrgency.trim(),
   });
 
-  if (result.status === "sent") {
-    return { success: true };
+  // 22 Sep 2026: email delivery (Resend, via Vercel's integration) is not
+  // reliably working yet and is being debugged separately - see this
+  // repo's own history for the in-progress investigation. Until that is
+  // resolved, a delivery failure is deliberately NOT shown to the
+  // visitor as an error (validation failures above still are - those
+  // are real, useful feedback). This is a conscious, temporary trade-off
+  // agreed with the site owner: a referral could currently be silently
+  // lost rather than delivered, so check this log line's output
+  // (or wherever it ends up in the hosting platform's logs) until
+  // sendReferralNotification is confirmed working end-to-end, then
+  // remove this comment - the success path does not need to change.
+  if (result.status !== "sent") {
+    console.error("Referral notification not delivered:", result);
   }
 
-  console.error("Referral notification not delivered:", result);
-
-  return {
-    success: false,
-    error:
-      "We couldn't send that just now. Please try again, or email Recept Heritage directly.",
-  };
+  return { success: true };
 }
