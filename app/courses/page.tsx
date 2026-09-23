@@ -40,7 +40,13 @@ export default function CoursesPage() {
             </div>
 
             <h2 className="mt-3 text-xl font-semibold text-neutral-900">
-              {course.title}
+              {course.detailHref ? (
+                <Link href={course.detailHref} className="hover:underline">
+                  {course.title}
+                </Link>
+              ) : (
+                course.title
+              )}
             </h2>
             <p className="mt-2 text-sm leading-6 text-neutral-600">
               {course.strapline}
@@ -67,7 +73,15 @@ export default function CoursesPage() {
               ))}
             </ul>
 
-            <div className="mt-6">
+            <div className="mt-6 flex flex-wrap gap-4">
+              {course.detailHref && (
+                <Link
+                  href={course.detailHref}
+                  className="text-sm font-medium text-neutral-900 underline hover:text-neutral-600"
+                >
+                  See chapters and preview Chapter 1
+                </Link>
+              )}
               <Link
                 href={`/refer?source=${course.slug}`}
                 className="text-sm font-medium text-neutral-700 underline hover:text-neutral-900"

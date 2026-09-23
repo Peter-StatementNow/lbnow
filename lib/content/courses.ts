@@ -9,6 +9,8 @@ export type Course = {
   workflow: string;
   outcomes: string[];
   status: "in-preparation";
+  /** Set once a course has its own detail page (chapter curriculum, module previews). */
+  detailHref: string | null;
 };
 
 /**
@@ -36,6 +38,7 @@ export const COURSES: Course[] = [
       "Know when a project has moved beyond straightforward heritage risk and needs specialist input.",
     ],
     status: "in-preparation",
+    detailHref: "/courses/heritage-design-risk-for-architects",
   },
   {
     slug: "listed-buildings-in-conveyancing",
@@ -53,5 +56,6 @@ export const COURSES: Course[] = [
       "Know when and how to escalate a heritage question to a specialist, and what to send them.",
     ],
     status: "in-preparation",
+    detailHref: null,
   },
 ];
