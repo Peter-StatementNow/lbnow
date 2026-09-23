@@ -1,37 +1,37 @@
 import type { ReactNode } from "react";
-import type { EvidenceItem, ProjectFileState } from "@/lib/content/architect-course-module-1";
-import { EvidenceTray } from "@/components/course/EvidenceTray";
-import { ProjectFilePanel } from "@/components/course/ProjectFilePanel";
+import type { HeritageRecordState } from "@/lib/content/architect-course-module-1";
+import { HeritageRecordPanel } from "@/components/course/HeritageRecordPanel";
 
 /**
- * The reusable learning-screen template (wireframe v2): the chrome
- * stays fixed across every activity in every module - only the
- * working surface (children) and footer state actually change. Reuse
- * this exact component for Module 2 onwards rather than rebuilding
- * the shell per module.
+ * The reusable learning-screen template (wireframe v3): course bar,
+ * a read-only project moment, the active heritage question, then a
+ * two-column area (working content | persistent Heritage Record),
+ * then save/continue. Everything below the heritage question - why
+ * now, prediction, evidence, the working surface, compare-with-
+ * worked-example, why-this-matters - is activity-specific sequencing
+ * and lives in `children`, not in this shell, since when evidence
+ * unlocks (after the prediction) is content behaviour, not chrome.
+ *
+ * Built through Module 1 only (explicit instruction, 23 Sep 2026) -
+ * do not extend into later modules until the live rhythm has been
+ * tested.
  */
 export function LearningScreenShell({
   courseTitle,
   percentComplete,
   minutesLeft,
-  stageLabel,
-  activityLabel,
-  activityIndexLabel,
-  whyNow,
-  projectFile,
-  evidence,
+  projectMoment,
+  heritageQuestion,
+  heritageRecord,
   children,
   footer,
 }: {
   courseTitle: string;
   percentComplete: number;
   minutesLeft: number;
-  stageLabel: string;
-  activityLabel: string;
-  activityIndexLabel: string;
-  whyNow: string;
-  projectFile: ProjectFileState;
-  evidence?: EvidenceItem[];
+  projectMoment: string;
+  heritageQuestion: string;
+  heritageRecord: HeritageRecordState;
   children: ReactNode;
   footer: ReactNode;
 }) {
@@ -53,33 +53,32 @@ export function LearningScreenShell({
         </div>
       </div>
 
-      {/* Stage / activity header */}
+      {/* Project moment - read only */}
       <div className="mt-6">
         <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-          {stageLabel}
+          Project moment
         </p>
-        <div className="mt-1 flex flex-wrap items-baseline justify-between gap-2">
-          <h1 className="text-2xl font-semibold tracking-tight text-neutral-900">
-            {activityLabel}
-          </h1>
-          <span className="text-xs font-medium text-neutral-500">{activityIndexLabel}</span>
-        </div>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-neutral-600">{whyNow}</p>
+        <p className="mt-1 text-sm leading-6 text-neutral-600">{projectMoment}</p>
       </div>
 
-      {/* Main two-column area. Mobile order (wireframe): project-file
-          summary, then evidence, then working surface - achieved with
-          `order` since the project file lives in the second grid
-          child but must render visually first below lg. */}
+      {/* Heritage question - active */}
+      <div className="mt-4">
+        <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+          Heritage question
+        </p>
+        <h1 className="mt-1 text-xl font-semibold tracking-tight text-neutral-900">
+          {heritageQuestion}
+        </h1>
+      </div>
+
+      {/* Main two-column area. Mobile order (wireframe): Heritage
+          Record summary, then the working content. */}
       <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
         <aside className="order-1 lg:order-2 lg:sticky lg:top-6 lg:self-start">
-          <ProjectFilePanel projectFile={projectFile} />
+          <HeritageRecordPanel record={heritageRecord} />
         </aside>
 
-        <div className="order-2 grid gap-6 lg:order-1">
-          {evidence && evidence.length > 0 && <EvidenceTray items={evidence} />}
-          <div>{children}</div>
-        </div>
+        <div className="order-2 grid gap-6 lg:order-1">{children}</div>
       </div>
 
       {/* Save/continue footer */}

@@ -3,7 +3,9 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { LearningScreenShell } from "@/components/course/LearningScreenShell";
-import { ProjectFilePanel } from "@/components/course/ProjectFilePanel";
+import { HeritageRecordPanel } from "@/components/course/HeritageRecordPanel";
+import { PredictionBlock } from "@/components/course/PredictionBlock";
+import { EvidenceTray } from "@/components/course/EvidenceTray";
 import {
   ACTIVITY_1,
   ACTIVITY_2,
@@ -11,17 +13,18 @@ import {
   ADDENDUM_HEADINGS,
   DECISION_GATE_EXPECTED_INDEX,
   DECISION_GATE_OPTIONS,
+  HERITAGE_RECORD_AFTER_ACTIVITY_1,
+  HERITAGE_RECORD_AFTER_ACTIVITY_2,
+  HERITAGE_RECORD_AFTER_ACTIVITY_3,
+  HERITAGE_RECORD_INITIAL,
   MODULE_COMPLETE,
   MODULE_TITLE,
-  PROJECT_FILE_AFTER_ACTIVITY_1,
-  PROJECT_FILE_AFTER_ACTIVITY_2,
-  PROJECT_FILE_AFTER_ACTIVITY_3,
-  PROJECT_FILE_INITIAL,
   PROMPT_CARDS,
-  STAGE_LABEL,
   TOTAL_COURSE_MINUTES,
+  addendumEvidence,
+  initialHeritagePositionEvidence,
   type AddendumHeading,
-  type ProjectFileState,
+  type HeritageRecordState,
 } from "@/lib/content/architect-course-module-1";
 import { PROMPT_CARD_DISPLAY_ORDER } from "@/lib/content/architect-course-module-1-display-order";
 
@@ -35,10 +38,42 @@ const secondaryButton =
   "inline-flex items-center justify-center border border-neutral-300 px-6 py-3 text-sm font-medium text-neutral-800 hover:border-neutral-500";
 const cardClassName = "border border-neutral-200 bg-white p-6";
 
+function FeedbackNote({ text }: { text: string }) {
+  return (
+    <div className="border border-neutral-300 bg-neutral-50 px-5 py-4">
+      <p className="text-sm leading-6 text-neutral-700">{text}</p>
+    </div>
+  );
+}
+
+function WrongPredictionNudge() {
+  return (
+    <p className="text-sm text-neutral-500">
+      Consider the position again in light of what proportionate professional practice
+      requires - review the other options.
+    </p>
+  );
+}
+
+function WhyThisMatters({ text }: { text: string }) {
+  return (
+    <div className="border-t border-neutral-200 pt-4">
+      <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+        Why this matters
+      </p>
+      <p className="mt-1 text-sm leading-6 text-neutral-600">{text}</p>
+    </div>
+  );
+}
+
 function buildWorkingToolText(
-  addendumPlacements: Record<string, AddendumHeading | null>
+  addendumPlacements: Record<string, AddendumHeading | null>,
+  record: HeritageRecordState
 ): string {
-  const lines = ["HERITAGE CONSIDERATIONS ADDENDUM - VERSION 1", ""];
+  const lines = ["HERITAGE RECORD - MODULE 1", ""];
+  lines.push(`Known: ${record.known}`);
+  lines.push(`Decision point: ${record.decisionPoints}`, "");
+  lines.push("HERITAGE CONSIDERATIONS ADDENDUM - VERSION 1", "");
 
   for (const heading of ADDENDUM_HEADINGS) {
     lines.push(`${heading.key}. ${heading.label}`.toUpperCase());
@@ -54,63 +89,36 @@ function buildWorkingToolText(
     lines.push("");
   }
 
-  lines.push("PRE-DESIGN DECISION GATE", "");
-  lines.push(
-    "Establish the heritage baseline and likely information/consent route proportionately, using further research, survey, assessment or specialist input where required by the project."
-  );
-
   return lines.join("\n");
 }
 
 export function Module1Experience() {
   const [stage, setStage] = useState<Stage>(1);
-  const [projectFile, setProjectFile] = useState<ProjectFileState>(PROJECT_FILE_INITIAL);
+  const [heritageRecord, setHeritageRecord] =
+    useState<HeritageRecordState>(HERITAGE_RECORD_INITIAL);
 
   // Activity 1
-  const [briefSelections, setBriefSelections] = useState<Set<string>>(new Set());
-  const [activity1Saved, setActivity1Saved] = useState(false);
+  const [a1Prediction, setA1Prediction] = useState<number | null>(null);
+  const [a1Saved, setA1Saved] = useState(false);
 
   // Activity 2
+  const [a2Prediction, setA2Prediction] = useState<number | null>(null);
   const [addendumPlacements, setAddendumPlacements] = useState<
     Record<string, AddendumHeading | null>
   >(() => Object.fromEntries(PROMPT_CARDS.map((card) => [card.id, null])));
-  const [activity2Saved, setActivity2Saved] = useState(false);
-  const [showSuggestedPlacement, setShowSuggestedPlacement] = useState(false);
+  const [a2ShowCompare, setA2ShowCompare] = useState(false);
+  const [a2Saved, setA2Saved] = useState(false);
 
   // Activity 3
-  const [selectedGateOption, setSelectedGateOption] = useState<number | null>(null);
-  const [activity3Saved, setActivity3Saved] = useState(false);
+  const [a3Prediction, setA3Prediction] = useState<number | null>(null);
+  const [a3Saved, setA3Saved] = useState(false);
 
-  const completedActivities = [activity1Saved, activity2Saved, activity3Saved].filter(
-    Boolean
-  ).length;
+  const completedActivities = [a1Saved, a2Saved, a3Saved].filter(Boolean).length;
   const completedMinutes = [1, 2, 3]
     .slice(0, completedActivities)
     .reduce((sum, n) => sum + ACTIVITY_MINUTES[n as 1 | 2 | 3], 0);
   const percentComplete = Math.round((completedMinutes / TOTAL_COURSE_MINUTES) * 100);
   const minutesLeft = TOTAL_COURSE_MINUTES - completedMinutes;
-
-  const selectableRows = ACTIVITY_1.briefStatusRows.filter((row) => row.selectable);
-  const allBriefLinesSelected = selectableRows.every((row) =>
-    briefSelections.has(row.label)
-  );
-
-  function toggleBriefSelection(label: string) {
-    setBriefSelections((current) => {
-      const next = new Set(current);
-      if (next.has(label)) {
-        next.delete(label);
-      } else {
-        next.add(label);
-      }
-      return next;
-    });
-  }
-
-  function saveActivity1() {
-    setProjectFile(PROJECT_FILE_AFTER_ACTIVITY_1);
-    setActivity1Saved(true);
-  }
 
   const unplacedCardIds = PROMPT_CARD_DISPLAY_ORDER.filter(
     (id) => !addendumPlacements[id]
@@ -125,16 +133,6 @@ export function Module1Experience() {
     setAddendumPlacements((current) => ({ ...current, [id]: null }));
   }
 
-  function saveActivity2() {
-    setProjectFile(PROJECT_FILE_AFTER_ACTIVITY_2);
-    setActivity2Saved(true);
-  }
-
-  function saveActivity3() {
-    setProjectFile(PROJECT_FILE_AFTER_ACTIVITY_3);
-    setActivity3Saved(true);
-  }
-
   function goTo(next: Stage) {
     setStage(next);
     if (typeof window !== "undefined") {
@@ -146,16 +144,12 @@ export function Module1Experience() {
     courseTitle: MODULE_TITLE,
     percentComplete,
     minutesLeft,
-    stageLabel: STAGE_LABEL,
-    projectFile,
+    heritageRecord,
   };
 
   if (stage === "complete") {
     return (
-      <ModuleComplete
-        addendumPlacements={addendumPlacements}
-        projectFile={projectFile}
-      />
+      <ModuleComplete addendumPlacements={addendumPlacements} record={heritageRecord} />
     );
   }
 
@@ -164,29 +158,26 @@ export function Module1Experience() {
       {stage === 1 && (
         <LearningScreenShell
           {...shellCommon}
-          activityLabel={ACTIVITY_1.activityLabel}
-          activityIndexLabel={ACTIVITY_1.activityIndexLabel}
-          whyNow={ACTIVITY_1.whyNow}
-          evidence={ACTIVITY_1.evidence}
+          projectMoment={ACTIVITY_1.projectMoment}
+          heritageQuestion={ACTIVITY_1.heritageQuestion}
           footer={
-            activity1Saved ? (
+            a1Saved ? (
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <p className="text-sm font-medium text-neutral-900">
-                  &#10003; Saved to project file
+                  &#10003; Saved to Heritage Record
                 </p>
-                <button
-                  type="button"
-                  onClick={() => goTo(2)}
-                  className={primaryButton}
-                >
+                <button type="button" onClick={() => goTo(2)} className={primaryButton}>
                   Next activity &rarr;
                 </button>
               </div>
             ) : (
               <button
                 type="button"
-                onClick={saveActivity1}
-                disabled={!allBriefLinesSelected}
+                onClick={() => {
+                  setHeritageRecord(HERITAGE_RECORD_AFTER_ACTIVITY_1);
+                  setA1Saved(true);
+                }}
+                disabled={a1Prediction === null}
                 className={primaryButton}
               >
                 {ACTIVITY_1.saveLabel}
@@ -194,40 +185,32 @@ export function Module1Experience() {
             )
           }
         >
-          <Activity1WorkingSurface
-            selections={briefSelections}
-            onToggle={toggleBriefSelection}
-            allSelected={allBriefLinesSelected}
-            saved={activity1Saved}
-          />
+          <Activity1Content prediction={a1Prediction} onPredict={setA1Prediction} />
         </LearningScreenShell>
       )}
 
       {stage === 2 && (
         <LearningScreenShell
           {...shellCommon}
-          activityLabel={ACTIVITY_2.activityLabel}
-          activityIndexLabel={ACTIVITY_2.activityIndexLabel}
-          whyNow={ACTIVITY_2.whyNow}
-          evidence={ACTIVITY_2.evidence}
+          projectMoment={ACTIVITY_2.projectMoment}
+          heritageQuestion={ACTIVITY_2.heritageQuestion}
           footer={
-            activity2Saved ? (
+            a2Saved ? (
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <p className="text-sm font-medium text-neutral-900">
-                  &#10003; Saved to project file
+                  &#10003; Saved to Heritage Record
                 </p>
-                <button
-                  type="button"
-                  onClick={() => goTo(3)}
-                  className={primaryButton}
-                >
+                <button type="button" onClick={() => goTo(3)} className={primaryButton}>
                   Next activity &rarr;
                 </button>
               </div>
             ) : (
               <button
                 type="button"
-                onClick={saveActivity2}
+                onClick={() => {
+                  setHeritageRecord(HERITAGE_RECORD_AFTER_ACTIVITY_2);
+                  setA2Saved(true);
+                }}
                 disabled={!allCardsPlaced}
                 className={primaryButton}
               >
@@ -236,14 +219,17 @@ export function Module1Experience() {
             )
           }
         >
-          <Activity2WorkingSurface
+          <Activity2Content
+            prediction={a2Prediction}
+            onPredict={setA2Prediction}
+            heritageRecord={heritageRecord}
             unplacedCardIds={unplacedCardIds}
             placements={addendumPlacements}
             allPlaced={allCardsPlaced}
-            showSuggested={showSuggestedPlacement}
+            showCompare={a2ShowCompare}
             onPlace={placeCard}
             onUnplace={unplaceCard}
-            onToggleSuggested={() => setShowSuggestedPlacement((v) => !v)}
+            onToggleCompare={() => setA2ShowCompare((v) => !v)}
           />
         </LearningScreenShell>
       )}
@@ -251,15 +237,13 @@ export function Module1Experience() {
       {stage === 3 && (
         <LearningScreenShell
           {...shellCommon}
-          activityLabel={ACTIVITY_3.activityLabel}
-          activityIndexLabel={ACTIVITY_3.activityIndexLabel}
-          whyNow={ACTIVITY_3.whyNow}
-          evidence={[]}
+          projectMoment={ACTIVITY_3.projectMoment}
+          heritageQuestion={ACTIVITY_3.heritageQuestion}
           footer={
-            activity3Saved ? (
+            a3Saved ? (
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <p className="text-sm font-medium text-neutral-900">
-                  &#10003; Saved to project file
+                  &#10003; Saved to Heritage Record
                 </p>
                 <button
                   type="button"
@@ -272,8 +256,11 @@ export function Module1Experience() {
             ) : (
               <button
                 type="button"
-                onClick={saveActivity3}
-                disabled={selectedGateOption !== DECISION_GATE_EXPECTED_INDEX}
+                onClick={() => {
+                  setHeritageRecord(HERITAGE_RECORD_AFTER_ACTIVITY_3);
+                  setA3Saved(true);
+                }}
+                disabled={a3Prediction !== DECISION_GATE_EXPECTED_INDEX}
                 className={primaryButton}
               >
                 {ACTIVITY_3.saveLabel}
@@ -281,10 +268,11 @@ export function Module1Experience() {
             )
           }
         >
-          <Activity3WorkingSurface
-            selectedOption={selectedGateOption}
-            onSelect={setSelectedGateOption}
-            saved={activity3Saved}
+          <Activity3Content
+            prediction={a3Prediction}
+            onPredict={setA3Prediction}
+            heritageRecord={heritageRecord}
+            addendumPlacements={addendumPlacements}
           />
         </LearningScreenShell>
       )}
@@ -292,327 +280,363 @@ export function Module1Experience() {
   );
 }
 
-// --- Activity 1 working surface -----------------------------------------
+// --- Activity 1 -------------------------------------------------------
 
-function Activity1WorkingSurface({
-  selections,
-  onToggle,
-  allSelected,
-  saved,
+function Activity1Content({
+  prediction,
+  onPredict,
 }: {
-  selections: Set<string>;
-  onToggle: (label: string) => void;
-  allSelected: boolean;
-  saved: boolean;
+  prediction: number | null;
+  onPredict: (index: number) => void;
 }) {
+  const hasAnswered = prediction !== null;
+
   return (
-    <div>
-      <p className="text-sm leading-6 text-neutral-600">{ACTIVITY_1.openingInstruction}</p>
+    <div className="grid gap-6">
+      <p className="text-sm leading-6 text-neutral-600">{ACTIVITY_1.whyNow}</p>
 
-      <div className={`mt-6 ${cardClassName}`}>
-        <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-          Project brief - initial status
-        </p>
-        <ul className="mt-3 grid gap-3">
-          {ACTIVITY_1.briefStatusRows.map((row) => (
-            <li
-              key={row.label}
-              className="flex items-start gap-3 border-b border-neutral-100 pb-3 last:border-0 last:pb-0"
-            >
-              {row.selectable ? (
-                <input
-                  type="checkbox"
-                  checked={selections.has(row.label)}
-                  onChange={() => onToggle(row.label)}
-                  disabled={saved}
-                  className="mt-1 h-4 w-4 shrink-0"
-                  aria-label={`Keep "${row.label}" open`}
-                />
-              ) : (
-                <span className="mt-1 h-4 w-4 shrink-0" aria-hidden="true" />
-              )}
-              <div className="flex-1">
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <p className="text-sm font-semibold text-neutral-900">{row.label}</p>
-                  <span className="text-xs font-medium text-neutral-500">{row.status}</span>
-                </div>
-                <p className="mt-0.5 text-sm text-neutral-600">{row.detail}</p>
+      <PredictionBlock
+        prompt={ACTIVITY_1.predictionPrompt}
+        options={ACTIVITY_1.predictionOptions}
+        selectedIndex={prediction}
+        onSelect={onPredict}
+      />
+
+      {hasAnswered && (
+        <>
+          <FeedbackNote text={ACTIVITY_1.predictionFeedback} />
+
+          <EvidenceTray items={ACTIVITY_1.evidence} />
+
+          <div className={cardClassName}>
+            <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+              Added to the Heritage Record - Known
+            </p>
+            <ul className="mt-2 grid gap-1.5">
+              {ACTIVITY_1.knownEntry.map((line) => (
+                <li key={line} className="text-sm leading-6 text-neutral-700">
+                  - {line}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <CompareToggle label="For comparison: show a worked example">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
+                  Known
+                </p>
+                <ul className="mt-2 grid gap-1.5">
+                  {ACTIVITY_1.worked.known.map((line) => (
+                    <li key={line} className="text-xs leading-5 text-neutral-600">
+                      - {line}
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
+                  To establish
+                </p>
+                <ul className="mt-2 grid gap-1.5">
+                  {ACTIVITY_1.worked.toEstablish.map((line) => (
+                    <li key={line} className="text-xs leading-5 text-neutral-600">
+                      - {line}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </CompareToggle>
 
-      <p className="mt-4 text-sm font-medium text-neutral-700">{ACTIVITY_1.prompt}</p>
-      {!allSelected && !saved && (
-        <p className="mt-1 text-xs text-neutral-400">
-          Select every brief line that should stay open.
-        </p>
-      )}
-
-      {allSelected && (
-        <div className="mt-4 border border-neutral-300 bg-neutral-50 px-5 py-4">
-          <p className="text-sm font-semibold text-neutral-900">
-            {ACTIVITY_1.feedback.heading}
-          </p>
-          <p className="mt-1 text-sm leading-6 text-neutral-600">
-            {ACTIVITY_1.feedback.body}
-          </p>
-        </div>
-      )}
-
-      {saved && (
-        <p className="mt-4 text-sm leading-6 text-neutral-600">
-          {ACTIVITY_1.savedConfirmation}
-          <br />
-          <span className="text-neutral-500">{ACTIVITY_1.forwardCue}</span>
-        </p>
+          <WhyThisMatters text={ACTIVITY_1.whyThisMatters} />
+        </>
       )}
     </div>
   );
 }
 
-// --- Activity 2 working surface -----------------------------------------
+// --- Activity 2 -------------------------------------------------------
 
-function Activity2WorkingSurface({
+function Activity2Content({
+  prediction,
+  onPredict,
+  heritageRecord,
   unplacedCardIds,
   placements,
   allPlaced,
-  showSuggested,
+  showCompare,
   onPlace,
   onUnplace,
-  onToggleSuggested,
+  onToggleCompare,
 }: {
+  prediction: number | null;
+  onPredict: (index: number) => void;
+  heritageRecord: HeritageRecordState;
   unplacedCardIds: string[];
   placements: Record<string, AddendumHeading | null>;
   allPlaced: boolean;
-  showSuggested: boolean;
+  showCompare: boolean;
   onPlace: (id: string, heading: AddendumHeading) => void;
   onUnplace: (id: string) => void;
-  onToggleSuggested: () => void;
+  onToggleCompare: () => void;
 }) {
-  const cardsById = useMemo(
-    () => new Map(PROMPT_CARDS.map((card) => [card.id, card])),
-    []
-  );
+  const cardsById = useMemo(() => new Map(PROMPT_CARDS.map((c) => [c.id, c])), []);
+  const hasAnswered = prediction !== null;
+  const isCorrect = prediction === ACTIVITY_2.predictionExpectedIndex;
   const placedCount = PROMPT_CARDS.length - unplacedCardIds.length;
+  const evidence = [initialHeritagePositionEvidence(heritageRecord), ...ACTIVITY_2.evidence];
 
   return (
-    <div>
-      <div className="grid gap-2">
-        {ACTIVITY_2.openingInstruction.map((paragraph) => (
-          <p key={paragraph} className="text-sm leading-6 text-neutral-600">
-            {paragraph}
-          </p>
-        ))}
-      </div>
+    <div className="grid gap-6">
+      <p className="text-sm leading-6 text-neutral-600">{ACTIVITY_2.whyNow}</p>
 
-      <p className="mt-6 text-xs font-medium uppercase tracking-wide text-neutral-500">
-        Heritage Considerations Addendum - draft
-      </p>
+      <PredictionBlock
+        prompt={ACTIVITY_2.predictionPrompt}
+        context={ACTIVITY_2.predictionQuestion}
+        options={ACTIVITY_2.predictionOptions}
+        selectedIndex={prediction}
+        onSelect={onPredict}
+      />
 
-      {unplacedCardIds.length > 0 && (
-        <div className="mt-3">
-          <p className="text-xs text-neutral-500">
-            {placedCount} of {PROMPT_CARDS.length} placed
-          </p>
-          <ul className="mt-2 grid gap-3">
-            {unplacedCardIds.map((id) => {
-              const card = cardsById.get(id)!;
-              return (
-                <li key={id} className="border border-neutral-300 bg-white px-4 py-3">
-                  <p className="text-sm text-neutral-900">{card.text}</p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {ADDENDUM_HEADINGS.map((heading) => (
-                      <button
-                        key={heading.key}
-                        type="button"
-                        onClick={() => onPlace(id, heading.key)}
-                        className="border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-700 hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
-                      >
-                        {heading.key}. {heading.label}
-                      </button>
-                    ))}
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      )}
-
-      <div className="mt-6 grid gap-4">
-        {ADDENDUM_HEADINGS.map((heading) => {
-          const placed = PROMPT_CARDS.filter(
-            (card) => placements[card.id] === heading.key
-          );
-          return (
-            <div key={heading.key} className="border border-neutral-200 bg-neutral-50 p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
-                {heading.key}. {heading.label}
-              </p>
-              <ul className="mt-2 grid gap-1.5">
-                {placed.map((card) => (
-                  <li
-                    key={card.id}
-                    className="border border-neutral-200 bg-white px-3 py-2 text-xs leading-5 text-neutral-800"
-                  >
-                    {card.text}
-                    <button
-                      type="button"
-                      onClick={() => onUnplace(card.id)}
-                      className="ml-2 text-neutral-400 hover:text-neutral-700"
-                      aria-label={`Move "${card.text}" back to the list`}
-                    >
-                      &times;
-                    </button>
-                  </li>
-                ))}
-                {placed.length === 0 && (
-                  <li className="text-xs text-neutral-400">Nothing placed here yet.</li>
-                )}
-              </ul>
-            </div>
-          );
-        })}
-      </div>
-
-      {allPlaced && (
-        <div className="mt-6 border border-neutral-300 bg-neutral-50 px-6 py-5">
-          <p className="text-base font-semibold text-neutral-900">
-            {ACTIVITY_2.feedback.heading}
-          </p>
-          <p className="mt-2 text-sm leading-6 text-neutral-600">
-            {ACTIVITY_2.feedback.body}
-          </p>
-
-          <button
-            type="button"
-            onClick={onToggleSuggested}
-            className="mt-4 text-sm font-medium text-neutral-700 underline hover:text-neutral-900"
-          >
-            {showSuggested
-              ? "Hide one suggested placement"
-              : "For comparison: show one suggested placement"}
-          </button>
-
-          {showSuggested && (
-            <div className="mt-4 grid gap-4 sm:grid-cols-3">
-              {ADDENDUM_HEADINGS.map((heading) => (
-                <div key={heading.key}>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
-                    {heading.key}. {heading.label}
-                  </p>
-                  <ul className="mt-2 grid gap-1.5">
-                    {PROMPT_CARDS.filter(
-                      (card) => card.suggestedHeading === heading.key
-                    ).map((card) => (
-                      <li key={card.id} className="text-xs leading-5 text-neutral-600">
-                        - {card.text}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+      {hasAnswered && (
+        <>
+          {isCorrect ? (
+            <FeedbackNote text={ACTIVITY_2.predictionFeedback} />
+          ) : (
+            <WrongPredictionNudge />
           )}
-        </div>
+
+          <EvidenceTray items={evidence} />
+
+          <div className="grid gap-2">
+            {ACTIVITY_2.workingIntro.map((p) => (
+              <p key={p} className="text-sm leading-6 text-neutral-600">
+                {p}
+              </p>
+            ))}
+          </div>
+
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+              Heritage Considerations Addendum - draft
+            </p>
+
+            {unplacedCardIds.length > 0 && (
+              <div className="mt-3">
+                <p className="text-xs text-neutral-500">
+                  {placedCount} of {PROMPT_CARDS.length} placed
+                </p>
+                <ul className="mt-2 grid gap-3">
+                  {unplacedCardIds.map((id) => {
+                    const card = cardsById.get(id)!;
+                    return (
+                      <li key={id} className="border border-neutral-300 bg-white px-4 py-3">
+                        <p className="text-sm text-neutral-900">{card.text}</p>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          {ADDENDUM_HEADINGS.map((heading) => (
+                            <button
+                              key={heading.key}
+                              type="button"
+                              onClick={() => onPlace(id, heading.key)}
+                              className="border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-700 hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
+                            >
+                              {heading.key}. {heading.label}
+                            </button>
+                          ))}
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+
+            <div className="mt-6 grid gap-4">
+              {ADDENDUM_HEADINGS.map((heading) => {
+                const placed = PROMPT_CARDS.filter(
+                  (card) => placements[card.id] === heading.key
+                );
+                return (
+                  <div key={heading.key} className="border border-neutral-200 bg-neutral-50 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
+                      {heading.key}. {heading.label}
+                    </p>
+                    <ul className="mt-2 grid gap-1.5">
+                      {placed.map((card) => (
+                        <li
+                          key={card.id}
+                          className="border border-neutral-200 bg-white px-3 py-2 text-xs leading-5 text-neutral-800"
+                        >
+                          {card.text}
+                          <button
+                            type="button"
+                            onClick={() => onUnplace(card.id)}
+                            className="ml-2 text-neutral-400 hover:text-neutral-700"
+                            aria-label={`Move "${card.text}" back to the list`}
+                          >
+                            &times;
+                          </button>
+                        </li>
+                      ))}
+                      {placed.length === 0 && (
+                        <li className="text-xs text-neutral-400">Nothing placed here yet.</li>
+                      )}
+                    </ul>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {allPlaced && (
+            <>
+              <CompareToggle
+                label="For comparison: show a worked example"
+                open={showCompare}
+                onToggle={onToggleCompare}
+              >
+                <p className="mb-3 text-xs leading-5 text-neutral-500">
+                  {ACTIVITY_2.compareInstruction}
+                </p>
+                <div className="grid gap-4 sm:grid-cols-3">
+                  {ADDENDUM_HEADINGS.map((heading) => (
+                    <div key={heading.key}>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
+                        {heading.key}. {heading.label}
+                      </p>
+                      <ul className="mt-2 grid gap-1.5">
+                        {PROMPT_CARDS.filter(
+                          (card) => card.suggestedHeading === heading.key
+                        ).map((card) => (
+                          <li key={card.id} className="text-xs leading-5 text-neutral-600">
+                            - {card.text}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </CompareToggle>
+
+              <WhyThisMatters text={ACTIVITY_2.whyThisMatters} />
+            </>
+          )}
+        </>
       )}
     </div>
   );
 }
 
-// --- Activity 3 working surface -----------------------------------------
+// --- Activity 3 -------------------------------------------------------
 
-function Activity3WorkingSurface({
-  selectedOption,
-  onSelect,
-  saved,
+function Activity3Content({
+  prediction,
+  onPredict,
+  heritageRecord,
+  addendumPlacements,
 }: {
-  selectedOption: number | null;
-  onSelect: (index: number) => void;
-  saved: boolean;
+  prediction: number | null;
+  onPredict: (index: number) => void;
+  heritageRecord: HeritageRecordState;
+  addendumPlacements: Record<string, AddendumHeading | null>;
 }) {
-  const isExpectedSelected = selectedOption === DECISION_GATE_EXPECTED_INDEX;
-  const hasSelectedWrong = selectedOption !== null && !isExpectedSelected;
+  const hasAnswered = prediction !== null;
+  const isCorrect = prediction === DECISION_GATE_EXPECTED_INDEX;
+  const evidence = [
+    addendumEvidence(buildWorkingToolText(addendumPlacements, heritageRecord)),
+    ...ACTIVITY_3.evidence,
+    initialHeritagePositionEvidence(heritageRecord),
+  ];
+
+  return (
+    <div className="grid gap-6">
+      <p className="text-sm leading-6 text-neutral-600">{ACTIVITY_3.whyNow}</p>
+
+      <PredictionBlock
+        prompt={ACTIVITY_3.predictionPrompt}
+        options={DECISION_GATE_OPTIONS}
+        selectedIndex={prediction}
+        onSelect={onPredict}
+      />
+
+      {hasAnswered && (
+        <>
+          {isCorrect ? (
+            <FeedbackNote text={ACTIVITY_3.predictionFeedback} />
+          ) : (
+            <WrongPredictionNudge />
+          )}
+
+          {isCorrect && (
+            <>
+              <EvidenceTray items={evidence} />
+
+              <div className={cardClassName}>
+                <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+                  Added to the Heritage Record - Decision point
+                </p>
+                <p className="mt-2 text-sm leading-6 text-neutral-900">
+                  {ACTIVITY_3.decisionPointText}
+                </p>
+              </div>
+
+              <CompareToggle label="For comparison: show a worked example">
+                <p className="text-sm leading-6 text-neutral-600">{ACTIVITY_3.worked}</p>
+              </CompareToggle>
+
+              <WhyThisMatters text={ACTIVITY_3.whyThisMatters} />
+            </>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+// --- Shared: compare-with-worked-example toggle ------------------------
+
+function CompareToggle({
+  label,
+  open: openProp,
+  onToggle,
+  children,
+}: {
+  label: string;
+  open?: boolean;
+  onToggle?: () => void;
+  children: React.ReactNode;
+}) {
+  const [localOpen, setLocalOpen] = useState(false);
+  const open = openProp ?? localOpen;
+  const toggle = onToggle ?? (() => setLocalOpen((v) => !v));
 
   return (
     <div>
-      <p className="text-sm leading-6 text-neutral-600">{ACTIVITY_3.openingInstruction}</p>
-
-      <p className="mt-6 text-sm font-medium text-neutral-700">{ACTIVITY_3.prompt}</p>
-
-      <div className="mt-3 grid gap-2">
-        {DECISION_GATE_OPTIONS.map((option, index) => (
-          <label
-            key={option}
-            className={
-              selectedOption === index
-                ? "flex cursor-pointer gap-3 border border-neutral-900 bg-neutral-50 px-4 py-3"
-                : "flex cursor-pointer gap-3 border border-neutral-200 bg-white px-4 py-3 hover:border-neutral-400"
-            }
-          >
-            <input
-              type="radio"
-              name="decision-gate"
-              checked={selectedOption === index}
-              onChange={() => onSelect(index)}
-              disabled={saved}
-              className="mt-1 h-4 w-4 shrink-0"
-            />
-            <span className="text-sm text-neutral-800">{option}</span>
-          </label>
-        ))}
-      </div>
-
-      {hasSelectedWrong && (
-        <p className="mt-4 text-sm text-neutral-500">
-          Consider whether this position is proportionate for a straightforward case -
-          review the other options.
-        </p>
-      )}
-
-      {isExpectedSelected && (
-        <div className="mt-4 border border-neutral-300 bg-neutral-50 px-5 py-4">
-          <p className="text-sm font-semibold text-neutral-900">
-            {ACTIVITY_3.feedback.heading}
-          </p>
-          <p className="mt-1 text-sm leading-6 text-neutral-600">
-            {ACTIVITY_3.feedback.body}
-          </p>
-
-          <div className="mt-4 border-t border-neutral-200 pt-4">
-            <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-              {ACTIVITY_3.savedNoteHeading}
-            </p>
-            <p className="mt-2 text-sm text-neutral-700">{ACTIVITY_3.savedNoteIntro}</p>
-            <p className="mt-2 text-sm leading-6 text-neutral-900">
-              {ACTIVITY_3.savedNoteBody}
-            </p>
-          </div>
-        </div>
-      )}
-
-      {saved && (
-        <p className="mt-4 text-sm leading-6 text-neutral-600">
-          {ACTIVITY_3.savedConfirmation}
-        </p>
-      )}
+      <button
+        type="button"
+        onClick={toggle}
+        className="text-sm font-medium text-neutral-700 underline hover:text-neutral-900"
+      >
+        {open ? "Hide worked example" : label}
+      </button>
+      {open && <div className="mt-3 border border-neutral-200 bg-neutral-50 p-4">{children}</div>}
     </div>
   );
 }
 
-// --- Module completion -----------------------------------------------
+// --- Module completion --------------------------------------------------
 
 function ModuleComplete({
   addendumPlacements,
-  projectFile,
+  record,
 }: {
   addendumPlacements: Record<string, AddendumHeading | null>;
-  projectFile: ProjectFileState;
+  record: HeritageRecordState;
 }) {
   const downloadHref = `data:text/plain;charset=utf-8,${encodeURIComponent(
-    buildWorkingToolText(addendumPlacements)
+    buildWorkingToolText(addendumPlacements, record)
   )}`;
 
   return (
@@ -621,17 +645,11 @@ function ModuleComplete({
         {MODULE_COMPLETE.heading}
       </h1>
 
-      <div className="mt-6 grid gap-4">
-        {MODULE_COMPLETE.body.map((paragraph) => (
-          <p key={paragraph} className="text-base leading-7 text-neutral-600">
-            {paragraph}
-          </p>
-        ))}
-      </div>
+      <p className="mt-6 text-base leading-7 text-neutral-600">{MODULE_COMPLETE.body}</p>
 
       <div className={`mt-8 ${cardClassName}`}>
         <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-          Completed project-file outputs
+          Outputs created
         </p>
         <ul className="mt-3 grid gap-1.5">
           {MODULE_COMPLETE.outputsCompleted.map((output) => (
@@ -642,8 +660,8 @@ function ModuleComplete({
         </ul>
       </div>
 
-      <div id="project-file" className="mt-6">
-        <ProjectFilePanel projectFile={projectFile} />
+      <div className="mt-6">
+        <HeritageRecordPanel record={record} />
       </div>
 
       <div className="mt-6 border border-neutral-200 bg-neutral-50 px-6 py-5">
@@ -662,7 +680,7 @@ function ModuleComplete({
         <button type="button" disabled className={primaryButton}>
           Continue to Module 2 (not yet built)
         </button>
-        <a href={downloadHref} download="module-1-working-tool.txt" className={secondaryButton}>
+        <a href={downloadHref} download="module-1-heritage-record.txt" className={secondaryButton}>
           Download Module 1 working tool
         </a>
         <Link href="/courses/heritage-design-risk-for-architects" className={secondaryButton}>

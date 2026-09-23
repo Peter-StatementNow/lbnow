@@ -9,10 +9,10 @@ export const PROMPT_CARD_DISPLAY_ORDER = [
   "local-validation",
   "specialist-input",
   "nearby-assets",
-  "emerging-effects",
+  "evidence-changes",
   "article-4",
   "existing-changes",
-  "route-adjustment",
+  "emerging-effects",
   "conservation-area",
   "outbuilding",
 ];
