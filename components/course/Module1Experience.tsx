@@ -2,24 +2,32 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ModuleStepper } from "@/components/course/ModuleStepper";
-import { ARCHITECT_COURSE_CHAPTERS } from "@/lib/content/architect-course";
+import { LearningScreenShell } from "@/components/course/LearningScreenShell";
+import { ProjectFilePanel } from "@/components/course/ProjectFilePanel";
 import {
-  MODULE_META,
-  SCREEN_1,
-  SCREEN_2,
-  SCREEN_3,
-  SCREEN_4,
-  SCREEN_5,
-  SCREEN_6,
-  SCREEN_7,
-  SORT_BUCKETS,
-  SORT_ITEMS,
-  type SortBucket,
+  ACTIVITY_1,
+  ACTIVITY_2,
+  ACTIVITY_3,
+  ADDENDUM_HEADINGS,
+  DECISION_GATE_EXPECTED_INDEX,
+  DECISION_GATE_OPTIONS,
+  MODULE_COMPLETE,
+  MODULE_TITLE,
+  PROJECT_FILE_AFTER_ACTIVITY_1,
+  PROJECT_FILE_AFTER_ACTIVITY_2,
+  PROJECT_FILE_AFTER_ACTIVITY_3,
+  PROJECT_FILE_INITIAL,
+  PROMPT_CARDS,
+  STAGE_LABEL,
+  TOTAL_COURSE_MINUTES,
+  type AddendumHeading,
+  type ProjectFileState,
 } from "@/lib/content/architect-course-module-1";
-import { SORT_ITEM_DISPLAY_ORDER } from "@/lib/content/architect-course-module-1-sort-order";
+import { PROMPT_CARD_DISPLAY_ORDER } from "@/lib/content/architect-course-module-1-display-order";
 
-type ScreenNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+type Stage = 1 | 2 | 3 | "complete";
+
+const ACTIVITY_MINUTES = { 1: 2, 2: 3, 3: 2 };
 
 const primaryButton =
   "inline-flex items-center justify-center bg-black px-6 py-3 text-sm font-medium text-white hover:bg-neutral-800 disabled:cursor-not-allowed disabled:bg-neutral-300";
@@ -27,367 +35,402 @@ const secondaryButton =
   "inline-flex items-center justify-center border border-neutral-300 px-6 py-3 text-sm font-medium text-neutral-800 hover:border-neutral-500";
 const cardClassName = "border border-neutral-200 bg-white p-6";
 
-function BackLink({ onClick }: { onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="mb-6 text-sm font-medium text-neutral-500 hover:text-neutral-800"
-    >
-      &larr; Back
-    </button>
-  );
-}
+function buildWorkingToolText(
+  addendumPlacements: Record<string, AddendumHeading | null>
+): string {
+  const lines = ["HERITAGE CONSIDERATIONS ADDENDUM - VERSION 1", ""];
 
-function buildAddendumText(): string {
-  const lines = [
-    SCREEN_6.heading.toUpperCase(),
-    `PROJECT: ${SCREEN_6.project}`,
-    `DATE: ${SCREEN_6.dateLabel}`,
-    "",
-  ];
-
-  for (const section of SCREEN_6.sections) {
-    lines.push(section.heading.toUpperCase());
-    for (const item of section.items) {
-      lines.push(`- ${item}`);
+  for (const heading of ADDENDUM_HEADINGS) {
+    lines.push(`${heading.key}. ${heading.label}`.toUpperCase());
+    const items = PROMPT_CARDS.filter(
+      (card) => addendumPlacements[card.id] === heading.key
+    );
+    if (items.length === 0) {
+      lines.push("(nothing placed here)");
+    }
+    for (const item of items) {
+      lines.push(`- ${item.text}`);
     }
     lines.push("");
   }
+
+  lines.push("PRE-DESIGN DECISION GATE", "");
+  lines.push(
+    "Establish the heritage baseline and likely information/consent route proportionately, using further research, survey, assessment or specialist input where required by the project."
+  );
 
   return lines.join("\n");
 }
 
 export function Module1Experience() {
-  const [screen, setScreen] = useState<ScreenNumber>(1);
-  const [placements, setPlacements] = useState<Record<string, SortBucket | null>>(() =>
-    Object.fromEntries(SORT_ITEMS.map((item) => [item.id, null]))
+  const [stage, setStage] = useState<Stage>(1);
+  const [projectFile, setProjectFile] = useState<ProjectFileState>(PROJECT_FILE_INITIAL);
+
+  // Activity 1
+  const [briefSelections, setBriefSelections] = useState<Set<string>>(new Set());
+  const [activity1Saved, setActivity1Saved] = useState(false);
+
+  // Activity 2
+  const [addendumPlacements, setAddendumPlacements] = useState<
+    Record<string, AddendumHeading | null>
+  >(() => Object.fromEntries(PROMPT_CARDS.map((card) => [card.id, null])));
+  const [activity2Saved, setActivity2Saved] = useState(false);
+  const [showSuggestedPlacement, setShowSuggestedPlacement] = useState(false);
+
+  // Activity 3
+  const [selectedGateOption, setSelectedGateOption] = useState<number | null>(null);
+  const [activity3Saved, setActivity3Saved] = useState(false);
+
+  const completedActivities = [activity1Saved, activity2Saved, activity3Saved].filter(
+    Boolean
+  ).length;
+  const completedMinutes = [1, 2, 3]
+    .slice(0, completedActivities)
+    .reduce((sum, n) => sum + ACTIVITY_MINUTES[n as 1 | 2 | 3], 0);
+  const percentComplete = Math.round((completedMinutes / TOTAL_COURSE_MINUTES) * 100);
+  const minutesLeft = TOTAL_COURSE_MINUTES - completedMinutes;
+
+  const selectableRows = ACTIVITY_1.briefStatusRows.filter((row) => row.selectable);
+  const allBriefLinesSelected = selectableRows.every((row) =>
+    briefSelections.has(row.label)
   );
-  const [showModelAnswer, setShowModelAnswer] = useState(false);
 
-  const itemsById = useMemo(
-    () => new Map(SORT_ITEMS.map((item) => [item.id, item])),
-    []
-  );
-
-  const unplacedIds = SORT_ITEM_DISPLAY_ORDER.filter((id) => !placements[id]);
-  const allPlaced = unplacedIds.length === 0;
-
-  function placeItem(id: string, bucket: SortBucket) {
-    setPlacements((current) => ({ ...current, [id]: bucket }));
+  function toggleBriefSelection(label: string) {
+    setBriefSelections((current) => {
+      const next = new Set(current);
+      if (next.has(label)) {
+        next.delete(label);
+      } else {
+        next.add(label);
+      }
+      return next;
+    });
   }
 
-  function unplaceItem(id: string) {
-    setPlacements((current) => ({ ...current, [id]: null }));
+  function saveActivity1() {
+    setProjectFile(PROJECT_FILE_AFTER_ACTIVITY_1);
+    setActivity1Saved(true);
   }
 
-  function goTo(next: ScreenNumber) {
-    setScreen(next);
+  const unplacedCardIds = PROMPT_CARD_DISPLAY_ORDER.filter(
+    (id) => !addendumPlacements[id]
+  );
+  const allCardsPlaced = unplacedCardIds.length === 0;
+
+  function placeCard(id: string, heading: AddendumHeading) {
+    setAddendumPlacements((current) => ({ ...current, [id]: heading }));
+  }
+
+  function unplaceCard(id: string) {
+    setAddendumPlacements((current) => ({ ...current, [id]: null }));
+  }
+
+  function saveActivity2() {
+    setProjectFile(PROJECT_FILE_AFTER_ACTIVITY_2);
+    setActivity2Saved(true);
+  }
+
+  function saveActivity3() {
+    setProjectFile(PROJECT_FILE_AFTER_ACTIVITY_3);
+    setActivity3Saved(true);
+  }
+
+  function goTo(next: Stage) {
+    setStage(next);
     if (typeof window !== "undefined") {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }
 
-  const stageIndex = 0; // Module 1 is entirely within "Receiving the brief"
+  const shellCommon = {
+    courseTitle: MODULE_TITLE,
+    percentComplete,
+    minutesLeft,
+    stageLabel: STAGE_LABEL,
+    projectFile,
+  };
+
+  if (stage === "complete") {
+    return (
+      <ModuleComplete
+        addendumPlacements={addendumPlacements}
+        projectFile={projectFile}
+      />
+    );
+  }
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16">
-      {screen > 1 && (
-        <BackLink onClick={() => goTo((screen - 1) as ScreenNumber)} />
+    <>
+      {stage === 1 && (
+        <LearningScreenShell
+          {...shellCommon}
+          activityLabel={ACTIVITY_1.activityLabel}
+          activityIndexLabel={ACTIVITY_1.activityIndexLabel}
+          whyNow={ACTIVITY_1.whyNow}
+          evidence={ACTIVITY_1.evidence}
+          footer={
+            activity1Saved ? (
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <p className="text-sm font-medium text-neutral-900">
+                  &#10003; Saved to project file
+                </p>
+                <button
+                  type="button"
+                  onClick={() => goTo(2)}
+                  className={primaryButton}
+                >
+                  Next activity &rarr;
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={saveActivity1}
+                disabled={!allBriefLinesSelected}
+                className={primaryButton}
+              >
+                {ACTIVITY_1.saveLabel}
+              </button>
+            )
+          }
+        >
+          <Activity1WorkingSurface
+            selections={briefSelections}
+            onToggle={toggleBriefSelection}
+            allSelected={allBriefLinesSelected}
+            saved={activity1Saved}
+          />
+        </LearningScreenShell>
       )}
 
-      {screen === 1 && <Screen1 onNext={() => goTo(2)} stageIndex={stageIndex} />}
-      {screen === 2 && <Screen2 onOpenEmail={() => goTo(3)} />}
-      {screen === 3 && <Screen3 onNext={() => goTo(4)} />}
-      {screen === 4 && <Screen4 onNext={() => goTo(5)} />}
-      {screen === 5 && (
-        <Screen5
-          unplacedIds={unplacedIds}
-          placements={placements}
-          itemsById={itemsById}
-          allPlaced={allPlaced}
-          showModelAnswer={showModelAnswer}
-          onPlace={placeItem}
-          onUnplace={unplaceItem}
-          onToggleModelAnswer={() => setShowModelAnswer((v) => !v)}
-          onNext={() => goTo(6)}
-        />
+      {stage === 2 && (
+        <LearningScreenShell
+          {...shellCommon}
+          activityLabel={ACTIVITY_2.activityLabel}
+          activityIndexLabel={ACTIVITY_2.activityIndexLabel}
+          whyNow={ACTIVITY_2.whyNow}
+          evidence={ACTIVITY_2.evidence}
+          footer={
+            activity2Saved ? (
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <p className="text-sm font-medium text-neutral-900">
+                  &#10003; Saved to project file
+                </p>
+                <button
+                  type="button"
+                  onClick={() => goTo(3)}
+                  className={primaryButton}
+                >
+                  Next activity &rarr;
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={saveActivity2}
+                disabled={!allCardsPlaced}
+                className={primaryButton}
+              >
+                {ACTIVITY_2.saveLabel}
+              </button>
+            )
+          }
+        >
+          <Activity2WorkingSurface
+            unplacedCardIds={unplacedCardIds}
+            placements={addendumPlacements}
+            allPlaced={allCardsPlaced}
+            showSuggested={showSuggestedPlacement}
+            onPlace={placeCard}
+            onUnplace={unplaceCard}
+            onToggleSuggested={() => setShowSuggestedPlacement((v) => !v)}
+          />
+        </LearningScreenShell>
       )}
-      {screen === 6 && <Screen6 onNext={() => goTo(7)} />}
-      {screen === 7 && <Screen7 />}
+
+      {stage === 3 && (
+        <LearningScreenShell
+          {...shellCommon}
+          activityLabel={ACTIVITY_3.activityLabel}
+          activityIndexLabel={ACTIVITY_3.activityIndexLabel}
+          whyNow={ACTIVITY_3.whyNow}
+          evidence={[]}
+          footer={
+            activity3Saved ? (
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <p className="text-sm font-medium text-neutral-900">
+                  &#10003; Saved to project file
+                </p>
+                <button
+                  type="button"
+                  onClick={() => goTo("complete")}
+                  className={primaryButton}
+                >
+                  Finish Module 1 &rarr;
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={saveActivity3}
+                disabled={selectedGateOption !== DECISION_GATE_EXPECTED_INDEX}
+                className={primaryButton}
+              >
+                {ACTIVITY_3.saveLabel}
+              </button>
+            )
+          }
+        >
+          <Activity3WorkingSurface
+            selectedOption={selectedGateOption}
+            onSelect={setSelectedGateOption}
+            saved={activity3Saved}
+          />
+        </LearningScreenShell>
+      )}
+    </>
+  );
+}
+
+// --- Activity 1 working surface -----------------------------------------
+
+function Activity1WorkingSurface({
+  selections,
+  onToggle,
+  allSelected,
+  saved,
+}: {
+  selections: Set<string>;
+  onToggle: (label: string) => void;
+  allSelected: boolean;
+  saved: boolean;
+}) {
+  return (
+    <div>
+      <p className="text-sm leading-6 text-neutral-600">{ACTIVITY_1.openingInstruction}</p>
+
+      <div className={`mt-6 ${cardClassName}`}>
+        <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+          Project brief - initial status
+        </p>
+        <ul className="mt-3 grid gap-3">
+          {ACTIVITY_1.briefStatusRows.map((row) => (
+            <li
+              key={row.label}
+              className="flex items-start gap-3 border-b border-neutral-100 pb-3 last:border-0 last:pb-0"
+            >
+              {row.selectable ? (
+                <input
+                  type="checkbox"
+                  checked={selections.has(row.label)}
+                  onChange={() => onToggle(row.label)}
+                  disabled={saved}
+                  className="mt-1 h-4 w-4 shrink-0"
+                  aria-label={`Keep "${row.label}" open`}
+                />
+              ) : (
+                <span className="mt-1 h-4 w-4 shrink-0" aria-hidden="true" />
+              )}
+              <div className="flex-1">
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <p className="text-sm font-semibold text-neutral-900">{row.label}</p>
+                  <span className="text-xs font-medium text-neutral-500">{row.status}</span>
+                </div>
+                <p className="mt-0.5 text-sm text-neutral-600">{row.detail}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <p className="mt-4 text-sm font-medium text-neutral-700">{ACTIVITY_1.prompt}</p>
+      {!allSelected && !saved && (
+        <p className="mt-1 text-xs text-neutral-400">
+          Select every brief line that should stay open.
+        </p>
+      )}
+
+      {allSelected && (
+        <div className="mt-4 border border-neutral-300 bg-neutral-50 px-5 py-4">
+          <p className="text-sm font-semibold text-neutral-900">
+            {ACTIVITY_1.feedback.heading}
+          </p>
+          <p className="mt-1 text-sm leading-6 text-neutral-600">
+            {ACTIVITY_1.feedback.body}
+          </p>
+        </div>
+      )}
+
+      {saved && (
+        <p className="mt-4 text-sm leading-6 text-neutral-600">
+          {ACTIVITY_1.savedConfirmation}
+          <br />
+          <span className="text-neutral-500">{ACTIVITY_1.forwardCue}</span>
+        </p>
+      )}
     </div>
   );
 }
 
-// --- Screen 1 --------------------------------------------------------
+// --- Activity 2 working surface -----------------------------------------
 
-function Screen1({
-  onNext,
-  stageIndex,
+function Activity2WorkingSurface({
+  unplacedCardIds,
+  placements,
+  allPlaced,
+  showSuggested,
+  onPlace,
+  onUnplace,
+  onToggleSuggested,
 }: {
-  onNext: () => void;
-  stageIndex: number;
+  unplacedCardIds: string[];
+  placements: Record<string, AddendumHeading | null>;
+  allPlaced: boolean;
+  showSuggested: boolean;
+  onPlace: (id: string, heading: AddendumHeading) => void;
+  onUnplace: (id: string) => void;
+  onToggleSuggested: () => void;
 }) {
+  const cardsById = useMemo(
+    () => new Map(PROMPT_CARDS.map((card) => [card.id, card])),
+    []
+  );
+  const placedCount = PROMPT_CARDS.length - unplacedCardIds.length;
+
   return (
     <div>
-      <ModuleStepper currentStageIndex={stageIndex} />
-
-      <h1 className="mt-8 text-3xl font-semibold tracking-tight text-neutral-900">
-        {SCREEN_1.heading}
-      </h1>
-
-      <div className="mt-6 grid gap-4">
-        {SCREEN_1.body.map((paragraph) => (
-          <p key={paragraph} className="text-base leading-7 text-neutral-600">
+      <div className="grid gap-2">
+        {ACTIVITY_2.openingInstruction.map((paragraph) => (
+          <p key={paragraph} className="text-sm leading-6 text-neutral-600">
             {paragraph}
           </p>
         ))}
       </div>
 
-      <p className="mt-8 border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm text-neutral-600">
-        {MODULE_META.timeEstimate} &middot; {MODULE_META.outputPromise}
+      <p className="mt-6 text-xs font-medium uppercase tracking-wide text-neutral-500">
+        Heritage Considerations Addendum - draft
       </p>
 
-      <div className="mt-8">
-        <button type="button" onClick={onNext} className={primaryButton}>
-          {SCREEN_1.primaryAction}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// --- Screen 2 --------------------------------------------------------
-
-function Screen2({ onOpenEmail }: { onOpenEmail: () => void }) {
-  const { projectFile, availableItems, briefStatus } = SCREEN_2;
-
-  return (
-    <div>
-      <h1 className="text-2xl font-semibold tracking-tight text-neutral-900">
-        {SCREEN_2.heading}
-      </h1>
-      <p className="mt-4 text-base leading-7 text-neutral-600">{SCREEN_2.body}</p>
-
-      <div className={`mt-8 ${cardClassName}`}>
-        <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-          Project file
-        </p>
-        <dl className="mt-3 grid gap-2 text-sm">
-          <div className="grid grid-cols-[110px_1fr] gap-2">
-            <dt className="font-medium text-neutral-500">Project</dt>
-            <dd className="text-neutral-900">{projectFile.project}</dd>
-          </div>
-          <div className="grid grid-cols-[110px_1fr] gap-2">
-            <dt className="font-medium text-neutral-500">Type</dt>
-            <dd className="text-neutral-900">{projectFile.type}</dd>
-          </div>
-          <div className="grid grid-cols-[110px_1fr] gap-2">
-            <dt className="font-medium text-neutral-500">Client ambition</dt>
-            <dd className="text-neutral-900">{projectFile.clientAmbition}</dd>
-          </div>
-          <div className="grid grid-cols-[110px_1fr] gap-2">
-            <dt className="font-medium text-neutral-500">Programme</dt>
-            <dd className="text-neutral-900">{projectFile.programme}</dd>
-          </div>
-          <div className="grid grid-cols-[110px_1fr] gap-2">
-            <dt className="font-medium text-neutral-500">Budget</dt>
-            <dd className="text-neutral-900">{projectFile.budget}</dd>
-          </div>
-        </dl>
-      </div>
-
-      <div className="mt-6 grid gap-6 sm:grid-cols-2">
-        <div className={cardClassName}>
-          <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-            Available
+      {unplacedCardIds.length > 0 && (
+        <div className="mt-3">
+          <p className="text-xs text-neutral-500">
+            {placedCount} of {PROMPT_CARDS.length} placed
           </p>
-          <ul className="mt-3 grid gap-2">
-            {availableItems.map((item) =>
-              item.interactive ? (
-                <li key={item.label}>
-                  <button
-                    type="button"
-                    onClick={onOpenEmail}
-                    className="w-full border border-neutral-300 px-3 py-2 text-left text-sm font-medium text-neutral-900 hover:border-neutral-500 hover:bg-neutral-50"
-                  >
-                    {item.label} &rarr;
-                  </button>
-                </li>
-              ) : (
-                <li
-                  key={item.label}
-                  className="border border-neutral-100 bg-neutral-50 px-3 py-2 text-sm text-neutral-500"
-                >
-                  {item.label}
-                </li>
-              )
-            )}
-          </ul>
-        </div>
-
-        <div className={cardClassName}>
-          <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-            Brief status
-          </p>
-          <dl className="mt-3 grid gap-2 text-sm">
-            {briefStatus.map((row) => (
-              <div key={row.item} className="flex items-center justify-between gap-3">
-                <dt className="text-neutral-600">{row.item}</dt>
-                <dd
-                  className={
-                    row.status === "Recorded"
-                      ? "font-medium text-neutral-900"
-                      : "font-medium text-neutral-500"
-                  }
-                >
-                  {row.status}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </div>
-
-      <p className="mt-6 text-sm text-neutral-500">
-        Start with the client email.
-      </p>
-    </div>
-  );
-}
-
-// --- Screen 3 --------------------------------------------------------
-
-function Screen3({ onNext }: { onNext: () => void }) {
-  return (
-    <div>
-      <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-        {SCREEN_3.documentHeader}
-      </p>
-
-      <div className={`mt-4 ${cardClassName} font-serif`}>
-        <div className="grid gap-4 text-[15px] leading-7 text-neutral-800">
-          {SCREEN_3.email.map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
-          ))}
-        </div>
-      </div>
-
-      <p className="mt-6 text-base leading-7 text-neutral-600">{SCREEN_3.prompt}</p>
-
-      <div className="mt-8">
-        <button type="button" onClick={onNext} className={primaryButton}>
-          {SCREEN_3.action}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// --- Screen 4 --------------------------------------------------------
-
-function Screen4({ onNext }: { onNext: () => void }) {
-  return (
-    <div>
-      <h1 className="text-2xl font-semibold tracking-tight text-neutral-900">
-        {SCREEN_4.heading}
-      </h1>
-      <p className="mt-4 text-base leading-7 text-neutral-600">{SCREEN_4.body}</p>
-
-      <div className="mt-8 grid gap-6">
-        {SCREEN_4.cards.map((card) => (
-          <div key={card.label} className={cardClassName}>
-            <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-              {card.label}
-            </p>
-            <p className="mt-2 text-base font-semibold text-neutral-900">
-              {card.heading}
-            </p>
-            <p className="mt-2 text-sm leading-6 text-neutral-600">{card.body}</p>
-
-            <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-neutral-500">
-              {card.additionsHeading}
-            </p>
-            <ul className="mt-2 grid gap-1.5">
-              {card.additions.map((addition) => (
-                <li key={addition} className="text-sm leading-6 text-neutral-600">
-                  - {addition}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-
-      <p className="mt-8 text-sm font-medium text-neutral-700">
-        {SCREEN_4.interactionPrompt}
-      </p>
-
-      <div className="mt-4">
-        <button type="button" onClick={onNext} className={primaryButton}>
-          {SCREEN_4.action}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// --- Screen 5 ----------------------------------------------------------
-
-function Screen5({
-  unplacedIds,
-  placements,
-  itemsById,
-  allPlaced,
-  showModelAnswer,
-  onPlace,
-  onUnplace,
-  onToggleModelAnswer,
-  onNext,
-}: {
-  unplacedIds: string[];
-  placements: Record<string, SortBucket | null>;
-  itemsById: Map<string, (typeof SORT_ITEMS)[number]>;
-  allPlaced: boolean;
-  showModelAnswer: boolean;
-  onPlace: (id: string, bucket: SortBucket) => void;
-  onUnplace: (id: string) => void;
-  onToggleModelAnswer: () => void;
-  onNext: () => void;
-}) {
-  const placedCount = SORT_ITEMS.length - unplacedIds.length;
-
-  return (
-    <div>
-      <h1 className="text-2xl font-semibold tracking-tight text-neutral-900">
-        {SCREEN_5.heading}
-      </h1>
-      <p className="mt-4 text-base leading-7 text-neutral-600">{SCREEN_5.body}</p>
-      <p className="mt-4 text-sm leading-6 text-neutral-500">{SCREEN_5.instructions}</p>
-
-      {unplacedIds.length > 0 && (
-        <div className="mt-8">
-          <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-            To place ({placedCount} of {SORT_ITEMS.length} placed)
-          </p>
-          <ul className="mt-3 grid gap-3">
-            {unplacedIds.map((id) => {
-              const item = itemsById.get(id)!;
+          <ul className="mt-2 grid gap-3">
+            {unplacedCardIds.map((id) => {
+              const card = cardsById.get(id)!;
               return (
-                <li
-                  key={id}
-                  className="border border-neutral-300 bg-white px-4 py-3"
-                >
-                  <p className="text-sm text-neutral-900">{item.text}</p>
+                <li key={id} className="border border-neutral-300 bg-white px-4 py-3">
+                  <p className="text-sm text-neutral-900">{card.text}</p>
                   <div className="mt-3 flex flex-wrap gap-2">
-                    {SORT_BUCKETS.map((bucket) => (
+                    {ADDENDUM_HEADINGS.map((heading) => (
                       <button
-                        key={bucket.key}
+                        key={heading.key}
                         type="button"
-                        onClick={() => onPlace(id, bucket.key)}
+                        onClick={() => onPlace(id, heading.key)}
                         className="border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-700 hover:border-neutral-900 hover:bg-neutral-900 hover:text-white"
                       >
-                        {bucket.label}
+                        {heading.key}. {heading.label}
                       </button>
                     ))}
                   </div>
@@ -398,34 +441,34 @@ function Screen5({
         </div>
       )}
 
-      <div className="mt-10 grid gap-6 sm:grid-cols-3">
-        {SORT_BUCKETS.map((bucket) => {
-          const placedIds = SORT_ITEMS.filter(
-            (item) => placements[item.id] === bucket.key
+      <div className="mt-6 grid gap-4">
+        {ADDENDUM_HEADINGS.map((heading) => {
+          const placed = PROMPT_CARDS.filter(
+            (card) => placements[card.id] === heading.key
           );
           return (
-            <div key={bucket.key} className="border border-neutral-200 bg-neutral-50 p-4">
+            <div key={heading.key} className="border border-neutral-200 bg-neutral-50 p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
-                {bucket.label}
+                {heading.key}. {heading.label}
               </p>
-              <ul className="mt-3 grid gap-2">
-                {placedIds.map((item) => (
+              <ul className="mt-2 grid gap-1.5">
+                {placed.map((card) => (
                   <li
-                    key={item.id}
+                    key={card.id}
                     className="border border-neutral-200 bg-white px-3 py-2 text-xs leading-5 text-neutral-800"
                   >
-                    {item.text}
+                    {card.text}
                     <button
                       type="button"
-                      onClick={() => onUnplace(item.id)}
+                      onClick={() => onUnplace(card.id)}
                       className="ml-2 text-neutral-400 hover:text-neutral-700"
-                      aria-label={`Move "${item.text}" back to the list`}
+                      aria-label={`Move "${card.text}" back to the list`}
                     >
                       &times;
                     </button>
                   </li>
                 ))}
-                {placedIds.length === 0 && (
+                {placed.length === 0 && (
                   <li className="text-xs text-neutral-400">Nothing placed here yet.</li>
                 )}
               </ul>
@@ -435,39 +478,39 @@ function Screen5({
       </div>
 
       {allPlaced && (
-        <div className="mt-10 border border-neutral-300 bg-neutral-50 px-6 py-5">
+        <div className="mt-6 border border-neutral-300 bg-neutral-50 px-6 py-5">
           <p className="text-base font-semibold text-neutral-900">
-            {SCREEN_5.feedbackHeading}
+            {ACTIVITY_2.feedback.heading}
           </p>
           <p className="mt-2 text-sm leading-6 text-neutral-600">
-            {SCREEN_5.feedbackBody}
+            {ACTIVITY_2.feedback.body}
           </p>
 
           <button
             type="button"
-            onClick={onToggleModelAnswer}
+            onClick={onToggleSuggested}
             className="mt-4 text-sm font-medium text-neutral-700 underline hover:text-neutral-900"
           >
-            {showModelAnswer
-              ? "Hide one possible categorisation"
-              : "For comparison: show one possible categorisation"}
+            {showSuggested
+              ? "Hide one suggested placement"
+              : "For comparison: show one suggested placement"}
           </button>
 
-          {showModelAnswer && (
+          {showSuggested && (
             <div className="mt-4 grid gap-4 sm:grid-cols-3">
-              {SORT_BUCKETS.map((bucket) => (
-                <div key={bucket.key}>
+              {ADDENDUM_HEADINGS.map((heading) => (
+                <div key={heading.key}>
                   <p className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
-                    {bucket.label}
+                    {heading.key}. {heading.label}
                   </p>
                   <ul className="mt-2 grid gap-1.5">
-                    {SORT_ITEMS.filter((item) => item.modelBucket === bucket.key).map(
-                      (item) => (
-                        <li key={item.id} className="text-xs leading-5 text-neutral-600">
-                          - {item.text}
-                        </li>
-                      )
-                    )}
+                    {PROMPT_CARDS.filter(
+                      (card) => card.suggestedHeading === heading.key
+                    ).map((card) => (
+                      <li key={card.id} className="text-xs leading-5 text-neutral-600">
+                        - {card.text}
+                      </li>
+                    ))}
                   </ul>
                 </div>
               ))}
@@ -475,94 +518,111 @@ function Screen5({
           )}
         </div>
       )}
-
-      <div className="mt-8">
-        <button
-          type="button"
-          onClick={onNext}
-          disabled={!allPlaced}
-          className={primaryButton}
-        >
-          {SCREEN_5.action}
-        </button>
-      </div>
     </div>
   );
 }
 
-// --- Screen 6 --------------------------------------------------------
+// --- Activity 3 working surface -----------------------------------------
 
-function Screen6({ onNext }: { onNext: () => void }) {
+function Activity3WorkingSurface({
+  selectedOption,
+  onSelect,
+  saved,
+}: {
+  selectedOption: number | null;
+  onSelect: (index: number) => void;
+  saved: boolean;
+}) {
+  const isExpectedSelected = selectedOption === DECISION_GATE_EXPECTED_INDEX;
+  const hasSelectedWrong = selectedOption !== null && !isExpectedSelected;
+
+  return (
+    <div>
+      <p className="text-sm leading-6 text-neutral-600">{ACTIVITY_3.openingInstruction}</p>
+
+      <p className="mt-6 text-sm font-medium text-neutral-700">{ACTIVITY_3.prompt}</p>
+
+      <div className="mt-3 grid gap-2">
+        {DECISION_GATE_OPTIONS.map((option, index) => (
+          <label
+            key={option}
+            className={
+              selectedOption === index
+                ? "flex cursor-pointer gap-3 border border-neutral-900 bg-neutral-50 px-4 py-3"
+                : "flex cursor-pointer gap-3 border border-neutral-200 bg-white px-4 py-3 hover:border-neutral-400"
+            }
+          >
+            <input
+              type="radio"
+              name="decision-gate"
+              checked={selectedOption === index}
+              onChange={() => onSelect(index)}
+              disabled={saved}
+              className="mt-1 h-4 w-4 shrink-0"
+            />
+            <span className="text-sm text-neutral-800">{option}</span>
+          </label>
+        ))}
+      </div>
+
+      {hasSelectedWrong && (
+        <p className="mt-4 text-sm text-neutral-500">
+          Consider whether this position is proportionate for a straightforward case -
+          review the other options.
+        </p>
+      )}
+
+      {isExpectedSelected && (
+        <div className="mt-4 border border-neutral-300 bg-neutral-50 px-5 py-4">
+          <p className="text-sm font-semibold text-neutral-900">
+            {ACTIVITY_3.feedback.heading}
+          </p>
+          <p className="mt-1 text-sm leading-6 text-neutral-600">
+            {ACTIVITY_3.feedback.body}
+          </p>
+
+          <div className="mt-4 border-t border-neutral-200 pt-4">
+            <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+              {ACTIVITY_3.savedNoteHeading}
+            </p>
+            <p className="mt-2 text-sm text-neutral-700">{ACTIVITY_3.savedNoteIntro}</p>
+            <p className="mt-2 text-sm leading-6 text-neutral-900">
+              {ACTIVITY_3.savedNoteBody}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {saved && (
+        <p className="mt-4 text-sm leading-6 text-neutral-600">
+          {ACTIVITY_3.savedConfirmation}
+        </p>
+      )}
+    </div>
+  );
+}
+
+// --- Module completion -----------------------------------------------
+
+function ModuleComplete({
+  addendumPlacements,
+  projectFile,
+}: {
+  addendumPlacements: Record<string, AddendumHeading | null>;
+  projectFile: ProjectFileState;
+}) {
   const downloadHref = `data:text/plain;charset=utf-8,${encodeURIComponent(
-    buildAddendumText()
+    buildWorkingToolText(addendumPlacements)
   )}`;
 
   return (
-    <div>
-      <h1 className="text-2xl font-semibold tracking-tight text-neutral-900">
-        {SCREEN_6.heading}
-      </h1>
-      <p className="mt-4 text-base leading-7 text-neutral-600">{SCREEN_6.body}</p>
-
-      <div className={`mt-8 ${cardClassName} font-mono text-[13px] leading-6`}>
-        <p className="text-neutral-500">PROJECT: {SCREEN_6.project}</p>
-        <p className="text-neutral-500">DATE: {SCREEN_6.dateLabel}</p>
-
-        <div className="mt-5 grid gap-5">
-          {SCREEN_6.sections.map((section) => (
-            <div key={section.heading}>
-              <p className="font-semibold text-neutral-900">{section.heading}</p>
-              <ul className="mt-1.5 grid gap-1">
-                {section.items.map((item) => (
-                  <li key={item} className="text-neutral-700">
-                    &bull; {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="mt-6 border border-neutral-200 bg-neutral-50 px-6 py-5">
-        <p className="text-sm font-semibold uppercase tracking-wide text-neutral-500">
-          {SCREEN_6.sidePanel.heading}
-        </p>
-        <p className="mt-1 text-base font-semibold text-neutral-900">
-          {SCREEN_6.sidePanel.body}
-        </p>
-        <p className="mt-2 text-sm leading-6 text-neutral-600">
-          {SCREEN_6.sidePanel.footer}
-        </p>
-      </div>
-
-      <div className="mt-8 flex flex-wrap gap-4">
-        <a
-          href={downloadHref}
-          download="heritage-considerations-addendum.txt"
-          className={secondaryButton}
-        >
-          {SCREEN_6.actions.download}
-        </a>
-        <button type="button" onClick={onNext} className={primaryButton}>
-          {SCREEN_6.actions.continue}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// --- Screen 7 --------------------------------------------------------
-
-function Screen7() {
-  return (
-    <div>
-      <h1 className="text-2xl font-semibold tracking-tight text-neutral-900">
-        {SCREEN_7.heading}
+    <div className="mx-auto max-w-3xl px-6 py-16">
+      <h1 className="text-3xl font-semibold tracking-tight text-neutral-900">
+        {MODULE_COMPLETE.heading}
       </h1>
 
       <div className="mt-6 grid gap-4">
-        {SCREEN_7.body.map((paragraph) => (
+        {MODULE_COMPLETE.body.map((paragraph) => (
           <p key={paragraph} className="text-base leading-7 text-neutral-600">
             {paragraph}
           </p>
@@ -571,45 +631,42 @@ function Screen7() {
 
       <div className={`mt-8 ${cardClassName}`}>
         <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-          Course progress
+          Completed project-file outputs
         </p>
-        <ul className="mt-3 grid gap-2">
-          {ARCHITECT_COURSE_CHAPTERS.map((chapter, index) => {
-            const status =
-              index === 0 ? "Complete" : index === 1 ? "Next" : "Later";
-            return (
-              <li
-                key={chapter.chapterNumber}
-                className="flex items-center justify-between gap-3 text-sm"
-              >
-                <span
-                  className={
-                    index === 0 ? "text-neutral-400 line-through" : "text-neutral-800"
-                  }
-                >
-                  {chapter.chapterNumber}. {chapter.title}
-                </span>
-                <span
-                  className={
-                    status === "Next"
-                      ? "font-medium text-neutral-900"
-                      : "text-neutral-400"
-                  }
-                >
-                  {status}
-                </span>
-              </li>
-            );
-          })}
+        <ul className="mt-3 grid gap-1.5">
+          {MODULE_COMPLETE.outputsCompleted.map((output) => (
+            <li key={output} className="text-sm text-neutral-900">
+              &#10003; {output}
+            </li>
+          ))}
         </ul>
+      </div>
+
+      <div id="project-file" className="mt-6">
+        <ProjectFilePanel projectFile={projectFile} />
+      </div>
+
+      <div className="mt-6 border border-neutral-200 bg-neutral-50 px-6 py-5">
+        <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+          {MODULE_COMPLETE.nextStageHeading}
+        </p>
+        <p className="mt-2 text-sm leading-6 text-neutral-600">
+          {MODULE_COMPLETE.nextStageBody}
+        </p>
+        <p className="mt-2 text-xs font-medium text-neutral-500">
+          {MODULE_COMPLETE.nextStageMinutes}
+        </p>
       </div>
 
       <div className="mt-8 flex flex-wrap gap-4">
         <button type="button" disabled className={primaryButton}>
-          {SCREEN_7.continueAction} (not yet built)
+          Continue to Module 2 (not yet built)
         </button>
+        <a href={downloadHref} download="module-1-working-tool.txt" className={secondaryButton}>
+          Download Module 1 working tool
+        </a>
         <Link href="/courses/heritage-design-risk-for-architects" className={secondaryButton}>
-          {SCREEN_7.returnAction}
+          Return to course overview
         </Link>
       </div>
     </div>

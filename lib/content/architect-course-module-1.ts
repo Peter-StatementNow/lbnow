@@ -1,72 +1,105 @@
 /**
  * "Receiving the brief" - Module 1 of Heritage Design Risk for
- * Architects. Built verbatim from
- * architect-course-module-1-wireframe.md (23 Sep 2026) - a working
- * prototype to test the shape/feel of the course, not a finished
- * product. See components/course/Module1Experience.tsx for the
- * screen-by-screen build this content feeds.
+ * Architects. Rebuilt (23 Sep 2026) from
+ * architect-course-module-1-wireframe-v2.md around a reusable
+ * learning-screen template (course bar, stage/activity header, why-now,
+ * project file, evidence tray, working surface, save/continue) instead
+ * of one-off screens - see components/course/Module1Experience.tsx and
+ * components/course/LearningScreenShell.tsx.
  *
- * Content-authenticity note carried over from the wireframe: the
- * address, client, email and project facts are a composite based on
- * recurring project patterns, not an identifiable commission.
+ * Explicitly a content/interaction prototype, not a finished product:
+ * state lives only in the browser tab for this session (no accounts,
+ * no backend) - see this file's own "illustrative" notes below for
+ * what's a placeholder until the full course exists.
  */
 
-export const MODULE_1_STAGES = [
-  "Receiving the brief",
-  "Understanding the existing building",
-  "Developing the design",
-  "Managing client, cost and programme",
-  "Gaining consent",
-  "Detailing and delivering work",
-  "Handover and the next change",
-] as const;
+export const MODULE_TITLE = "Heritage Considerations in Practice";
 
-export const MODULE_META = {
-  courseLabel: "Heritage Design Risk for Architects",
-  moduleTitle: "Receiving the brief",
-  timeEstimate: "About 7 minutes",
-  outputPromise: "You will leave with a Heritage Considerations Addendum to a normal project brief.",
+/**
+ * Illustrative only - there's no real total yet since only this one
+ * module (of an eventual much longer course) has been built. Chosen to
+ * roughly match the wireframe's own worked example ("8% complete ·
+ * about 51 min left"). Replace once the full curriculum's module count
+ * and time estimates are set.
+ */
+export const TOTAL_COURSE_MINUTES = 56;
+
+export const STAGE_LABEL = "1. Receiving the brief";
+
+export const PROJECT_CONTEXT = {
+  project: "42 Church Street",
+  projectType: "Alterations and extension to an existing house",
+  clientAmbition:
+    "More usable family space, improved energy performance and a clearer connection to the garden",
+  programme:
+    "Initial options in four weeks; target application this year; hoped-for start on site next spring",
+  budget: "To be confirmed after feasibility",
 };
 
-export const SCREEN_1 = {
-  heading: "Receiving the brief",
+// --- Project file (the persistent, accumulating record) ----------------
+
+export type ProjectFileRow = { label: string; status: string; emphasis?: boolean };
+export type ProjectFileState = {
+  briefRows: ProjectFileRow[];
+  outputs: ProjectFileRow[];
+};
+
+export const PROJECT_FILE_INITIAL: ProjectFileState = {
+  briefRows: [
+    { label: "Client objectives", status: "Recorded" },
+    { label: "Budget and programme", status: "Initial only" },
+    { label: "Existing-building information", status: "Partial" },
+    { label: "Heritage considerations", status: "Not yet added" },
+  ],
+  outputs: [
+    { label: "Heritage Considerations Addendum", status: "Not started" },
+    { label: "Pre-design decision gate", status: "Not started" },
+  ],
+};
+
+export const PROJECT_FILE_AFTER_ACTIVITY_1: ProjectFileState = {
+  briefRows: [
+    { label: "Client objectives", status: "Recorded" },
+    { label: "Budget and programme", status: "Initial only" },
+    {
+      label: "Existing-building information",
+      status: "Partial - baseline to establish",
+      emphasis: true,
+    },
+    { label: "Heritage considerations", status: "To add", emphasis: true },
+    { label: "Planning / consent route", status: "To establish", emphasis: true },
+  ],
+  outputs: PROJECT_FILE_INITIAL.outputs,
+};
+
+export const PROJECT_FILE_AFTER_ACTIVITY_2: ProjectFileState = {
+  briefRows: PROJECT_FILE_AFTER_ACTIVITY_1.briefRows.map((row) =>
+    row.label === "Heritage considerations"
+      ? { label: row.label, status: "Addendum v1 saved", emphasis: true }
+      : row
+  ),
+  outputs: [
+    { label: "Heritage Considerations Addendum", status: "Version 1", emphasis: true },
+    { label: "Pre-design decision gate", status: "Not started" },
+  ],
+};
+
+export const PROJECT_FILE_AFTER_ACTIVITY_3: ProjectFileState = {
+  briefRows: PROJECT_FILE_AFTER_ACTIVITY_2.briefRows,
+  outputs: [
+    { label: "Heritage Considerations Addendum", status: "Version 1" },
+    { label: "Pre-design decision gate", status: "Agreed", emphasis: true },
+  ],
+};
+
+// --- Evidence -----------------------------------------------------------
+
+export type EvidenceItem = { id: string; label: string; body: string[] };
+
+export const CLIENT_ENQUIRY: EvidenceItem = {
+  id: "client-enquiry",
+  label: "Client enquiry",
   body: [
-    "You already know how to establish a client's objectives, scope, budget, programme and appetite for risk.",
-    "Where heritage is involved, the brief is not different. It has additional considerations: the building or place affected, what is already known, and what may need establishing before assumptions become commitments.",
-  ],
-  primaryAction: "Open a project brief",
-};
-
-export const SCREEN_2 = {
-  heading: "A new instruction",
-  body: "The client has asked for an initial meeting and wants to move quickly. The normal briefing information is already taking shape.",
-  projectFile: {
-    project: "42 Church Street",
-    type: "Alterations and extension to an existing house",
-    clientAmbition:
-      "More family space, improved energy performance and a clearer connection to the garden",
-    programme: "Initial options in four weeks; aim to submit an application this year",
-    budget: "To be confirmed after feasibility",
-  },
-  availableItems: [
-    { label: "Client email", interactive: true },
-    { label: "Estate-agent particulars", interactive: false },
-    { label: "Existing plan/sketch", interactive: false },
-    { label: "Site photographs", interactive: false },
-    { label: "Initial programme note", interactive: false },
-  ],
-  briefStatus: [
-    { item: "Client objectives", status: "Recorded" },
-    { item: "Budget and programme", status: "Initial only" },
-    { item: "Existing information", status: "Partial" },
-    { item: "Planning context", status: "To establish" },
-    { item: "Heritage considerations", status: "To establish" },
-  ],
-};
-
-export const SCREEN_3 = {
-  documentHeader: "Client email - extract",
-  email: [
     "Hello,",
     "We are hoping to buy 42 Church Street and would like an initial view on whether we can make it work for our family. The house needs more usable space and we would like a rear extension, new windows where necessary and some internal changes downstairs.",
     "The agent has said that the property is not listed, so we do not think there should be anything unusual. It is in an attractive older part of the town, but we assume the main issue will be getting planning permission for the extension.",
@@ -74,180 +107,216 @@ export const SCREEN_3 = {
     "Many thanks,",
     "A prospective client",
   ],
-  prompt:
-    "Nothing in this email changes the ordinary briefing conversation. But are there additional heritage considerations that could affect what you record, check or explain at this point?",
-  action: "Review the initial heritage context",
 };
 
-export const SCREEN_4 = {
-  heading: "The property is not listed. Heritage may still affect the project.",
-  body: "A project does not need to alter a listed building for heritage to affect its route. At instruction, the point is not to reach a conclusion. It is to identify whether heritage adds information, design, consent or programme considerations to the normal brief.",
-  cards: [
+export const EXISTING_PLAN: EvidenceItem = {
+  id: "existing-plan",
+  label: "Existing plan",
+  body: ["A simple existing floor plan sketch, supplied by the client's estate agent."],
+};
+
+export const SITE_PHOTOGRAPHS: EvidenceItem = {
+  id: "site-photographs",
+  label: "Site photographs",
+  body: [
+    "A handful of exterior photographs of the house, garden and rear outbuilding, taken by the client on a viewing.",
+  ],
+};
+
+export const INITIAL_PROGRAMME_NOTE: EvidenceItem = {
+  id: "initial-programme-note",
+  label: "Initial programme note",
+  body: [PROJECT_CONTEXT.programme],
+};
+
+export const LOCATION_CONTEXT_NOTE: EvidenceItem = {
+  id: "location-context-note",
+  label: "Initial location/context note",
+  body: [
+    "The house is not identified as nationally listed in the initial information.",
+    "It lies in an older town-centre area.",
+    "A listed former school is shown on mapping nearby.",
+    "The site boundary includes a rear outbuilding and boundary wall.",
+    "No conservation-area, Article 4, local-listing, consent-history or local-validation check has yet been recorded.",
+  ],
+};
+
+// --- Activity 1: Set up the project brief -------------------------------
+
+export const ACTIVITY_1 = {
+  activityLabel: "Set up the project brief",
+  activityIndexLabel: "Activity 1 of 3 · about 2 min",
+  whyNow:
+    "Before scope and programme harden, make the additional heritage considerations visible in the normal brief.",
+  openingInstruction:
+    "The client has supplied the usual early information for an initial briefing conversation. Review the project material and identify the parts of the brief that cannot yet be treated as settled.",
+  evidence: [CLIENT_ENQUIRY, EXISTING_PLAN, SITE_PHOTOGRAPHS, INITIAL_PROGRAMME_NOTE],
+  briefStatusRows: [
     {
-      label: "Card A - The asset itself",
-      heading: "Where the work affects a heritage asset",
-      body: "Record whether the building or any structure directly affected may be listed or otherwise designated. Note what is known about historic fabric, prior alteration and consent history - and what is not.",
-      additionsHeading: "Typical additions to the brief",
-      additions: [
-        "Designation and affected building/structure",
-        "Known historic fabric and significance",
-        "Existing alterations and available approval records",
-        "Potential listed building consent implications",
-      ],
+      label: "Client objectives",
+      detail:
+        "More family space, improved energy performance and better connection to garden.",
+      status: "Recorded",
+      selectable: false,
     },
     {
-      label: "Card B - The building and its context",
-      heading: "Where the proposal may affect heritage beyond the building",
-      body: "The building may be unlisted but lie in a conservation area, affect the setting of a listed building, relate to a locally listed asset, or be subject to other heritage-related controls.",
-      additionsHeading: "Typical additions to the brief",
-      additions: [
-        "Conservation-area status and relevant character/appraisal material",
-        "Article 4 directions and other local controls",
-        "Nearby heritage assets and potential setting considerations",
-        "Local listing, historic landscape or archaeological context where relevant",
-        "Local validation requirements likely to affect the application route",
-      ],
+      label: "Budget and programme",
+      detail: "Budget to be confirmed after feasibility. Initial options requested in four weeks.",
+      status: "Initial only",
+      selectable: false,
+    },
+    {
+      label: "Existing-building information",
+      detail: "Plan, photographs and agent information available.",
+      status: "Partial",
+      selectable: true,
+    },
+    {
+      label: "Planning / consent route",
+      detail: "Client assumes a standard planning route.",
+      status: "To establish",
+      selectable: true,
+    },
+    {
+      label: "Heritage considerations",
+      detail: "No heritage information recorded.",
+      status: "Add now",
+      selectable: true,
     },
   ],
-  interactionPrompt: "Add the considerations that are relevant to this project brief.",
-  action: "Build the Heritage Considerations Addendum",
+  prompt: "Which brief lines should remain open before the project is treated as a straightforward design-and-planning commission?",
+  feedback: {
+    heading: "Correct.",
+    body: "The client's objectives can be recorded, but the information needed to confirm scope, programme and project route is incomplete. At this point, no conclusion is required about acceptability, consent or the exact level of heritage work. The next professional task is to record what heritage may add to the brief and what needs establishing.",
+  },
+  saveLabel: "Save initial brief status",
+  savedConfirmation:
+    "Initial brief status saved. You have identified the project lines that cannot yet be treated as settled.",
+  forwardCue: "Next, add the heritage considerations that need to sit alongside the normal brief.",
 };
 
-export type SortBucket = "known" | "toEstablish" | "underReview";
+// --- Activity 2: Add heritage considerations ----------------------------
 
-export const SORT_BUCKETS: { key: SortBucket; label: string }[] = [
-  { key: "known", label: "Known now" },
-  { key: "toEstablish", label: "To establish before the brief is fixed" },
-  { key: "underReview", label: "Keep under review as the project develops" },
+export type AddendumHeading = "A" | "B" | "C";
+
+export const ADDENDUM_HEADINGS: { key: AddendumHeading; label: string }[] = [
+  { key: "A", label: "Establish before the brief is fixed" },
+  { key: "B", label: "Allow for in scope, programme or appointments" },
+  { key: "C", label: "Keep under review as the proposal develops" },
 ];
 
-export type SortItem = {
-  id: string;
-  text: string;
-  modelBucket: SortBucket;
-};
+export type PromptCard = { id: string; text: string; suggestedHeading: AddendumHeading };
 
-/**
- * Deliberately un-grouped here (see Module1Experience.tsx, which
- * shuffles them for display) - the learner sorts these into the three
- * buckets above. modelBucket is only revealed after the learner has
- * placed everything, as "one possible categorisation" - the wireframe
- * is explicit that more than one placement can be reasonable.
- */
-export const SORT_ITEMS: SortItem[] = [
-  { id: "not-listed", text: "Existing house is not nationally listed", modelBucket: "known" },
-  {
-    id: "client-wants",
-    text: "Client wants rear extension, window changes and internal alterations",
-    modelBucket: "known",
-  },
-  {
-    id: "standard-route",
-    text: "Client anticipates a standard planning route",
-    modelBucket: "known",
-  },
-  { id: "town-centre", text: "Older town-centre location", modelBucket: "known" },
+export const PROMPT_CARDS: PromptCard[] = [
   {
     id: "conservation-area",
-    text: "Whether the property is in a conservation area",
-    modelBucket: "toEstablish",
+    text: "Conservation-area status and relevant character/appraisal material.",
+    suggestedHeading: "A",
   },
   {
     id: "article-4",
-    text: "Whether Article 4 directions affect the proposed works",
-    modelBucket: "toEstablish",
+    text: "Article 4 direction coverage and the types of work affected.",
+    suggestedHeading: "A",
   },
   {
-    id: "validation",
-    text: "Local validation requirements and heritage-information expectations",
-    modelBucket: "toEstablish",
+    id: "nearby-assets",
+    text: "Nearby designated or locally listed assets and possible setting considerations.",
+    suggestedHeading: "A",
   },
   {
-    id: "appraisal",
-    text: "Relevant local appraisal/design guidance",
-    modelBucket: "toEstablish",
+    id: "outbuilding",
+    text: "Whether the rear outbuilding or boundary wall requires further heritage/context investigation.",
+    suggestedHeading: "A",
   },
   {
-    id: "character",
-    text: "How the emerging proposal affects character and appearance",
-    modelBucket: "underReview",
+    id: "existing-changes",
+    text: "Existing changes, historic fabric and available consent/approval records.",
+    suggestedHeading: "A",
   },
   {
-    id: "setting",
-    text: "Whether nearby heritage assets could be affected through setting",
-    modelBucket: "underReview",
+    id: "local-validation",
+    text: "Local validation requirements and likely heritage-information expectations.",
+    suggestedHeading: "A",
   },
   {
-    id: "fabric",
-    text: "Whether existing changes or retained fabric need further investigation",
-    modelBucket: "underReview",
+    id: "specialist-input",
+    text: "Whether additional research, survey, assessment or specialist input is proportionate before concept direction is fixed.",
+    suggestedHeading: "B",
   },
   {
-    id: "adjustment",
-    text: "Whether consent route, scope, programme or budget needs adjustment",
-    modelBucket: "underReview",
+    id: "route-adjustment",
+    text: "Whether the consent route, scope, programme or budget needs adjustment as the baseline becomes clearer.",
+    suggestedHeading: "B",
+  },
+  {
+    id: "emerging-effects",
+    text: "Effects of the emerging proposal on character, appearance, fabric, setting and any relevant asset.",
+    suggestedHeading: "C",
   },
 ];
 
-export const SCREEN_5 = {
-  heading: "Add the heritage considerations",
-  body: 'The aim is not to diagnose the project from a map or a listing entry. It is to make the additional considerations visible before they disappear into an assumed "straightforward" route.',
-  instructions:
-    "Place each item where it matters most. More than one answer may be appropriate. The purpose is not a perfect answer; it is a usable brief that makes uncertainty visible.",
-  feedbackHeading: "The heritage layer is now visible in the brief.",
-  feedbackBody:
-    "At this stage, the project does not need a conclusion about acceptability or consent. It needs a proportionate plan for establishing the information that could affect scope, programme, design development and client expectation.",
-  action: "View the completed addendum",
-};
-
-export const SCREEN_6 = {
-  heading: "Heritage Considerations Addendum",
-  body: "This is not a separate heritage brief. It is an addition to the normal project brief.",
-  project: "42 Church Street",
-  dateLabel: "[course example]",
-  sections: [
-    {
-      heading: "1. Heritage context to check",
-      items: [
-        "Conservation-area status and relevant appraisal/management material.",
-        "Article 4 direction coverage and the specific classes/works affected.",
-        "Nearby designated or locally listed heritage assets and any potential setting consideration.",
-        "Other relevant designations or locally held heritage information where proportionate.",
-      ],
-    },
-    {
-      heading: "2. Existing building and available information",
-      items: [
-        "Existing plans, photographs and client/agent information reviewed.",
-        "Existing alterations, including windows and internal changes, to be recorded as part of baseline understanding.",
-        "Available planning/consent history and relevant local records to be checked.",
-        "Known facts, client assumptions and missing evidence to be distinguished.",
-      ],
-    },
-    {
-      heading: "3. Brief, appointments and decision gates",
-      items: [
-        "Confirm whether heritage research, assessment, survey or other specialist input is required before the concept direction is fixed.",
-        "Allow for any additional consent/information requirements in initial programme and fee discussions.",
-        "Explain to client that a planning route, scope, cost and timing may need adjustment when the heritage baseline is understood.",
-        "Record a decision point before client approval of a preferred design direction.",
-      ],
-    },
+export const ACTIVITY_2 = {
+  activityLabel: "Add heritage considerations",
+  activityIndexLabel: "Activity 2 of 3 · about 3 min",
+  whyNow:
+    "Record the additional heritage considerations that may affect information, scope, programme or design decisions later.",
+  openingInstruction: [
+    "A heritage consideration can arise because the project affects an asset directly, or because it may affect an asset, historic place or local control beyond the building itself.",
+    "Use the available information to create a concise addendum to the brief. Do not attempt to decide what the proposal can achieve yet.",
   ],
-  sidePanel: {
-    heading: "The brief has not become more complicated.",
-    body: "It is more complete.",
-    footer: "The next task is to understand the existing building and place well enough to develop options responsibly.",
+  evidence: [CLIENT_ENQUIRY, SITE_PHOTOGRAPHS, LOCATION_CONTEXT_NOTE, INITIAL_PROGRAMME_NOTE],
+  feedback: {
+    heading: "The addendum does not decide the scheme.",
+    body: "It makes the additional heritage considerations visible in the same place as the client objectives, programme and other project constraints. Some of these items may prove not to affect the final proposal. Their value at this stage is that the team does not treat uncertainty as an answer.",
   },
-  actions: { download: "Download the addendum", continue: "Continue to the next stage" },
+  saveLabel: "Save Heritage Considerations Addendum",
+  savedConfirmation: "Heritage Considerations Addendum saved to the project file.",
+  forwardCue: "You have identified what needs establishing. Now agree the point at which this information must inform the project.",
 };
 
-export const SCREEN_7 = {
-  heading: "Before design, establish the baseline",
+// --- Activity 3: Agree the pre-design decision gate ---------------------
+
+export const DECISION_GATE_OPTIONS = [
+  "Start option design immediately. Heritage information can be considered when preparing the application.",
+  "Commission a full heritage statement before any further client or design discussion.",
+  "Establish the heritage baseline and likely information/consent route proportionately before the client treats a preferred concept, programme or consent route as settled.",
+  "Wait for the local planning authority to identify heritage requirements after a planning application is submitted.",
+] as const;
+
+export const DECISION_GATE_EXPECTED_INDEX = 2;
+
+export const ACTIVITY_3 = {
+  activityLabel: "Agree the pre-design decision gate",
+  activityIndexLabel: "Activity 3 of 3 · about 2 min",
+  whyNow:
+    "Set the point at which the additional heritage information must inform the project before design assumptions harden.",
+  openingInstruction:
+    "The client wants initial options within four weeks and expects a conventional planning route. The project file now records heritage considerations, but the team still needs to decide when those considerations must influence the next step.",
+  prompt: "Which position should be recorded before the project moves into a preferred concept direction?",
+  feedback: {
+    heading: "Correct.",
+    body: "This is a decision gate, not a prescription for a single report or consultant appointment. The appropriate next step depends on the building, place, proposed change and evidence already available. The principle is that the project should establish enough of the heritage baseline and likely route to make the next design and client decisions responsibly.",
+  },
+  savedNoteHeading: "Pre-design decision gate",
+  savedNoteIntro: "Before a preferred concept, project programme or consent route is treated as settled:",
+  savedNoteBody:
+    "Establish the heritage baseline and likely information/consent route proportionately, using further research, survey, assessment or specialist input where required by the project.",
+  saveLabel: "Save decision gate",
+  savedConfirmation:
+    "Decision gate saved. The project now has a clear reason to move from initial briefing to understanding the building and place.",
+};
+
+// --- Module completion ---------------------------------------------------
+
+export const MODULE_COMPLETE = {
+  heading: "Receiving the brief complete",
   body: [
-    "A normal brief gives the project direction. Heritage considerations help identify what must be understood before that direction becomes difficult or expensive to change.",
-    "In the next stage, you will look at the information that turns an initial heritage flag into a proportionate baseline: the building, its history, its fabric, its setting and the project context.",
+    "The ordinary brief has not become a separate heritage process. It now records the additional considerations that may affect how the project proceeds.",
+    "You have identified what needs establishing before design assumptions, programme and client expectations become fixed.",
   ],
-  continueAction: "Continue: Understanding the existing building",
-  returnAction: "Return to course overview",
+  outputsCompleted: ["Heritage Considerations Addendum - version 1", "Pre-design decision gate"],
+  nextStageHeading: "Next: Understanding the existing building and place",
+  nextStageBody:
+    "The project file identifies what needs establishing. The next stage turns these initial flags into a proportionate baseline: existing fabric, history, significance, setting and project context.",
+  nextStageMinutes: "About 9 minutes",
 };
