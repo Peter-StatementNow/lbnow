@@ -11,6 +11,7 @@ import {
   ACTIVITY_2,
   ACTIVITY_3,
   ADDENDUM_HEADINGS,
+  COURSE_NAME,
   DECISION_GATE_EXPECTED_INDEX,
   DECISION_GATE_OPTIONS,
   HERITAGE_RECORD_AFTER_ACTIVITY_1,
@@ -44,6 +45,14 @@ function FeedbackNote({ text }: { text: string }) {
     <div className="border border-neutral-300 bg-neutral-50 px-5 py-4">
       <p className="text-sm leading-6 text-neutral-700">{text}</p>
     </div>
+  );
+}
+
+function BackButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick} className={secondaryButton}>
+      &larr; Back
+    </button>
   );
 }
 
@@ -142,6 +151,7 @@ export function Module1Experience() {
   }
 
   const shellCommon = {
+    courseName: COURSE_NAME,
     stageLabel: STAGE_LABEL,
     percentComplete,
     minutesLeft,
@@ -193,7 +203,11 @@ export function Module1Experience() {
             )
           }
         >
-          <Activity1Content prediction={a1Prediction} onPredict={setA1Prediction} />
+          <Activity1Content
+            prediction={a1Prediction}
+            onPredict={setA1Prediction}
+            saved={a1Saved}
+          />
         </LearningScreenShell>
       )}
 
@@ -210,28 +224,31 @@ export function Module1Experience() {
             />
           }
           footer={
-            a2Saved ? (
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <p className="text-sm font-medium text-neutral-900">
-                  &#10003; Saved to Heritage Record
-                </p>
-                <button type="button" onClick={() => goTo(3)} className={primaryButton}>
-                  Next activity &rarr;
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <BackButton onClick={() => goTo(1)} />
+              {a2Saved ? (
+                <div className="flex flex-wrap items-center gap-4">
+                  <p className="text-sm font-medium text-neutral-900">
+                    &#10003; Saved to Heritage Record
+                  </p>
+                  <button type="button" onClick={() => goTo(3)} className={primaryButton}>
+                    Next activity &rarr;
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setHeritageRecord(HERITAGE_RECORD_AFTER_ACTIVITY_2);
+                    setA2Saved(true);
+                  }}
+                  disabled={!allCardsPlaced}
+                  className={primaryButton}
+                >
+                  {ACTIVITY_2.saveLabel}
                 </button>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  setHeritageRecord(HERITAGE_RECORD_AFTER_ACTIVITY_2);
-                  setA2Saved(true);
-                }}
-                disabled={!allCardsPlaced}
-                className={primaryButton}
-              >
-                {ACTIVITY_2.saveLabel}
-              </button>
-            )
+              )}
+            </div>
           }
         >
           <Activity2Content
@@ -244,6 +261,7 @@ export function Module1Experience() {
             onPlace={placeCard}
             onUnplace={unplaceCard}
             onToggleCompare={() => setA2ShowCompare((v) => !v)}
+            saved={a2Saved}
           />
         </LearningScreenShell>
       )}
@@ -265,35 +283,42 @@ export function Module1Experience() {
             />
           }
           footer={
-            a3Saved ? (
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <p className="text-sm font-medium text-neutral-900">
-                  &#10003; Saved to Heritage Record
-                </p>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <BackButton onClick={() => goTo(2)} />
+              {a3Saved ? (
+                <div className="flex flex-wrap items-center gap-4">
+                  <p className="text-sm font-medium text-neutral-900">
+                    &#10003; Saved to Heritage Record
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => goTo("complete")}
+                    className={primaryButton}
+                  >
+                    Finish Module 1 &rarr;
+                  </button>
+                </div>
+              ) : (
                 <button
                   type="button"
-                  onClick={() => goTo("complete")}
+                  onClick={() => {
+                    setHeritageRecord(HERITAGE_RECORD_AFTER_ACTIVITY_3);
+                    setA3Saved(true);
+                  }}
+                  disabled={a3Prediction !== DECISION_GATE_EXPECTED_INDEX}
                   className={primaryButton}
                 >
-                  Finish Module 1 &rarr;
+                  {ACTIVITY_3.saveLabel}
                 </button>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  setHeritageRecord(HERITAGE_RECORD_AFTER_ACTIVITY_3);
-                  setA3Saved(true);
-                }}
-                disabled={a3Prediction !== DECISION_GATE_EXPECTED_INDEX}
-                className={primaryButton}
-              >
-                {ACTIVITY_3.saveLabel}
-              </button>
-            )
+              )}
+            </div>
           }
         >
-          <Activity3Content prediction={a3Prediction} onPredict={setA3Prediction} />
+          <Activity3Content
+            prediction={a3Prediction}
+            onPredict={setA3Prediction}
+            saved={a3Saved}
+          />
         </LearningScreenShell>
       )}
     </>
@@ -305,9 +330,11 @@ export function Module1Experience() {
 function Activity1Content({
   prediction,
   onPredict,
+  saved,
 }: {
   prediction: number | null;
   onPredict: (index: number) => void;
+  saved: boolean;
 }) {
   const hasAnswered = prediction !== null;
 
@@ -318,6 +345,7 @@ function Activity1Content({
         options={ACTIVITY_1.predictionOptions}
         selectedIndex={prediction}
         onSelect={onPredict}
+        disabled={saved}
       />
 
       {hasAnswered && (
@@ -385,6 +413,7 @@ function Activity2Content({
   onPlace,
   onUnplace,
   onToggleCompare,
+  saved,
 }: {
   prediction: number | null;
   onPredict: (index: number) => void;
@@ -395,6 +424,7 @@ function Activity2Content({
   onPlace: (id: string, heading: AddendumHeading) => void;
   onUnplace: (id: string) => void;
   onToggleCompare: () => void;
+  saved: boolean;
 }) {
   const cardsById = useMemo(() => new Map(PROMPT_CARDS.map((c) => [c.id, c])), []);
   const hasAnswered = prediction !== null;
@@ -409,6 +439,7 @@ function Activity2Content({
         options={ACTIVITY_2.predictionOptions}
         selectedIndex={prediction}
         onSelect={onPredict}
+        disabled={saved}
       />
 
       {hasAnswered && (
@@ -479,14 +510,16 @@ function Activity2Content({
                           className="border border-neutral-200 bg-white px-3 py-2 text-xs leading-5 text-neutral-800"
                         >
                           {card.text}
-                          <button
-                            type="button"
-                            onClick={() => onUnplace(card.id)}
-                            className="ml-2 text-neutral-400 hover:text-neutral-700"
-                            aria-label={`Move "${card.text}" back to the list`}
-                          >
-                            &times;
-                          </button>
+                          {!saved && (
+                            <button
+                              type="button"
+                              onClick={() => onUnplace(card.id)}
+                              className="ml-2 text-neutral-400 hover:text-neutral-700"
+                              aria-label={`Move "${card.text}" back to the list`}
+                            >
+                              &times;
+                            </button>
+                          )}
                         </li>
                       ))}
                       {placed.length === 0 && (
@@ -543,9 +576,11 @@ function Activity2Content({
 function Activity3Content({
   prediction,
   onPredict,
+  saved,
 }: {
   prediction: number | null;
   onPredict: (index: number) => void;
+  saved: boolean;
 }) {
   const hasAnswered = prediction !== null;
   const isCorrect = prediction === DECISION_GATE_EXPECTED_INDEX;
@@ -557,6 +592,7 @@ function Activity3Content({
         options={DECISION_GATE_OPTIONS}
         selectedIndex={prediction}
         onSelect={onPredict}
+        disabled={saved}
       />
 
       {hasAnswered && (

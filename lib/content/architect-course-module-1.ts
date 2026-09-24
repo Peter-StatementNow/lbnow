@@ -14,6 +14,13 @@
  * through Module 1 only; do not extend it into later modules yet.
  */
 
+/**
+ * Short form of the course title, used consistently across the
+ * course-taking chrome (not the longer marketing title used on the
+ * catalogue/detail pages).
+ */
+export const COURSE_NAME = "Heritage Design Risk for Architects";
+
 /** Persists across the whole chapter - all three activities share it. */
 export const STAGE_LABEL = "1. Receiving the brief";
 

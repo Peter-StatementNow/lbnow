@@ -19,6 +19,7 @@ import { HeritageRecordPanel } from "@/components/course/HeritageRecordPanel";
  * tested.
  */
 export function LearningScreenShell({
+  courseName,
   stageLabel,
   percentComplete,
   minutesLeft,
@@ -29,6 +30,7 @@ export function LearningScreenShell({
   children,
   footer,
 }: {
+  courseName: string;
   stageLabel: string;
   percentComplete: number;
   minutesLeft: number;
@@ -41,12 +43,12 @@ export function LearningScreenShell({
 }) {
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
-      {/* Course bar */}
+      {/* Course bar - percent/time is a course-level measure, so it
+          pairs with the course name; the chapter label (fixed for the
+          whole chapter) sits below the progress bar. */}
       <div>
         <div className="flex items-baseline justify-between gap-3 text-xs text-neutral-500">
-          <span className="font-medium uppercase tracking-wide text-neutral-700">
-            {stageLabel}
-          </span>
+          <span className="font-medium text-neutral-700">{courseName}</span>
           <span>
             {percentComplete}% complete &middot; about {minutesLeft} min left
           </span>
@@ -57,6 +59,9 @@ export function LearningScreenShell({
             style={{ width: `${percentComplete}%` }}
           />
         </div>
+        <p className="mt-2 text-xs font-medium uppercase tracking-wide text-neutral-500">
+          {stageLabel}
+        </p>
       </div>
 
       {/* Project moment - read only, updates between activities */}
