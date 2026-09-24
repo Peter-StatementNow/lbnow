@@ -5,7 +5,7 @@ import Link from "next/link";
 import { LearningScreenShell } from "@/components/course/LearningScreenShell";
 import { HeritageRecordPanel } from "@/components/course/HeritageRecordPanel";
 import { PredictionBlock } from "@/components/course/PredictionBlock";
-import { EvidenceTray } from "@/components/course/EvidenceTray";
+import { ProjectMaterialPanel } from "@/components/course/ProjectMaterialPanel";
 import {
   ACTIVITY_1,
   ACTIVITY_2,
@@ -37,6 +37,7 @@ const primaryButton =
 const secondaryButton =
   "inline-flex items-center justify-center border border-neutral-300 px-6 py-3 text-sm font-medium text-neutral-800 hover:border-neutral-500";
 const cardClassName = "border border-neutral-200 bg-white p-6";
+const UNLOCK_HINT = "Available after you record your initial view";
 
 function FeedbackNote({ text }: { text: string }) {
   return (
@@ -160,6 +161,13 @@ export function Module1Experience() {
           {...shellCommon}
           projectMoment={ACTIVITY_1.projectMoment}
           task={ACTIVITY_1.task}
+          projectMaterial={
+            <ProjectMaterialPanel
+              items={ACTIVITY_1.evidence}
+              unlocked={a1Prediction !== null}
+              unlockHint={UNLOCK_HINT}
+            />
+          }
           footer={
             a1Saved ? (
               <div className="flex flex-wrap items-center justify-between gap-4">
@@ -194,6 +202,13 @@ export function Module1Experience() {
           {...shellCommon}
           projectMoment={ACTIVITY_2.projectMoment}
           task={ACTIVITY_2.task}
+          projectMaterial={
+            <ProjectMaterialPanel
+              items={[initialHeritagePositionEvidence(heritageRecord), ...ACTIVITY_2.evidence]}
+              unlocked={a2Prediction !== null}
+              unlockHint={UNLOCK_HINT}
+            />
+          }
           footer={
             a2Saved ? (
               <div className="flex flex-wrap items-center justify-between gap-4">
@@ -222,7 +237,6 @@ export function Module1Experience() {
           <Activity2Content
             prediction={a2Prediction}
             onPredict={setA2Prediction}
-            heritageRecord={heritageRecord}
             unplacedCardIds={unplacedCardIds}
             placements={addendumPlacements}
             allPlaced={allCardsPlaced}
@@ -239,6 +253,17 @@ export function Module1Experience() {
           {...shellCommon}
           projectMoment={ACTIVITY_3.projectMoment}
           task={ACTIVITY_3.task}
+          projectMaterial={
+            <ProjectMaterialPanel
+              items={[
+                addendumEvidence(buildWorkingToolText(addendumPlacements, heritageRecord)),
+                ...ACTIVITY_3.evidence,
+                initialHeritagePositionEvidence(heritageRecord),
+              ]}
+              unlocked={a3Prediction === DECISION_GATE_EXPECTED_INDEX}
+              unlockHint="Available once your initial view reflects the heritage decision point"
+            />
+          }
           footer={
             a3Saved ? (
               <div className="flex flex-wrap items-center justify-between gap-4">
@@ -268,12 +293,7 @@ export function Module1Experience() {
             )
           }
         >
-          <Activity3Content
-            prediction={a3Prediction}
-            onPredict={setA3Prediction}
-            heritageRecord={heritageRecord}
-            addendumPlacements={addendumPlacements}
-          />
+          <Activity3Content prediction={a3Prediction} onPredict={setA3Prediction} />
         </LearningScreenShell>
       )}
     </>
@@ -303,8 +323,6 @@ function Activity1Content({
       {hasAnswered && (
         <>
           <FeedbackNote text={ACTIVITY_1.predictionFeedback} />
-
-          <EvidenceTray items={ACTIVITY_1.evidence} />
 
           <div className={cardClassName}>
             <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
@@ -360,7 +378,6 @@ function Activity1Content({
 function Activity2Content({
   prediction,
   onPredict,
-  heritageRecord,
   unplacedCardIds,
   placements,
   allPlaced,
@@ -371,7 +388,6 @@ function Activity2Content({
 }: {
   prediction: number | null;
   onPredict: (index: number) => void;
-  heritageRecord: HeritageRecordState;
   unplacedCardIds: string[];
   placements: Record<string, AddendumHeading | null>;
   allPlaced: boolean;
@@ -384,7 +400,6 @@ function Activity2Content({
   const hasAnswered = prediction !== null;
   const isCorrect = prediction === ACTIVITY_2.predictionExpectedIndex;
   const placedCount = PROMPT_CARDS.length - unplacedCardIds.length;
-  const evidence = [initialHeritagePositionEvidence(heritageRecord), ...ACTIVITY_2.evidence];
 
   return (
     <div className="grid gap-6">
@@ -403,8 +418,6 @@ function Activity2Content({
           ) : (
             <WrongPredictionNudge />
           )}
-
-          <EvidenceTray items={evidence} />
 
           <div className="grid gap-2">
             {ACTIVITY_2.workingIntro.map((p) => (
@@ -530,21 +543,12 @@ function Activity2Content({
 function Activity3Content({
   prediction,
   onPredict,
-  heritageRecord,
-  addendumPlacements,
 }: {
   prediction: number | null;
   onPredict: (index: number) => void;
-  heritageRecord: HeritageRecordState;
-  addendumPlacements: Record<string, AddendumHeading | null>;
 }) {
   const hasAnswered = prediction !== null;
   const isCorrect = prediction === DECISION_GATE_EXPECTED_INDEX;
-  const evidence = [
-    addendumEvidence(buildWorkingToolText(addendumPlacements, heritageRecord)),
-    ...ACTIVITY_3.evidence,
-    initialHeritagePositionEvidence(heritageRecord),
-  ];
 
   return (
     <div className="grid gap-6">
@@ -565,8 +569,6 @@ function Activity3Content({
 
           {isCorrect && (
             <>
-              <EvidenceTray items={evidence} />
-
               <div className={cardClassName}>
                 <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
                   Added to the Heritage Record - Decision point

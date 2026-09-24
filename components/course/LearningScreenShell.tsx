@@ -4,13 +4,15 @@ import { HeritageRecordPanel } from "@/components/course/HeritageRecordPanel";
 
 /**
  * The reusable learning-screen template (wireframe v3): course bar,
- * a read-only project moment, the active heritage question, then a
- * two-column area (working content | persistent Heritage Record),
- * then save/continue. Everything below the heritage question - why
- * now, prediction, evidence, the working surface, compare-with-
- * worked-example, why-this-matters - is activity-specific sequencing
- * and lives in `children`, not in this shell, since when evidence
- * unlocks (after the prediction) is content behaviour, not chrome.
+ * a read-only project moment, the active task, then a two-column area
+ * (working content | persistent project workspace), then save/
+ * continue. The workspace is Project Material (the available evidence)
+ * above the Heritage Record (the learner's accumulated response) -
+ * reading order matches the professional process: material informs
+ * judgement, the record preserves it. Everything below the task -
+ * prediction, the working surface, compare-with-worked-example, why-
+ * this-matters - is activity-specific sequencing and lives in
+ * `children`, not in this shell.
  *
  * Built through Module 1 only (explicit instruction, 23 Sep 2026) -
  * do not extend into later modules until the live rhythm has been
@@ -22,6 +24,7 @@ export function LearningScreenShell({
   minutesLeft,
   projectMoment,
   task,
+  projectMaterial,
   heritageRecord,
   children,
   footer,
@@ -31,6 +34,7 @@ export function LearningScreenShell({
   minutesLeft: number;
   projectMoment: string;
   task: string;
+  projectMaterial: ReactNode;
   heritageRecord: HeritageRecordState;
   children: ReactNode;
   footer: ReactNode;
@@ -73,10 +77,11 @@ export function LearningScreenShell({
         </h1>
       </div>
 
-      {/* Main two-column area. Mobile order (wireframe): Heritage
-          Record summary, then the working content. */}
+      {/* Main two-column area. Mobile order (wireframe): the project
+          workspace (material, then record), then the working content. */}
       <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
-        <aside className="order-1 lg:order-2 lg:sticky lg:top-6 lg:self-start">
+        <aside className="order-1 grid gap-4 lg:order-2 lg:sticky lg:top-6 lg:self-start">
+          {projectMaterial}
           <HeritageRecordPanel record={heritageRecord} />
         </aside>
 
