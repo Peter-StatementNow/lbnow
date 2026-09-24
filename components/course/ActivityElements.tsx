@@ -28,6 +28,36 @@ export function WrongPredictionNudge() {
   );
 }
 
+/**
+ * Feedback for the option the learner selected. When `optionFeedback`
+ * is authored (bespoke text per option, not just correct/incorrect),
+ * it takes priority - otherwise falls back to the single correct-
+ * answer `feedback` string or the generic wrong-answer nudge.
+ * `alwaysShowFeedback` is for activities (like Module 1's Activity 1)
+ * where any answer unlocks the feedback - there's no "wrong" state.
+ */
+export function PredictionFeedback({
+  selectedIndex,
+  expectedIndex,
+  feedback,
+  optionFeedback,
+  alwaysShowFeedback = false,
+}: {
+  selectedIndex: number;
+  expectedIndex: number;
+  feedback: string;
+  optionFeedback?: string[];
+  alwaysShowFeedback?: boolean;
+}) {
+  if (optionFeedback) {
+    return <FeedbackNote text={optionFeedback[selectedIndex]} />;
+  }
+  if (alwaysShowFeedback || selectedIndex === expectedIndex) {
+    return <FeedbackNote text={feedback} />;
+  }
+  return <WrongPredictionNudge />;
+}
+
 export function WhyThisMatters({ text }: { text: string }) {
   return (
     <div className="border-t border-neutral-200 pt-4">

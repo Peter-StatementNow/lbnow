@@ -70,6 +70,8 @@ export type ChapterActivityContent = {
   predictionOptions: string[];
   predictionExpectedIndex: number;
   predictionFeedback: string;
+  /** Per-option feedback (indexed to predictionOptions), when authored - overrides the generic wrong-answer nudge. */
+  optionFeedback?: string[];
   evidence: EvidenceItem[];
   recordAfter: HeritageRecordState;
   workedExample: string;

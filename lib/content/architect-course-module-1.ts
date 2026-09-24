@@ -63,11 +63,19 @@ export type HeritageRecordState = {
   toEstablish: string;
   keepUnderReview: string;
   decisionPoints: string;
+  /** Short status label shown at the top of the panel, e.g. "Review required". Optional - most snapshots don't set one. */
+  status?: string;
+  /** One-off explanatory line shown under `status`, e.g. on first arrival - drop it once the task itself has explained why. */
+  statusNote?: string;
 };
 
 export const HERITAGE_RECORD_INITIAL: HeritageRecordState = {
   completed: [],
-  known: "Not yet recorded",
+  status: "Review required",
+  statusNote:
+    "Initial information indicates that heritage may affect this project. Verify the trigger and record the proportionate heritage considerations.",
+  known:
+    "Client identifies The Old Vicarage as Grade II listed; proposed work includes a rear extension, ground-floor reconfiguration, energy improvements and window work; the brief refers to a detached former coach house, a boundary wall and incomplete records of earlier work",
   toEstablish: "Not yet recorded",
   keepUnderReview: "Not yet started",
   decisionPoints: "Not yet set",
@@ -75,11 +83,12 @@ export const HERITAGE_RECORD_INITIAL: HeritageRecordState = {
 
 export const HERITAGE_RECORD_AFTER_ACTIVITY_1: HeritageRecordState = {
   completed: ["Initial heritage position recorded"],
-  known:
-    "The Old Vicarage is Grade II listed; proposed works are a rear extension, ground-floor reconfiguration, window and energy works",
+  status: "Review required",
+  known: HERITAGE_RECORD_INITIAL.known,
   toEstablish:
-    "What the listing covers, the status of the coach house and boundary wall, consent history for prior work, and the conservation-area/Article 4 position",
-  keepUnderReview: "Not yet started",
+    "The current listing record, entry details and what the entry identifies; available consent history for earlier work; whether the former coach house and boundary wall require further heritage/status investigation before future alteration is assumed",
+  keepUnderReview:
+    "Which parts of the building, fabric, setting and associated features are affected as the proposal becomes more specific",
   decisionPoints: "Not yet set",
 };
 
@@ -88,6 +97,7 @@ export const HERITAGE_RECORD_AFTER_ACTIVITY_2: HeritageRecordState = {
     "Initial heritage position recorded",
     "Heritage Considerations Addendum - version 1",
   ],
+  status: HERITAGE_RECORD_AFTER_ACTIVITY_1.status,
   known: HERITAGE_RECORD_AFTER_ACTIVITY_1.known,
   toEstablish:
     "Conservation-area/Article 4 position, significance of the coach house and wall, consent history for prior work, and local validation requirements",
@@ -101,6 +111,7 @@ export const HERITAGE_RECORD_AFTER_ACTIVITY_3: HeritageRecordState = {
     "Heritage Considerations Addendum - version 1",
     "Heritage decision point recorded",
   ],
+  status: HERITAGE_RECORD_AFTER_ACTIVITY_2.status,
   known: HERITAGE_RECORD_AFTER_ACTIVITY_2.known,
   toEstablish: HERITAGE_RECORD_AFTER_ACTIVITY_2.toEstablish,
   keepUnderReview: "Effects and changed implications as design develops",
@@ -118,7 +129,7 @@ export const CLIENT_ENQUIRY: EvidenceItem = {
   body: [
     "Subject: Request for proposal - alterations to The Old Vicarage, Ashcombe",
     "Dear [Architect's name],",
-    "We are looking for an architect to help us plan alterations to The Old Vicarage, Church Lane, Ashcombe, which we bought last year. We understand that the house is Grade II listed and would like advice on what is possible, as well as a proposal for taking the project forward.",
+    "We are looking for an architect to help us plan alterations to The Old Vicarage, Church Lane, Ashcombe, which we bought last year. We understand that the house is Grade II listed and would like advice on what may be possible, as well as a proposal for taking the project forward.",
     "The main aim is to create a more useful kitchen and family space at the back of the house. We are considering a modest rear extension and some changes to the existing ground-floor rooms. We would also like to improve insulation, heating and ventilation, and review the existing windows, several of which are in poor condition.",
     "We are also thinking about improving access to the garden. There is an old brick wall along Church Lane and a detached former coach house at the bottom of the garden. We are not proposing to alter the coach house immediately, but may want to consider it in future.",
     "The previous owners carried out some work, including changes to the kitchen and windows, but we do not have a full set of drawings or approvals. We have attached the sales details, photographs and the information we received when we bought the house.",
@@ -130,17 +141,17 @@ export const CLIENT_ENQUIRY: EvidenceItem = {
 
 export const EXISTING_PLAN: EvidenceItem = {
   id: "existing-plan",
-  label: "Sale particulars / existing plan",
+  label: "Sales particulars / existing plan",
   body: [
-    "A simple existing floor plan and description, from the sales particulars the client received when they bought the house.",
+    "Client-held sales particulars and existing plan showing the principal house, later rear/service accommodation, detached coach house, garden and street boundary.",
   ],
 };
 
 export const SITE_PHOTOGRAPHS: EvidenceItem = {
-  id: "site-photographs",
-  label: "Site photographs",
+  id: "existing-house",
+  label: "Existing house",
   body: [
-    "A handful of exterior photographs supplied by the client: the principal (Church Lane) elevation, the rear of the house, the boundary wall and the detached coach house.",
+    "The Old Vicarage from Church Lane. The boundary wall and gate piers are visible; the former coach house is not visible in this view.",
   ],
 };
 
@@ -154,10 +165,10 @@ export const LOCATION_CONTEXT_NOTE: EvidenceItem = {
   id: "location-context-note",
   label: "Initial location/context note",
   body: [
-    "The Old Vicarage is Grade II listed (confirmed by the client).",
-    "Ashcombe's older centre contains several other listed buildings, including the church and a former school.",
-    "Whether the site lies within a conservation area, whether an Article 4 direction applies, and the status of the coach house and boundary wall have not yet been checked.",
-    "No consent history is held for the previous owners' kitchen and window alterations.",
+    "The property is on Church Lane, in the historic core of Ashcombe.",
+    "The village contains a number of older buildings, including the parish church and former school.",
+    "The client's information identifies the principal house as Grade II listed.",
+    "The client-held material does not include the current National Heritage List entry, a confirmed conservation-area record, Article 4 information, local-listing information, or a complete planning/listed-building-consent history.",
   ],
 };
 
@@ -184,67 +195,80 @@ export function addendumEvidence(addendumText: string): EvidenceItem {
 
 export const ACTIVITY_1 = {
   projectMoment:
-    "A homeowner has asked for a fee proposal for alterations to The Old Vicarage, a Grade II listed house they bought last year. Their email is clear about what they want, and states that the house is listed - but it also raises a boundary wall, a former coach house, and previous work with no surviving consent records.",
-  task: "Identify what this brief needs to record, beyond the fact that the house is listed.",
-  predictionPrompt: "Which of these is the most useful first heritage addition to this brief?",
+    "A homeowner has asked for a fee proposal for alterations to The Old Vicarage, a house they bought last year. Their enquiry describes a rear extension, ground-floor alterations, energy improvements and window work. They identify the house as Grade II listed, refer to a detached former coach house and boundary wall, and explain that records of earlier work are incomplete.\nThe client's information is enough to begin a heritage review. It is not enough to define the heritage position, consent route or scope of advice.",
+  task: "Decide whether this brief needs a Heritage Record review. If it does, identify the most useful first heritage addition to the brief before scope and fee are defined.",
+  predictionPrompt: "What is the most useful first heritage addition to this brief?",
   predictionOptions: [
-    "None - the client has already confirmed the house is listed, so nothing further needs recording yet.",
-    "A note that listed building consent will be required, without yet establishing what it needs to cover.",
-    "A record of what still needs establishing: the extent of the listing, the status of the coach house and wall, and the missing consent history for earlier work.",
-    "A recommendation that the client commission a full heritage impact assessment before any fee proposal is given.",
+    "No further heritage entry is needed at this stage. The client has identified the house as listed, so the architect can address heritage matters when developing the application.",
+    "Record that listed building consent will be required for the extension, internal changes, window work and boundary-wall alterations.",
+    "Record what needs verifying or establishing: the current listing record and what it identifies; the available consent history for earlier work; and the status/significance of the former coach house and boundary wall before future work to them is assumed.",
+    "Require a full heritage impact assessment before providing a fee proposal.",
   ],
   predictionExpectedIndex: 2,
   predictionFeedback:
-    "Knowing the house is listed is the start, not the end, of the heritage position. The useful first addition is recording what still needs to be established, proportionately, before scope and fee are fixed - not a conclusion, and not a blanket requirement.",
+    "This is the strongest first addition. It records the heritage trigger and the information gaps without treating the client's description as verified, deciding the consent route, or prescribing a report before the project's heritage questions are understood.",
+  /** Per-option feedback (indexed to predictionOptions), when authored - overrides the generic wrong-answer nudge. */
+  optionFeedback: [
+    "The client's statement that the house is listed is a reason to begin a heritage review, not a reason to defer it. The proposed works, incomplete records and associated features may affect what needs to be established before scope, fee, programme and later decisions can be defined responsibly. The next step is not to resolve everything now, but to record the questions that need verification or proportionate investigation.",
+    "This reaches a consent conclusion too early. The proposed works may raise listed-building-consent questions, but the current listing record, the specific fabric affected, the extent of earlier work and the position of associated structures have not yet been verified. Record what needs establishing before defining the likely route.",
+    "This is the strongest first addition. It records the heritage trigger and the information gaps without treating the client's description as verified, deciding the consent route, or prescribing a report before the project's heritage questions are understood.",
+    "This is over-prescriptive at this stage. Further heritage input may become proportionate, but the material currently available does not justify prescribing a full heritage impact assessment before verifying the listed asset, understanding the proposal and identifying the project's actual heritage questions.",
+  ] as string[] | undefined,
   evidence: [CLIENT_ENQUIRY, SITE_PHOTOGRAPHS, EXISTING_PLAN, LOCATION_CONTEXT_NOTE],
   alwaysAvailableEvidenceIds: [CLIENT_ENQUIRY.id],
-  knownEntry: [
-    "The Old Vicarage is Grade II listed.",
-    "The proposal includes a rear extension, ground-floor reconfiguration, energy improvements and window works.",
-    "The brief also raises a boundary wall and a detached former coach house, and notes incomplete consent records for previous work.",
+  /** What this activity adds to the record - the "to establish" gaps, not "known", since Known is already given by the client's own enquiry. */
+  toEstablishEntry: [
+    "The current listing record, entry details and what the entry identifies.",
+    "Available consent history for earlier work.",
+    "Whether the former coach house and boundary wall require further heritage/status investigation before future alteration is assumed.",
   ],
   worked: {
     known: [
-      "The Old Vicarage is Grade II listed.",
-      "The brief covers a rear extension, internal reconfiguration, energy works and windows, alongside a boundary wall and a detached former coach house.",
+      "The client identifies the principal house as Grade II listed.",
+      "The immediate proposal includes a rear extension, ground-floor changes, energy improvements and window work.",
+      "The site includes a boundary wall and detached former coach house.",
+      "Records of earlier work are incomplete.",
     ],
     toEstablish: [
-      "What the list entry actually covers, and what significance it protects.",
-      "Whether the coach house and boundary wall require further heritage/status investigation before any future work is assumed.",
-      "Whether the previous kitchen and window alterations were lawfully consented.",
-      "Whether the site lies within a conservation area or is affected by an Article 4 direction.",
+      "Current listing record and its limits.",
+      "Available approval / consent history.",
+      "Relevant status and significance questions for associated structures.",
+      "The proportionate heritage information needed before project assumptions harden.",
     ],
   },
   whyThisMatters:
-    "A confirmed listing tells you that consent and significance matter here - it does not tell you what matters, or what has already changed. The heritage addition at instruction is to record what needs establishing before scope, fee and programme are fixed.",
+    "A client's statement that a house is listed is enough to trigger a heritage review, but not enough to define the project route. The first Heritage Record entry identifies what must be verified or established before assumptions about scope, fee, programme, consent or specialist input become fixed.",
   saveLabel: "Save initial heritage position",
-  carryForwardCue: "You have recorded the initial heritage position. Next, turn it into the specific additions that should travel with the brief.",
+  continueLabel: "Continue: Verify the listed asset",
+  carryForwardCue:
+    "The client identifies The Old Vicarage as Grade II listed. Next, check the current official listing record and distinguish what it establishes from what still requires investigation.",
   comparisonCard: {
-    heading: "If the house were unlisted but in a conservation area",
-    courseCase: "The Old Vicarage is confirmed Grade II listed.",
-    comparable: "The house is not listed, but sits within a conservation area.",
+    heading: "If the heritage trigger were different",
+    courseCase: "The Old Vicarage is confirmed Grade II listed from the client's own enquiry.",
+    comparable:
+      "The house is unlisted, but lies in a conservation area or the proposal may affect the setting of a listed building. The first action is still to verify the relevant designation, local controls and heritage context, then record what they may add to the brief.",
     whatMayChange: [
-      "Listed building consent would not apply to the house itself.",
-      "Conservation-area character, local validation requirements and any Article 4 direction would still need checking.",
-      "Internal work is less likely to raise the same consent questions, though external works and boundary treatment may still need assessment.",
+      "Listed building consent may not apply to the house itself.",
+      "External work, conservation-area character and appearance, Article 4 directions, local validation requirements or effects on nearby heritage assets may still affect the route.",
+      "Internal alterations would not normally raise the same listed-building considerations.",
     ],
     whatStaysSame: [
-      "Identify the heritage trigger before assuming a route.",
-      "Establish proportionate evidence for the trigger actually present.",
-      "Do not assume the consent or information route from one fact alone.",
+      "Verify the heritage trigger.",
+      "Record what is known and what needs establishing.",
+      "Do not fix scope, fee, programme or consent assumptions on incomplete information.",
     ],
   } satisfies ComparisonCardContent,
   scopeBoundaryCard: {
-    heading: "The coach house and boundary wall are flagged, not resolved, at this stage.",
+    heading: "The former coach house and boundary wall are flagged, not resolved, at this stage.",
     covers: [
-      "Recording that associated structures and boundary features may need further heritage/status investigation before future work is assumed.",
+      "Recognising that associated structures and boundary features may need heritage/status investigation before future work is assumed.",
     ],
     doesNotCover: [
       "Determining curtilage status.",
-      "Legal advice on the status of associated structures.",
+      "Giving legal advice on the status or consent implications of associated structures.",
     ],
     nextAction:
-      "Establish the relevant status and significance proportionately before developing proposals for these structures.",
+      "Verify and establish their relevant status and significance proportionately before developing proposals that affect them.",
   } satisfies ScopeBoundaryCardContent,
 };
 
@@ -322,6 +346,7 @@ export const ACTIVITY_2 = {
   predictionExpectedIndex: 1,
   predictionFeedback:
     "Correct. The question is not whether the structure prevents the project. It is whether it could affect the baseline, evidence or project route and therefore needs proportionate establishing early.",
+  optionFeedback: undefined as string[] | undefined,
   evidence: [SITE_PHOTOGRAPHS, EXISTING_PLAN, INITIAL_PROGRAMME_NOTE],
   workingIntro: [
     "A heritage consideration can arise because the project affects the listed house directly, or because it may affect an associated structure, boundary feature or local control beyond the house itself.",
@@ -353,6 +378,7 @@ export const ACTIVITY_3 = {
   predictionPrompt: "Which statement is the most useful heritage addition to the project route?",
   predictionFeedback:
     "This is a heritage decision point, not a requirement for a prescribed report. The next step is to establish what must be understood proportionately before a preferred option or route is treated as settled.",
+  optionFeedback: undefined as string[] | undefined,
   evidence: [INITIAL_PROGRAMME_NOTE],
   decisionPointText:
     "Establish the heritage baseline and likely heritage-information requirements proportionately, using further research, survey, assessment or specialist input where required by the project.",

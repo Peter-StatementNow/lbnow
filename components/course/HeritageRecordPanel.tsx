@@ -28,6 +28,17 @@ export function HeritageRecordPanel({ record }: { record: HeritageRecordState })
 
       {isOpen && (
         <div className="grid gap-4 border-t border-neutral-200 px-4 py-4">
+          {record.status && (
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-neutral-900">
+                {record.status}
+              </p>
+              {record.statusNote && (
+                <p className="mt-1 text-xs leading-5 text-neutral-600">{record.statusNote}</p>
+              )}
+            </div>
+          )}
+
           {record.completed.length > 0 && (
             <ul className="grid gap-1">
               {record.completed.map((item) => (

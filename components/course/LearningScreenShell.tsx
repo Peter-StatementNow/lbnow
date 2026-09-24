@@ -64,12 +64,19 @@ export function LearningScreenShell({
         </p>
       </div>
 
-      {/* Project moment - read only, updates between activities */}
+      {/* Project moment - read only, updates between activities. May be
+          multiple paragraphs, separated by "\n" in the content. */}
       <div className="mt-6">
         <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
           Project moment
         </p>
-        <p className="mt-1 text-sm leading-6 text-neutral-600">{projectMoment}</p>
+        <div className="mt-1 grid gap-2">
+          {projectMoment.split("\n").map((paragraph) => (
+            <p key={paragraph} className="text-sm leading-6 text-neutral-600">
+              {paragraph}
+            </p>
+          ))}
+        </div>
       </div>
 
       {/* Your task - active */}

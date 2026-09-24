@@ -11,9 +11,8 @@ import { ScopeBoundaryCard } from "@/components/course/ScopeBoundaryCard";
 import {
   BackButton,
   CompareToggle,
-  FeedbackNote,
+  PredictionFeedback,
   WhyThisMatters,
-  WrongPredictionNudge,
   cardClassName,
   primaryButton,
   secondaryButton,
@@ -152,11 +151,14 @@ export function Module1Experience() {
           footer={
             a1Saved ? (
               <div className="flex flex-wrap items-center justify-between gap-4">
-                <p className="text-sm font-medium text-neutral-900">
-                  &#10003; Saved to Heritage Record
+                <p className="max-w-md text-sm text-neutral-600">
+                  <span className="font-medium text-neutral-900">
+                    &#10003; Saved to Heritage Record.
+                  </span>{" "}
+                  {ACTIVITY_1.carryForwardCue}
                 </p>
                 <button type="button" onClick={() => goTo(2)} className={primaryButton}>
-                  Next activity &rarr;
+                  {ACTIVITY_1.continueLabel} &rarr;
                 </button>
               </div>
             ) : (
@@ -322,14 +324,20 @@ function Activity1Content({
 
       {hasAnswered && (
         <>
-          <FeedbackNote text={ACTIVITY_1.predictionFeedback} />
+          <PredictionFeedback
+            selectedIndex={prediction}
+            expectedIndex={ACTIVITY_1.predictionExpectedIndex}
+            feedback={ACTIVITY_1.predictionFeedback}
+            optionFeedback={ACTIVITY_1.optionFeedback}
+            alwaysShowFeedback
+          />
 
           <div className={cardClassName}>
             <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-              Added to the Heritage Record - Known
+              Added to the Heritage Record - To establish
             </p>
             <ul className="mt-2 grid gap-1.5">
-              {ACTIVITY_1.knownEntry.map((line) => (
+              {ACTIVITY_1.toEstablishEntry.map((line) => (
                 <li key={line} className="text-sm leading-6 text-neutral-700">
                   - {line}
                 </li>
@@ -403,7 +411,6 @@ function Activity2Content({
 }) {
   const cardsById = useMemo(() => new Map(PROMPT_CARDS.map((c) => [c.id, c])), []);
   const hasAnswered = prediction !== null;
-  const isCorrect = prediction === ACTIVITY_2.predictionExpectedIndex;
   const placedCount = PROMPT_CARDS.length - unplacedCardIds.length;
 
   return (
@@ -419,11 +426,12 @@ function Activity2Content({
 
       {hasAnswered && (
         <>
-          {isCorrect ? (
-            <FeedbackNote text={ACTIVITY_2.predictionFeedback} />
-          ) : (
-            <WrongPredictionNudge />
-          )}
+          <PredictionFeedback
+            selectedIndex={prediction}
+            expectedIndex={ACTIVITY_2.predictionExpectedIndex}
+            feedback={ACTIVITY_2.predictionFeedback}
+            optionFeedback={ACTIVITY_2.optionFeedback}
+          />
 
           <div className="grid gap-2">
             {ACTIVITY_2.workingIntro.map((p) => (
@@ -572,11 +580,12 @@ function Activity3Content({
 
       {hasAnswered && (
         <>
-          {isCorrect ? (
-            <FeedbackNote text={ACTIVITY_3.predictionFeedback} />
-          ) : (
-            <WrongPredictionNudge />
-          )}
+          <PredictionFeedback
+            selectedIndex={prediction}
+            expectedIndex={DECISION_GATE_EXPECTED_INDEX}
+            feedback={ACTIVITY_3.predictionFeedback}
+            optionFeedback={ACTIVITY_3.optionFeedback}
+          />
 
           {isCorrect && (
             <>

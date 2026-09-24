@@ -10,9 +10,8 @@ import { ScopeBoundaryCard } from "@/components/course/ScopeBoundaryCard";
 import {
   BackButton,
   CompareToggle,
-  FeedbackNote,
+  PredictionFeedback,
   WhyThisMatters,
-  WrongPredictionNudge,
   cardClassName,
   primaryButton,
 } from "@/components/course/ActivityElements";
@@ -61,7 +60,6 @@ export function ChapterActivity({
   }, [saved, content.predictionExpectedIndex]);
 
   const hasAnswered = prediction !== null;
-  const isCorrect = prediction === content.predictionExpectedIndex;
   const { percentComplete, minutesLeft } = courseProgress(completedChapters);
 
   function handleSave() {
@@ -125,11 +123,12 @@ export function ChapterActivity({
 
         {hasAnswered && (
           <>
-            {isCorrect ? (
-              <FeedbackNote text={content.predictionFeedback} />
-            ) : (
-              <WrongPredictionNudge />
-            )}
+            <PredictionFeedback
+              selectedIndex={prediction}
+              expectedIndex={content.predictionExpectedIndex}
+              feedback={content.predictionFeedback}
+              optionFeedback={content.optionFeedback}
+            />
 
             <div className={cardClassName}>
               <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
