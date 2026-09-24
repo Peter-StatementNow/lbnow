@@ -95,11 +95,11 @@ export const CLIENT_ENQUIRY: EvidenceItem = {
   label: "Client enquiry",
   body: [
     "Hello,",
-    "We are hoping to buy 42 Church Street and would like an initial view on whether we can make it work for our family. The house needs more usable space and we would like a rear extension, new windows where necessary and some internal changes downstairs.",
-    "The agent has said that the property is not listed, so we do not think there should be anything unusual. It is in an attractive older part of the town, but we assume the main issue will be getting planning permission for the extension.",
-    "We would like to move quickly after exchange. We have allowed for a straightforward design and planning process, and ideally want work to start next spring.",
+    "We are looking for an architect to help with alterations and an extension to our house at 42 Church Street. We would like more usable family space, a rear extension, replacement windows where necessary and some internal changes downstairs.",
+    "We understand the property is not listed, so we think this should be a fairly straightforward planning application. We would like to start work next spring and would be grateful for an indication of your fees and likely timescale.",
+    "Please let us know what information you need from us in order to provide a proposal.",
     "Many thanks,",
-    "A prospective client",
+    "A homeowner",
   ],
 };
 
@@ -158,19 +158,20 @@ export function addendumEvidence(addendumText: string): EvidenceItem {
 
 export const ACTIVITY_1 = {
   projectMoment:
-    "The client has asked for early feasibility advice. Their initial information assumes a straightforward planning route, but no heritage context or consent information has been checked.",
-  task: "Identify the first heritage consideration that should be added to the brief.",
-  predictionPrompt: "Before you open the project material, which description best captures the heritage position?",
+    "A homeowner has asked for a fee proposal for alterations to their house. They want an extension, changes to existing windows and internal alterations. Their email gives a clear starting brief, but it also includes assumptions about the planning route and the information needed before work can begin.",
+  task: "Review the client's enquiry and record your initial view.",
+  predictionPrompt: "Are there heritage considerations to add to this brief?",
   predictionOptions: [
-    "The building itself is likely to be the heritage asset.",
-    "The building is unlikely to be an asset, but the proposal may affect heritage context.",
-    "Both may apply.",
-    "There is not yet enough information to know; the heritage position needs recording as an information gap.",
+    "No - the house is not listed.",
+    "Yes - the proposed works and available information indicate heritage considerations may need to be recorded.",
+    "It is too early to identify any heritage considerations.",
+    "Heritage matters only after planning advice has been obtained.",
   ],
-  predictionExpectedIndex: 3,
+  predictionExpectedIndex: 1,
   predictionFeedback:
-    "A useful first response is not a conclusion. At instruction, record whether heritage may be relevant and what needs checking before the brief assumes a simple route.",
+    "The point is not to decide the outcome or assume a consent requirement. It is to recognise that the client's statement ‘the house is not listed’ does not settle the project's heritage context, available records or possible information requirements.",
   evidence: [CLIENT_ENQUIRY, SITE_PHOTOGRAPHS, EXISTING_PLAN, LOCATION_CONTEXT_NOTE],
+  alwaysAvailableEvidenceIds: [CLIENT_ENQUIRY.id],
   knownEntry: [
     "The building is not identified as nationally listed in the initial information.",
     "The project is in an older town-centre context and is close to a listed building.",

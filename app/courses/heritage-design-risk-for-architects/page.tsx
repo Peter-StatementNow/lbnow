@@ -34,8 +34,9 @@ export default function ArchitectCoursePage() {
         Course chapters
       </h2>
       <p className="mt-2 text-sm text-neutral-500">
-        Chapter 1 is built as a working prototype - the rest are curriculum
-        only so far.
+        Chapter 1 is a fully worked prototype. Chapters 2-7 are a lighter
+        framework build, walking the same case through the rest of the
+        project - content and wording are still placeholder.
       </p>
 
       <ol className="mt-6 grid gap-4">
@@ -54,13 +55,17 @@ export default function ArchitectCoursePage() {
                 </p>
               </div>
 
-              {chapter.moduleHref ? (
-                <span className="border border-neutral-900 bg-neutral-900 px-3 py-1 text-xs font-medium text-white">
-                  Preview available
-                </span>
-              ) : (
+              {!chapter.moduleHref ? (
                 <span className="border border-neutral-200 px-3 py-1 text-xs font-medium text-neutral-500">
                   Coming soon
+                </span>
+              ) : chapter.isPrototype ? (
+                <span className="border border-neutral-300 bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600">
+                  Prototype
+                </span>
+              ) : (
+                <span className="border border-neutral-900 bg-neutral-900 px-3 py-1 text-xs font-medium text-white">
+                  Preview available
                 </span>
               )}
             </div>

@@ -7,6 +7,17 @@ import { HeritageRecordPanel } from "@/components/course/HeritageRecordPanel";
 import { PredictionBlock } from "@/components/course/PredictionBlock";
 import { ProjectMaterialPanel } from "@/components/course/ProjectMaterialPanel";
 import {
+  BackButton,
+  CompareToggle,
+  FeedbackNote,
+  WhyThisMatters,
+  WrongPredictionNudge,
+  cardClassName,
+  primaryButton,
+  secondaryButton,
+} from "@/components/course/ActivityElements";
+import { useCourseState } from "@/lib/course/heritage-course-store";
+import {
   ACTIVITY_1,
   ACTIVITY_2,
   ACTIVITY_3,
@@ -17,7 +28,6 @@ import {
   HERITAGE_RECORD_AFTER_ACTIVITY_1,
   HERITAGE_RECORD_AFTER_ACTIVITY_2,
   HERITAGE_RECORD_AFTER_ACTIVITY_3,
-  HERITAGE_RECORD_INITIAL,
   MODULE_COMPLETE,
   PROMPT_CARDS,
   STAGE_LABEL,
@@ -32,49 +42,7 @@ import { PROMPT_CARD_DISPLAY_ORDER } from "@/lib/content/architect-course-module
 type Stage = 1 | 2 | 3 | "complete";
 
 const ACTIVITY_MINUTES = { 1: 2, 2: 3, 3: 2 };
-
-const primaryButton =
-  "inline-flex items-center justify-center bg-black px-6 py-3 text-sm font-medium text-white hover:bg-neutral-800 disabled:cursor-not-allowed disabled:bg-neutral-300";
-const secondaryButton =
-  "inline-flex items-center justify-center border border-neutral-300 px-6 py-3 text-sm font-medium text-neutral-800 hover:border-neutral-500";
-const cardClassName = "border border-neutral-200 bg-white p-6";
 const UNLOCK_HINT = "Available after you record your initial view";
-
-function FeedbackNote({ text }: { text: string }) {
-  return (
-    <div className="border border-neutral-300 bg-neutral-50 px-5 py-4">
-      <p className="text-sm leading-6 text-neutral-700">{text}</p>
-    </div>
-  );
-}
-
-function BackButton({ onClick }: { onClick: () => void }) {
-  return (
-    <button type="button" onClick={onClick} className={secondaryButton}>
-      &larr; Back
-    </button>
-  );
-}
-
-function WrongPredictionNudge() {
-  return (
-    <p className="text-sm text-neutral-500">
-      Consider the position again in light of what proportionate professional practice
-      requires - review the other options.
-    </p>
-  );
-}
-
-function WhyThisMatters({ text }: { text: string }) {
-  return (
-    <div className="border-t border-neutral-200 pt-4">
-      <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-        Why this matters
-      </p>
-      <p className="mt-1 text-sm leading-6 text-neutral-600">{text}</p>
-    </div>
-  );
-}
 
 function buildWorkingToolText(
   addendumPlacements: Record<string, AddendumHeading | null>,
@@ -104,8 +72,7 @@ function buildWorkingToolText(
 
 export function Module1Experience() {
   const [stage, setStage] = useState<Stage>(1);
-  const [heritageRecord, setHeritageRecord] =
-    useState<HeritageRecordState>(HERITAGE_RECORD_INITIAL);
+  const { heritageRecord, setHeritageRecord, markChapterComplete } = useCourseState();
 
   // Activity 1
   const [a1Prediction, setA1Prediction] = useState<number | null>(null);
@@ -176,6 +143,8 @@ export function Module1Experience() {
               items={ACTIVITY_1.evidence}
               unlocked={a1Prediction !== null}
               unlockHint={UNLOCK_HINT}
+              alwaysAvailableIds={ACTIVITY_1.alwaysAvailableEvidenceIds}
+              initialOpenId={ACTIVITY_1.alwaysAvailableEvidenceIds[0]}
             />
           }
           footer={
@@ -304,6 +273,7 @@ export function Module1Experience() {
                   onClick={() => {
                     setHeritageRecord(HERITAGE_RECORD_AFTER_ACTIVITY_3);
                     setA3Saved(true);
+                    markChapterComplete(1);
                   }}
                   disabled={a3Prediction !== DECISION_GATE_EXPECTED_INDEX}
                   className={primaryButton}
@@ -623,37 +593,6 @@ function Activity3Content({
           )}
         </>
       )}
-    </div>
-  );
-}
-
-// --- Shared: compare-with-worked-example toggle ------------------------
-
-function CompareToggle({
-  label,
-  open: openProp,
-  onToggle,
-  children,
-}: {
-  label: string;
-  open?: boolean;
-  onToggle?: () => void;
-  children: React.ReactNode;
-}) {
-  const [localOpen, setLocalOpen] = useState(false);
-  const open = openProp ?? localOpen;
-  const toggle = onToggle ?? (() => setLocalOpen((v) => !v));
-
-  return (
-    <div>
-      <button
-        type="button"
-        onClick={toggle}
-        className="text-sm font-medium text-neutral-700 underline hover:text-neutral-900"
-      >
-        {open ? "Hide worked example" : label}
-      </button>
-      {open && <div className="mt-3 border border-neutral-200 bg-neutral-50 p-4">{children}</div>}
     </div>
   );
 }
