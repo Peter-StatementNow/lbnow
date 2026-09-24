@@ -7,7 +7,6 @@ import { HeritageRecordPanel } from "@/components/course/HeritageRecordPanel";
 import { PredictionBlock } from "@/components/course/PredictionBlock";
 import { ProjectMaterialPanel } from "@/components/course/ProjectMaterialPanel";
 import { ComparisonCard } from "@/components/course/ComparisonCard";
-import { ScopeBoundaryCard } from "@/components/course/ScopeBoundaryCard";
 import {
   BackButton,
   CompareToggle,
@@ -375,7 +374,6 @@ function Activity1Content({
           </CompareToggle>
 
           <ComparisonCard content={ACTIVITY_1.comparisonCard} />
-          <ScopeBoundaryCard content={ACTIVITY_1.scopeBoundaryCard} />
 
           <WhyThisMatters text={ACTIVITY_1.whyThisMatters} />
         </>

@@ -31,7 +31,6 @@
  */
 
 import type { ComparisonCardContent } from "@/components/course/ComparisonCard";
-import type { ScopeBoundaryCardContent } from "@/components/course/ScopeBoundaryCard";
 
 /**
  * Short form of the course title, used consistently across the
@@ -258,18 +257,6 @@ export const ACTIVITY_1 = {
       "Do not fix scope, fee, programme or consent assumptions on incomplete information.",
     ],
   } satisfies ComparisonCardContent,
-  scopeBoundaryCard: {
-    heading: "The former coach house and boundary wall are flagged, not resolved, at this stage.",
-    covers: [
-      "Recognising that associated structures and boundary features may need heritage/status investigation before future work is assumed.",
-    ],
-    doesNotCover: [
-      "Determining curtilage status.",
-      "Giving legal advice on the status or consent implications of associated structures.",
-    ],
-    nextAction:
-      "Verify and establish their relevant status and significance proportionately before developing proposals that affect them.",
-  } satisfies ScopeBoundaryCardContent,
 };
 
 // --- Activity 2: Record the Heritage Considerations Addendum --------------

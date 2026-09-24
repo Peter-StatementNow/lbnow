@@ -25,8 +25,7 @@ export const COURSES: Course[] = [
     slug: "heritage-design-risk-for-architects",
     audience: "architect",
     audienceLabel: "For architects",
-    title:
-      "Heritage Design Risk for Architects: NPPF 2026, Significance and Consent Strategy",
+    title: "Heritage Design Risk for Architects",
     strapline:
       "Understand heritage risk early enough to shape the design, not just justify it afterwards.",
     workflow:
