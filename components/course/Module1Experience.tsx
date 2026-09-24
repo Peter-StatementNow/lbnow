@@ -18,8 +18,8 @@ import {
   HERITAGE_RECORD_AFTER_ACTIVITY_3,
   HERITAGE_RECORD_INITIAL,
   MODULE_COMPLETE,
-  MODULE_TITLE,
   PROMPT_CARDS,
+  STAGE_LABEL,
   TOTAL_COURSE_MINUTES,
   addendumEvidence,
   initialHeritagePositionEvidence,
@@ -141,7 +141,7 @@ export function Module1Experience() {
   }
 
   const shellCommon = {
-    courseTitle: MODULE_TITLE,
+    stageLabel: STAGE_LABEL,
     percentComplete,
     minutesLeft,
     heritageRecord,
@@ -159,7 +159,7 @@ export function Module1Experience() {
         <LearningScreenShell
           {...shellCommon}
           projectMoment={ACTIVITY_1.projectMoment}
-          heritageQuestion={ACTIVITY_1.heritageQuestion}
+          task={ACTIVITY_1.task}
           footer={
             a1Saved ? (
               <div className="flex flex-wrap items-center justify-between gap-4">
@@ -193,7 +193,7 @@ export function Module1Experience() {
         <LearningScreenShell
           {...shellCommon}
           projectMoment={ACTIVITY_2.projectMoment}
-          heritageQuestion={ACTIVITY_2.heritageQuestion}
+          task={ACTIVITY_2.task}
           footer={
             a2Saved ? (
               <div className="flex flex-wrap items-center justify-between gap-4">
@@ -238,7 +238,7 @@ export function Module1Experience() {
         <LearningScreenShell
           {...shellCommon}
           projectMoment={ACTIVITY_3.projectMoment}
-          heritageQuestion={ACTIVITY_3.heritageQuestion}
+          task={ACTIVITY_3.task}
           footer={
             a3Saved ? (
               <div className="flex flex-wrap items-center justify-between gap-4">
@@ -293,8 +293,6 @@ function Activity1Content({
 
   return (
     <div className="grid gap-6">
-      <p className="text-sm leading-6 text-neutral-600">{ACTIVITY_1.whyNow}</p>
-
       <PredictionBlock
         prompt={ACTIVITY_1.predictionPrompt}
         options={ACTIVITY_1.predictionOptions}
@@ -390,8 +388,6 @@ function Activity2Content({
 
   return (
     <div className="grid gap-6">
-      <p className="text-sm leading-6 text-neutral-600">{ACTIVITY_2.whyNow}</p>
-
       <PredictionBlock
         prompt={ACTIVITY_2.predictionPrompt}
         context={ACTIVITY_2.predictionQuestion}
@@ -552,8 +548,6 @@ function Activity3Content({
 
   return (
     <div className="grid gap-6">
-      <p className="text-sm leading-6 text-neutral-600">{ACTIVITY_3.whyNow}</p>
-
       <PredictionBlock
         prompt={ACTIVITY_3.predictionPrompt}
         options={DECISION_GATE_OPTIONS}

@@ -14,7 +14,8 @@
  * through Module 1 only; do not extend it into later modules yet.
  */
 
-export const MODULE_TITLE = "Heritage Considerations in Practice";
+/** Persists across the whole chapter - all three activities share it. */
+export const STAGE_LABEL = "1. Receiving the brief";
 
 /** Illustrative only - see this file's own v2-era note; unchanged in v3. */
 export const TOTAL_COURSE_MINUTES = 56;
@@ -150,11 +151,8 @@ export function addendumEvidence(addendumText: string): EvidenceItem {
 
 export const ACTIVITY_1 = {
   projectMoment:
-    "Receiving the brief: normal briefing is underway. The client's objectives, broad scope, budget and programme are being discussed in the usual way.",
-  heritageQuestion:
-    "What additional heritage consideration should be recorded now, before the project is treated as having a settled design-and-consent route?",
-  whyNow:
-    "Client assumptions about designation or planning route can shape expectations before the information needed to test them has been gathered.",
+    "The client has asked for early feasibility advice. Their initial information assumes a straightforward planning route, but no heritage context or consent information has been checked.",
+  task: "Identify the first heritage consideration that should be added to the brief.",
   predictionPrompt: "Before you open the project material, which description best captures the heritage position?",
   predictionOptions: [
     "The building itself is likely to be the heritage asset.",
@@ -250,11 +248,8 @@ export const PROMPT_CARDS: PromptCard[] = [
 
 export const ACTIVITY_2 = {
   projectMoment:
-    "Receiving the brief: normal briefing is continuing. The project now needs a concise heritage addition alongside the ordinary brief.",
-  heritageQuestion:
-    "What heritage information, allowance and review point should be added now - without deciding the outcome of the eventual proposal?",
-  whyNow:
-    "Heritage considerations are most useful when they influence what is established before a design option, programme or consent route becomes an assumption.",
+    "The project may be heritage-sensitive. The initial position has been recorded, but the brief still needs a clear record of what must be established and revisited.",
+  task: "Create the Heritage Considerations Addendum.",
   predictionPrompt: "Before you open the Heritage Record, which category does this question belong in?",
   predictionQuestion: "“Does the outbuilding or boundary wall need further heritage/context investigation?”",
   predictionOptions: [
@@ -291,11 +286,8 @@ export const DECISION_GATE_EXPECTED_INDEX = 2;
 
 export const ACTIVITY_3 = {
   projectMoment:
-    "Receiving the brief: the client wants initial options in four weeks and expects an ordinary planning route. The normal project programme is moving forward.",
-  heritageQuestion:
-    "What heritage decision point should be recorded before the project treats a preferred option or consent route as settled?",
-  whyNow:
-    "The value of an early heritage record is lost if it does not affect the point at which design and client assumptions become commitments.",
+    "The client wants initial options within four weeks. Heritage considerations are now recorded, but the project needs a point at which that information must influence design assumptions and the expected consent route.",
+  task: "Set the heritage decision point.",
   predictionPrompt: "Which statement is the most useful heritage addition to the project route?",
   predictionFeedback:
     "This is a heritage decision point, not a requirement for a prescribed report. The next step is to establish what must be understood proportionately before a preferred option or route is treated as settled.",

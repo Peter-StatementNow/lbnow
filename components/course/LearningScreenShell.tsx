@@ -17,20 +17,20 @@ import { HeritageRecordPanel } from "@/components/course/HeritageRecordPanel";
  * tested.
  */
 export function LearningScreenShell({
-  courseTitle,
+  stageLabel,
   percentComplete,
   minutesLeft,
   projectMoment,
-  heritageQuestion,
+  task,
   heritageRecord,
   children,
   footer,
 }: {
-  courseTitle: string;
+  stageLabel: string;
   percentComplete: number;
   minutesLeft: number;
   projectMoment: string;
-  heritageQuestion: string;
+  task: string;
   heritageRecord: HeritageRecordState;
   children: ReactNode;
   footer: ReactNode;
@@ -40,7 +40,9 @@ export function LearningScreenShell({
       {/* Course bar */}
       <div>
         <div className="flex items-baseline justify-between gap-3 text-xs text-neutral-500">
-          <span className="font-medium text-neutral-700">{courseTitle}</span>
+          <span className="font-medium uppercase tracking-wide text-neutral-700">
+            {stageLabel}
+          </span>
           <span>
             {percentComplete}% complete &middot; about {minutesLeft} min left
           </span>
@@ -53,7 +55,7 @@ export function LearningScreenShell({
         </div>
       </div>
 
-      {/* Project moment - read only */}
+      {/* Project moment - read only, updates between activities */}
       <div className="mt-6">
         <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
           Project moment
@@ -61,13 +63,13 @@ export function LearningScreenShell({
         <p className="mt-1 text-sm leading-6 text-neutral-600">{projectMoment}</p>
       </div>
 
-      {/* Heritage question - active */}
+      {/* Your task - active */}
       <div className="mt-4">
         <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-          Heritage question
+          Your task
         </p>
         <h1 className="mt-1 text-xl font-semibold tracking-tight text-neutral-900">
-          {heritageQuestion}
+          {task}
         </h1>
       </div>
 
