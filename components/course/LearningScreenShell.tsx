@@ -97,7 +97,13 @@ export function LearningScreenShell({
           <HeritageRecordPanel record={heritageRecord} />
         </aside>
 
-        <div className="order-2 grid gap-6 lg:order-1">{children}</div>
+        {/* Flex column, top-aligned: each block sizes to its own content
+            and stacks directly below the previous one. (A grid here would
+            stretch to the workspace column's height and share the spare
+            space out between rows, leaving large gaps.) */}
+        <div className="order-2 flex min-w-0 flex-col gap-6 lg:order-1 lg:self-start">
+          {children}
+        </div>
       </div>
 
       {/* Save/continue footer */}
