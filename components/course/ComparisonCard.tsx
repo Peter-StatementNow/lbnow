@@ -2,13 +2,41 @@
 
 import { useState } from "react";
 
-export type ComparisonCardContent = {
+/** Course case vs comparable project, with what may change / what stays the same. */
+type CaseComparison = {
   heading: string;
   courseCase: string;
   comparable: string;
   whatMayChange: string[];
   whatStaysSame: string[];
 };
+
+/** An intro line followed by headed checklists (e.g. Verify / Do not assume / Record). */
+type SectionedComparison = {
+  heading: string;
+  intro: string;
+  sections: { heading: string; items: string[] }[];
+};
+
+export type ComparisonCardContent = CaseComparison | SectionedComparison;
+
+function BulletList({ items }: { items: string[] }) {
+  return (
+    <ul className="mt-2 grid gap-1.5">
+      {items.map((line) => (
+        <li key={line} className="text-sm leading-6 text-neutral-700">
+          - {line}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function SectionHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">{children}</p>
+  );
+}
 
 /**
  * "If the heritage trigger were different" - optional, collapsed by
@@ -39,40 +67,36 @@ export function ComparisonCard({ content }: { content: ComparisonCardContent }) 
 
       {open && (
         <div className="grid gap-4 border-t border-neutral-200 px-5 py-4">
-          <p className="text-sm leading-6 text-neutral-700">
-            <span className="font-medium text-neutral-900">This course case: </span>
-            {content.courseCase}
-          </p>
-          <p className="text-sm leading-6 text-neutral-700">
-            <span className="font-medium text-neutral-900">Comparable project: </span>
-            {content.comparable}
-          </p>
-
-          <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-              What may change
-            </p>
-            <ul className="mt-2 grid gap-1.5">
-              {content.whatMayChange.map((line) => (
-                <li key={line} className="text-sm leading-6 text-neutral-700">
-                  - {line}
-                </li>
+          {"sections" in content ? (
+            <>
+              <p className="text-sm leading-6 text-neutral-700">{content.intro}</p>
+              {content.sections.map((section) => (
+                <div key={section.heading}>
+                  <SectionHeading>{section.heading}</SectionHeading>
+                  <BulletList items={section.items} />
+                </div>
               ))}
-            </ul>
-          </div>
-
-          <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-              What stays the same
-            </p>
-            <ul className="mt-2 grid gap-1.5">
-              {content.whatStaysSame.map((line) => (
-                <li key={line} className="text-sm leading-6 text-neutral-700">
-                  - {line}
-                </li>
-              ))}
-            </ul>
-          </div>
+            </>
+          ) : (
+            <>
+              <p className="text-sm leading-6 text-neutral-700">
+                <span className="font-medium text-neutral-900">This course case: </span>
+                {content.courseCase}
+              </p>
+              <p className="text-sm leading-6 text-neutral-700">
+                <span className="font-medium text-neutral-900">Comparable project: </span>
+                {content.comparable}
+              </p>
+              <div>
+                <SectionHeading>What may change</SectionHeading>
+                <BulletList items={content.whatMayChange} />
+              </div>
+              <div>
+                <SectionHeading>What stays the same</SectionHeading>
+                <BulletList items={content.whatStaysSame} />
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

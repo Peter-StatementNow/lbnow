@@ -14,9 +14,7 @@ import { HeritageRecordPanel } from "@/components/course/HeritageRecordPanel";
  * this-matters - is activity-specific sequencing and lives in
  * `children`, not in this shell.
  *
- * Built through Module 1 only (explicit instruction, 23 Sep 2026) -
- * do not extend into later modules until the live rhythm has been
- * tested.
+ * Shared by Module 1's pages and the chapters 2-7 framework.
  */
 export function LearningScreenShell({
   courseName,
@@ -25,6 +23,7 @@ export function LearningScreenShell({
   minutesLeft,
   projectMoment,
   task,
+  taskDetail,
   projectMaterial,
   heritageRecord,
   children,
@@ -36,6 +35,8 @@ export function LearningScreenShell({
   minutesLeft: number;
   projectMoment: string;
   task: string;
+  /** Optional second line of the task, shown under the heading. */
+  taskDetail?: string;
   projectMaterial: ReactNode;
   heritageRecord: HeritageRecordState;
   children: ReactNode;
@@ -87,6 +88,9 @@ export function LearningScreenShell({
         <h1 className="mt-1 text-xl font-semibold tracking-tight text-neutral-900">
           {task}
         </h1>
+        {taskDetail && (
+          <p className="mt-1 text-base leading-7 text-neutral-700">{taskDetail}</p>
+        )}
       </div>
 
       {/* Main two-column area. Mobile order (wireframe): the project

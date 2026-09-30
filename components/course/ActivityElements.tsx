@@ -11,10 +11,15 @@ export const cardClassName = "border border-neutral-200 bg-white p-6";
 
 /** Small shared pieces used by every activity screen (Module 1 and the chapter framework). */
 
+/** Paragraphs in `text` are separated by "\n". */
 export function FeedbackNote({ text }: { text: string }) {
   return (
-    <div className="border border-neutral-300 bg-neutral-50 px-5 py-4">
-      <p className="text-sm leading-6 text-neutral-700">{text}</p>
+    <div className="grid gap-2 border border-neutral-300 bg-neutral-50 px-5 py-4">
+      {text.split("\n").map((paragraph) => (
+        <p key={paragraph} className="text-sm leading-6 text-neutral-700">
+          {paragraph}
+        </p>
+      ))}
     </div>
   );
 }
@@ -64,7 +69,13 @@ export function WhyThisMatters({ text }: { text: string }) {
       <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
         Why this matters
       </p>
-      <p className="mt-1 text-sm leading-6 text-neutral-600">{text}</p>
+      <div className="mt-1 grid gap-2">
+        {text.split("\n").map((paragraph) => (
+          <p key={paragraph} className="text-sm leading-6 text-neutral-600">
+            {paragraph}
+          </p>
+        ))}
+      </div>
     </div>
   );
 }

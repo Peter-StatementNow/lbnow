@@ -3,8 +3,8 @@
  * curriculum structure, named in normal architectural language rather
  * than "heritage stages" (owner instruction, 23 Sep 2026).
  *
- * Chapter 1 ("Receiving the brief") is the fully realised, three-
- * activity build - see lib/content/architect-course-module-1.ts and
+ * Chapter 1 ("Receiving the brief") is the fully realised, six-page
+ * build - see lib/content/architect-course-module-1.ts and
  * components/course/Module1Experience.tsx.
  *
  * Chapters 2-7 (24 Sep 2026) are a content-light, one-activity-per-

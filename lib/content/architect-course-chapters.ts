@@ -4,7 +4,7 @@
  * source (course-design-discussion-from-2026-09-24-1034.md), after two
  * earlier attempts built content from lossy paraphrases of it instead.
  * Placeholder wording throughout: one task per chapter, not the fully
- * realised three-activity treatment Module 1 has. Not final guidance -
+ * realised six-page treatment Module 1 has. Not final guidance -
  * see PROTOTYPE_NOTICE.
  *
  * Case: The Old Vicarage, Church Lane, Ashcombe - Grade II listed,
@@ -27,7 +27,7 @@
  */
 
 import {
-  HERITAGE_RECORD_AFTER_ACTIVITY_3,
+  HERITAGE_RECORD_MODULE_1_COMPLETE,
   TOTAL_COURSE_MINUTES,
   initialHeritagePositionEvidence,
   type EvidenceItem,
@@ -124,7 +124,7 @@ export const CHAPTER_2: ChapterActivityContent = {
     "A proportionate baseline is not maximal or minimal - it responds to what the project actually proposes, tested against what is actually known and still uncertain about the building and its setting.",
   evidence: [LIST_ENTRY_EXTRACT, SITE_VISIT_NOTE],
   recordAfter: {
-    completed: [...HERITAGE_RECORD_AFTER_ACTIVITY_3.completed, "Proportionate baseline / information plan"],
+    completed: [...HERITAGE_RECORD_MODULE_1_COMPLETE.completed, "Proportionate baseline / information plan"],
     known:
       "The list entry covers the principal elevations and historic plan form of the house; the coach house and wall are not itemised and their status is not yet established",
     toEstablish:
