@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   HERITAGE_RECORD_INITIAL,
   type HeritageRecordState,
-} from "@/lib/content/architect-course-module-1";
+} from "@/lib/content/architect-course-chapter-1";
 
 const STORAGE_KEY = "lbnow-heritage-design-risk-course-state";
 

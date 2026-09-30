@@ -9,7 +9,7 @@ export const secondaryButton =
   "inline-flex items-center justify-center border border-neutral-300 px-6 py-3 text-sm font-medium text-neutral-800 hover:border-neutral-500";
 export const cardClassName = "border border-neutral-200 bg-white p-6";
 
-/** Small shared pieces used by every activity screen (Module 1 and the chapter framework). */
+/** Small shared pieces used by every activity screen (Chapter 1 and the chapter framework). */
 
 /** Paragraphs in `text` are separated by "\n". */
 export function FeedbackNote({ text }: { text: string }) {
@@ -38,7 +38,7 @@ export function WrongPredictionNudge() {
  * is authored (bespoke text per option, not just correct/incorrect),
  * it takes priority - otherwise falls back to the single correct-
  * answer `feedback` string or the generic wrong-answer nudge.
- * `alwaysShowFeedback` is for activities (like Module 1's Activity 1)
+ * `alwaysShowFeedback` is for activities (like Chapter 1's Activity 1)
  * where any answer unlocks the feedback - there's no "wrong" state.
  */
 export function PredictionFeedback({

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import type { HeritageRecordState } from "@/lib/content/architect-course-module-1";
+import type { HeritageRecordState } from "@/lib/content/architect-course-chapter-1";
 import { HeritageRecordPanel } from "@/components/course/HeritageRecordPanel";
 import { WORKSPACE_TABS_ID } from "@/components/course/ActivityElements";
 
@@ -32,7 +32,7 @@ const WORKSPACE_TABS: { key: WorkspaceTab; label: string }[] = [
  * documents that need to be read properly. Below lg it collapses to one
  * column, workspace first.
  *
- * Shared by Module 1's pages and the chapters 2-7 framework.
+ * Shared by Chapter 1's pages and the chapters 2-7 framework.
  */
 export function LearningScreenShell({
   courseName,

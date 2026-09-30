@@ -16,7 +16,7 @@ import {
   primaryButton,
 } from "@/components/course/ActivityElements";
 import { useCourseState } from "@/lib/course/heritage-course-store";
-import { COURSE_NAME } from "@/lib/content/architect-course-module-1";
+import { COURSE_NAME } from "@/lib/content/architect-course-chapter-1";
 import {
   PROTOTYPE_NOTICE,
   courseProgress,
@@ -28,9 +28,9 @@ const UNLOCK_HINT = "Available after you record your initial view";
 /**
  * Generic single-activity chapter renderer for the chapters 2-7
  * framework (24 Sep 2026) - one predict -> inspect -> compare -> save
- * pattern per chapter, matching Module 1's rhythm but content-light.
+ * pattern per chapter, matching Chapter 1's rhythm but content-light.
  * Chapters are separate routes (not in-memory stage switches like
- * Module 1), so the Heritage Record and completion state come from
+ * Chapter 1), so the Heritage Record and completion state come from
  * the shared localStorage-backed course store, and "read only on
  * revisit" is driven by `completedChapters` rather than component
  * state.

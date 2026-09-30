@@ -17,18 +17,18 @@ import {
 import { useCourseState } from "@/lib/course/heritage-course-store";
 import {
   COURSE_NAME,
-  MODULE_1_PAGES,
+  CHAPTER_1_PAGES,
   STAGE_LABEL,
   TOTAL_COURSE_MINUTES,
-  type Module1Page,
-} from "@/lib/content/architect-course-module-1";
+  type Chapter1Page,
+} from "@/lib/content/architect-course-chapter-1";
 
 const UNLOCK_HINT = "Available after you record your initial view";
-const NEXT_CHAPTER_HREF = "/courses/heritage-design-risk-for-architects/module-2";
+const NEXT_CHAPTER_HREF = "/courses/heritage-design-risk-for-architects/chapter-2";
 const DRAFT_NOTICE = "Draft content for review - wording may change.";
 
 /**
- * Module 1's six pages, rendered in-memory as one route. Every page
+ * Chapter 1's six pages, rendered in-memory as one route. Every page
  * follows the same sequence: initial view -> option-specific feedback
  * -> worked example -> optional comparison -> why this matters -> save
  * (the workspace's Heritage Record tab then shows the page's worked
@@ -37,8 +37,8 @@ const DRAFT_NOTICE = "Draft content for review - wording may change.";
  * page's worked position on save, whatever was chosen (no answer-
  * dependent route, score or record state - per the source document).
  */
-export function Module1Experience() {
-  const pageCount = MODULE_1_PAGES.length;
+export function Chapter1Experience() {
+  const pageCount = CHAPTER_1_PAGES.length;
   const [pageIndex, setPageIndex] = useState(0);
   const [predictions, setPredictions] = useState<(number | null)[]>(() =>
     Array(pageCount).fill(null)
@@ -47,12 +47,12 @@ export function Module1Experience() {
   const [recordRevision, setRecordRevision] = useState(0);
   const { setHeritageRecord, markChapterComplete } = useCourseState();
 
-  const page = MODULE_1_PAGES[pageIndex];
+  const page = CHAPTER_1_PAGES[pageIndex];
   const prediction = predictions[pageIndex];
   const isSaved = saved[pageIndex];
   const isLastPage = pageIndex === pageCount - 1;
 
-  const completedMinutes = MODULE_1_PAGES.reduce(
+  const completedMinutes = CHAPTER_1_PAGES.reduce(
     (sum, p, index) => sum + (saved[index] ? p.minutes : 0),
     0
   );
@@ -159,7 +159,7 @@ function PageContent({
   saved,
   onShowRecord,
 }: {
-  page: Module1Page;
+  page: Chapter1Page;
   prediction: number | null;
   onPredict: (index: number) => void;
   saved: boolean;

@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { CourseChapter } from "@/lib/content/architect-course";
 
 function badgeFor(chapter: CourseChapter): { label: string; className: string } {
-  if (!chapter.moduleHref) {
+  if (!chapter.chapterHref) {
     return {
       label: "Coming soon",
       className: "border border-neutral-200 px-2.5 py-1 text-xs font-medium text-neutral-500",
@@ -54,8 +54,8 @@ export function CourseRouteMap({ chapters }: { chapters: CourseChapter[] }) {
 
         return (
           <li key={chapter.chapterNumber} className="border-b border-neutral-200">
-            {chapter.moduleHref ? (
-              <Link href={chapter.moduleHref} className="block hover:bg-neutral-50">
+            {chapter.chapterHref ? (
+              <Link href={chapter.chapterHref} className="block hover:bg-neutral-50">
                 {row}
               </Link>
             ) : (

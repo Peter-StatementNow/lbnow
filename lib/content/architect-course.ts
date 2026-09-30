@@ -4,8 +4,8 @@
  * than "heritage stages" (owner instruction, 23 Sep 2026).
  *
  * Chapter 1 ("Receiving the brief") is the fully realised, six-page
- * build - see lib/content/architect-course-module-1.ts and
- * components/course/Module1Experience.tsx.
+ * build - see lib/content/architect-course-chapter-1.ts and
+ * components/course/Chapter1Experience.tsx.
  *
  * Chapters 2-7 (24 Sep 2026) are a content-light, one-activity-per-
  * chapter framework - see lib/content/architect-course-chapters.ts and
@@ -20,7 +20,7 @@ export type CourseChapter = {
   question: string;
   /** One-line "what heritage adds at this project point" - used on the course route map. */
   heritageAddition: string;
-  moduleHref: string | null;
+  chapterHref: string | null;
   estimatedMinutes: number | null;
   /** True for the content-light framework chapters (2-7) - not yet final content. */
   isPrototype?: boolean;
@@ -33,7 +33,7 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     question:
       "What does the client think they are asking for - and what may change because the building is historic or designated?",
     heritageAddition: "Add heritage considerations before assumptions harden",
-    moduleHref: "/courses/heritage-design-risk-for-architects/module-1",
+    chapterHref: "/courses/heritage-design-risk-for-architects/chapter-1",
     estimatedMinutes: 7,
   },
   {
@@ -42,7 +42,7 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     question:
       "What additional evidence is needed beyond a standard measured/condition survey?",
     heritageAddition: "Establish significance, evidence and uncertainty",
-    moduleHref: "/courses/heritage-design-risk-for-architects/module-2",
+    chapterHref: "/courses/heritage-design-risk-for-architects/chapter-2",
     estimatedMinutes: 9,
     isPrototype: true,
   },
@@ -52,7 +52,7 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     question:
       "How does understanding significance change option testing and design choice?",
     heritageAddition: "Test options against what matters",
-    moduleHref: "/courses/heritage-design-risk-for-architects/module-3",
+    chapterHref: "/courses/heritage-design-risk-for-architects/chapter-3",
     estimatedMinutes: 8,
     isPrototype: true,
   },
@@ -62,7 +62,7 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     question:
       "How do you explain uncertainty, consent risk, evidence needs and decision gates without alarming the client?",
     heritageAddition: "Build in consent, evidence and decision gates",
-    moduleHref: "/courses/heritage-design-risk-for-architects/module-4",
+    chapterHref: "/courses/heritage-design-risk-for-architects/chapter-4",
     estimatedMinutes: 7,
     isPrototype: true,
   },
@@ -72,7 +72,7 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     question:
       "How does a listed building change the permissions, application material, sequencing and likely scrutiny?",
     heritageAddition: "Explain effects and provide the right information",
-    moduleHref: "/courses/heritage-design-risk-for-architects/module-5",
+    chapterHref: "/courses/heritage-design-risk-for-architects/chapter-5",
     estimatedMinutes: 8,
     isPrototype: true,
   },
@@ -82,7 +82,7 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     question:
       "How do historic fabric, repair/replacement, technical upgrades and site discoveries change ordinary technical and construction management?",
     heritageAddition: "Protect fabric and manage site change",
-    moduleHref: "/courses/heritage-design-risk-for-architects/module-6",
+    chapterHref: "/courses/heritage-design-risk-for-architects/chapter-6",
     estimatedMinutes: 9,
     isPrototype: true,
   },
@@ -92,7 +92,7 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     question:
       "What needs recording, retaining and explaining to make future ownership and alteration safer?",
     heritageAddition: "Keep records for care and future work",
-    moduleHref: "/courses/heritage-design-risk-for-architects/module-7",
+    chapterHref: "/courses/heritage-design-risk-for-architects/chapter-7",
     estimatedMinutes: 8,
     isPrototype: true,
   },

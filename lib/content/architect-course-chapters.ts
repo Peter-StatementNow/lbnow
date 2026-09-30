@@ -4,12 +4,12 @@
  * source (course-design-discussion-from-2026-09-24-1034.md), after two
  * earlier attempts built content from lossy paraphrases of it instead.
  * Placeholder wording throughout: one task per chapter, not the fully
- * realised six-page treatment Module 1 has. Not final guidance -
+ * realised six-page treatment Chapter 1 has. Not final guidance -
  * see PROTOTYPE_NOTICE.
  *
  * Case: The Old Vicarage, Church Lane, Ashcombe - Grade II listed,
  * confirmed from the client's own first email (see
- * architect-course-module-1.ts). There is no reveal anywhere in this
+ * architect-course-chapter-1.ts). There is no reveal anywhere in this
  * course - the source document states this explicitly:
  *
  *   "No false twist: the house does not suddenly become Grade II
@@ -27,12 +27,12 @@
  */
 
 import {
-  HERITAGE_RECORD_MODULE_1_COMPLETE,
+  HERITAGE_RECORD_CHAPTER_1_COMPLETE,
   TOTAL_COURSE_MINUTES,
   initialHeritagePositionEvidence,
   type EvidenceItem,
   type HeritageRecordState,
-} from "@/lib/content/architect-course-module-1";
+} from "@/lib/content/architect-course-chapter-1";
 import type { ComparisonCardContent } from "@/components/course/ComparisonCard";
 import type { ScopeBoundaryCardContent } from "@/components/course/ScopeBoundaryCard";
 
@@ -124,7 +124,7 @@ export const CHAPTER_2: ChapterActivityContent = {
     "A proportionate baseline is not maximal or minimal - it responds to what the project actually proposes, tested against what is actually known and still uncertain about the building and its setting.",
   evidence: [LIST_ENTRY_EXTRACT, SITE_VISIT_NOTE],
   recordAfter: {
-    completed: [...HERITAGE_RECORD_MODULE_1_COMPLETE.completed, "Proportionate baseline / information plan"],
+    completed: [...HERITAGE_RECORD_CHAPTER_1_COMPLETE.completed, "Proportionate baseline / information plan"],
     known:
       "The list entry covers the principal elevations and historic plan form of the house; the coach house and wall are not itemised and their status is not yet established",
     toEstablish:

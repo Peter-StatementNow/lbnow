@@ -1,4 +1,4 @@
-import type { HeritageRecordState, RecordText } from "@/lib/content/architect-course-module-1";
+import type { HeritageRecordState, RecordText } from "@/lib/content/architect-course-chapter-1";
 
 const SECTIONS = [
   { key: "known", label: "Known" },
@@ -27,8 +27,8 @@ function RecordValue({ text, className }: { text: RecordText; className: string 
 
 /**
  * The four Heritage Record sections (Known / To establish / Keep under
- * review / Decision points). Shared by the side panel and the worked-
- * position card on each Module 1 page.
+ * review / Decision points), as rendered in the workspace's Heritage
+ * Record tab.
  */
 export function HeritageRecordSections({
   record,

@@ -9,7 +9,7 @@ export type Course = {
   workflow: string;
   outcomes: string[];
   status: "in-preparation";
-  /** Set once a course has its own detail page (chapter curriculum, module previews). */
+  /** Set once a course has its own detail page (chapter curriculum, chapter previews). */
   detailHref: string | null;
 };
 

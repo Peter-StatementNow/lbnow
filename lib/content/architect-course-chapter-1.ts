@@ -1,5 +1,5 @@
 /**
- * "Receiving the brief" - Module 1 of Heritage Design Risk for
+ * "Receiving the brief" - Chapter 1 of Heritage Design Risk for
  * Architects.
  *
  * Source (30 Sep 2026): module-1-heritage-record-pages-1-to-6-draft.md,
@@ -16,7 +16,7 @@
  *   listed halfway through."
  *
  * "Heritage Record" is the sole learner-facing name for the workspace
- * and the Module 1 output. "Heritage Considerations Addendum" was a
+ * and the Chapter 1 output. "Heritage Considerations Addendum" was a
  * superseded term and must not be reintroduced.
  *
  * Every page uses fixed continuation and option-specific feedback: no
@@ -172,10 +172,10 @@ const RECORD_AFTER_PAGE_5: HeritageRecordState = {
   decisionPoints: [FIRST_DECISION_POINT],
 };
 
-/** The Heritage Record at the end of Module 1 - the starting point for Chapter 2. */
-export const HERITAGE_RECORD_MODULE_1_COMPLETE: HeritageRecordState = {
+/** The Heritage Record at the end of Chapter 1 - the starting point for Chapter 2. */
+export const HERITAGE_RECORD_CHAPTER_1_COMPLETE: HeritageRecordState = {
   ...RECORD_AFTER_PAGE_5,
-  status: "Module 1 complete: receiving the brief",
+  status: "Chapter 1 complete: receiving the brief",
 };
 
 // --- Project Material -------------------------------------------------------
@@ -327,9 +327,9 @@ const HERITAGE_RECORD_EXTRACT: EvidenceItem = {
   ],
 };
 
-const MODULE_1_OUTPUTS: EvidenceItem = {
-  id: "module-1-outputs",
-  label: "Module 1 outputs",
+const CHAPTER_1_OUTPUTS: EvidenceItem = {
+  id: "chapter-1-outputs",
+  label: "Chapter 1 outputs",
   body: [
     "• The commission request and client-held information have been recorded.",
     "• The principal listed asset has been verified against the current official entry.",
@@ -358,7 +358,7 @@ export type WorkedExample = {
   groups?: { heading: string; items: string[] }[];
 };
 
-export type Module1Page = {
+export type Chapter1Page = {
   number: number;
   title: string;
   /** Editorial status from the source document - "draft" pages show a review notice. */
@@ -390,7 +390,7 @@ export type Module1Page = {
 
 const SAVE_TO_RECORD = "Save to Heritage Record";
 
-export const MODULE_1_PAGES: Module1Page[] = [
+export const CHAPTER_1_PAGES: Chapter1Page[] = [
   // --- Page 1 - Client enquiry received (agreed content) ---
   {
     number: 1,
@@ -662,9 +662,9 @@ export const MODULE_1_PAGES: Module1Page[] = [
     task: "Review the Heritage Record created at receiving-the-brief stage.",
     taskDetail:
       "Identify what it enables the project to do next—and what it deliberately does not yet decide.",
-    evidence: [MODULE_1_OUTPUTS],
-    alwaysAvailableEvidenceIds: [MODULE_1_OUTPUTS.id],
-    question: "What has Module 1 achieved?",
+    evidence: [CHAPTER_1_OUTPUTS],
+    alwaysAvailableEvidenceIds: [CHAPTER_1_OUTPUTS.id],
+    question: "What has Chapter 1 achieved?",
     options: [
       "It has determined that the client’s proposed works are acceptable and confirmed the consent route.",
       "It has created a working heritage position: verified the listed asset, recorded what is known, identified what needs establishing, and set a decision point before key project assumptions are fixed.",
@@ -673,17 +673,17 @@ export const MODULE_1_PAGES: Module1Page[] = [
     ],
     expectedIndex: 1,
     optionFeedback: [
-      "Module 1 does not determine that a particular proposal is acceptable or confirm a consent route.\nIt creates the informed starting position needed before those later project decisions can be made responsibly.",
+      "Chapter 1 does not determine that a particular proposal is acceptable or confirm a consent route.\nIt creates the informed starting position needed before those later project decisions can be made responsibly.",
       "This is the strongest summary.\nThe Heritage Record now distinguishes verified facts from open questions and identifies the first point at which further information is needed before the project commits to a position.",
-      "Module 1 is an early-stage review, not a completed heritage assessment.\nIts value is that it makes the next proportionate enquiries and decision points visible before the project fixes its scope, design or programme assumptions.",
+      "Chapter 1 is an early-stage review, not a completed heritage assessment.\nIts value is that it makes the next proportionate enquiries and decision points visible before the project fixes its scope, design or programme assumptions.",
       "The project can progress, but it should do so with the Heritage Record in view.\nThe record identifies what needs to be established before key commitments are made; it does not require every question to be resolved before the next stage begins.",
     ],
     recordBefore: RECORD_AFTER_PAGE_5,
-    recordAfter: HERITAGE_RECORD_MODULE_1_COMPLETE,
+    recordAfter: HERITAGE_RECORD_CHAPTER_1_COMPLETE,
     workedExample: {
       paragraphs: [
         "The Heritage Record is not a legal determination, a consent application or a completed assessment. It is a working project record.",
-        "At the end of Module 1, it gives the architect and client a shared account of what is verified, what remains to be established and what must happen before the project treats an important position as settled.",
+        "At the end of Chapter 1, it gives the architect and client a shared account of what is verified, what remains to be established and what must happen before the project treats an important position as settled.",
       ],
     },
     whyThisMatters:
@@ -692,7 +692,7 @@ export const MODULE_1_PAGES: Module1Page[] = [
     // Source reads "Begin Module 2: Prepare the brief"; Peter chose (30 Sep
     // 2026) to keep the existing Chapter 2 title, so the label and cue are
     // adapted to it. Flagged for content review.
-    continueLabel: "Begin Module 2: Understanding the existing building and place",
+    continueLabel: "Begin Chapter 2: Understanding the existing building and place",
     continueCue:
       "The Heritage Record now provides the starting position for the next stage: understanding the existing building and place, so the outstanding heritage questions can be addressed proportionately.",
   },

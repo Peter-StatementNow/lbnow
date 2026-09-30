@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { COURSES } from "@/lib/content/courses";
 import { ARCHITECT_COURSE_CHAPTERS } from "@/lib/content/architect-course";
-import { TOTAL_COURSE_MINUTES } from "@/lib/content/architect-course-module-1";
+import { TOTAL_COURSE_MINUTES } from "@/lib/content/architect-course-chapter-1";
 import { CourseRouteMap } from "@/components/course/CourseRouteMap";
 import { ScopeBoundaryCard } from "@/components/course/ScopeBoundaryCard";
 
@@ -87,10 +87,10 @@ export default function ArchitectCoursePage() {
         />
       </div>
 
-      {firstChapter.moduleHref && (
+      {firstChapter.chapterHref && (
         <div className="mt-8">
           <Link
-            href={firstChapter.moduleHref}
+            href={firstChapter.chapterHref}
             className="inline-flex items-center justify-center bg-action px-6 py-3 text-sm font-medium text-white hover:bg-action-hover"
           >
             Start Chapter 1 - {firstChapter.title}
@@ -124,7 +124,7 @@ export default function ArchitectCoursePage() {
                 </p>
               </div>
 
-              {!chapter.moduleHref ? (
+              {!chapter.chapterHref ? (
                 <span className="border border-neutral-200 px-3 py-1 text-xs font-medium text-neutral-500">
                   Coming soon
                 </span>
@@ -143,10 +143,10 @@ export default function ArchitectCoursePage() {
               {chapter.question}
             </p>
 
-            {chapter.moduleHref && (
+            {chapter.chapterHref && (
               <div className="mt-4">
                 <Link
-                  href={chapter.moduleHref}
+                  href={chapter.chapterHref}
                   className="text-sm font-medium text-neutral-900 underline hover:text-neutral-600"
                 >
                   Preview this chapter
