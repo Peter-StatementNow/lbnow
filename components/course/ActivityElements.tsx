@@ -63,6 +63,35 @@ export function PredictionFeedback({
   return <WrongPredictionNudge />;
 }
 
+/**
+ * Shown once the page is saved: brings the workspace's Heritage Record
+ * tab forward (see LearningScreenShell) and, on a phone - where the
+ * workspace sits above the question - scrolls up to it.
+ */
+export function SeeRecordLink({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        onClick();
+        // Wait for the tab switch to render first - otherwise the panel
+        // swapping height mid-scroll makes the browser cancel the scroll.
+        setTimeout(() =>
+          document
+            .getElementById(WORKSPACE_TABS_ID)
+            ?.scrollIntoView({ behavior: "smooth", block: "nearest" })
+        );
+      }}
+      className="justify-self-start text-left text-sm font-medium text-neutral-900 underline underline-offset-4 hover:text-neutral-600"
+    >
+      See the updated Heritage Record &rarr;
+    </button>
+  );
+}
+
+/** DOM id of the workspace tab bar, for scrolling it into view. */
+export const WORKSPACE_TABS_ID = "workspace-tabs";
+
 export function WhyThisMatters({ text }: { text: string }) {
   return (
     <div className="border-t border-neutral-200 pt-4">

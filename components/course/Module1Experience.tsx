@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { LearningScreenShell } from "@/components/course/LearningScreenShell";
-import { HeritageRecordSections } from "@/components/course/HeritageRecordPanel";
 import { PredictionBlock } from "@/components/course/PredictionBlock";
 import { ProjectMaterialPanel } from "@/components/course/ProjectMaterialPanel";
 import { ComparisonCard } from "@/components/course/ComparisonCard";
@@ -11,8 +10,8 @@ import {
   BackButton,
   CompareToggle,
   PredictionFeedback,
+  SeeRecordLink,
   WhyThisMatters,
-  cardClassName,
   primaryButton,
 } from "@/components/course/ActivityElements";
 import { useCourseState } from "@/lib/course/heritage-course-store";
@@ -31,8 +30,9 @@ const DRAFT_NOTICE = "Draft content for review - wording may change.";
 /**
  * Module 1's six pages, rendered in-memory as one route. Every page
  * follows the same sequence: initial view -> option-specific feedback
- * -> Heritage Record worked position -> worked example -> optional
- * comparison -> why this matters -> save -> fixed continue. Any answer
+ * -> worked example -> optional comparison -> why this matters -> save
+ * (the workspace's Heritage Record tab then shows the page's worked
+ * position) -> fixed continue. Any answer
  * unlocks the rest of the page; the Heritage Record moves to the
  * page's worked position on save, whatever was chosen (no answer-
  * dependent route, score or record state - per the source document).
@@ -44,6 +44,7 @@ export function Module1Experience() {
     Array(pageCount).fill(null)
   );
   const [saved, setSaved] = useState<boolean[]>(() => Array(pageCount).fill(false));
+  const [recordRevision, setRecordRevision] = useState(0);
   const { setHeritageRecord, markChapterComplete } = useCourseState();
 
   const page = MODULE_1_PAGES[pageIndex];
@@ -72,6 +73,7 @@ export function Module1Experience() {
   function save() {
     setHeritageRecord(page.recordAfter);
     setSaved((current) => current.map((v, i) => (i === pageIndex ? true : v)));
+    setRecordRevision((n) => n + 1);
     if (isLastPage) markChapterComplete(1);
   }
 
@@ -106,6 +108,7 @@ export function Module1Experience() {
         />
       }
       heritageRecord={isSaved ? page.recordAfter : page.recordBefore}
+      recordRevision={recordRevision}
       footer={
         <div className="flex flex-wrap items-center justify-between gap-4">
           {pageIndex > 0 ? <BackButton onClick={() => goTo(pageIndex - 1)} /> : <span />}
@@ -132,7 +135,13 @@ export function Module1Experience() {
         </div>
       }
     >
-      <PageContent page={page} prediction={prediction} onPredict={predict} saved={isSaved} />
+      <PageContent
+        page={page}
+        prediction={prediction}
+        onPredict={predict}
+        saved={isSaved}
+        onShowRecord={() => setRecordRevision((n) => n + 1)}
+      />
     </LearningScreenShell>
   );
 }
@@ -142,11 +151,13 @@ function PageContent({
   prediction,
   onPredict,
   saved,
+  onShowRecord,
 }: {
   page: Module1Page;
   prediction: number | null;
   onPredict: (index: number) => void;
   saved: boolean;
+  onShowRecord: () => void;
 }) {
   return (
     <div className="grid gap-6">
@@ -174,19 +185,6 @@ function PageContent({
             optionFeedback={page.optionFeedback}
           />
 
-          <div className={cardClassName}>
-            <p className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
-              Heritage Record - worked position
-            </p>
-            {page.recordAfter.status && (
-              <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-neutral-900">
-                {page.recordAfter.status}
-              </p>
-            )}
-            <div className="mt-4">
-              <HeritageRecordSections record={page.recordAfter} size="sm" />
-            </div>
-          </div>
 
           <CompareToggle label="For comparison: show a worked example">
             <div className="grid gap-3">
@@ -219,6 +217,11 @@ function PageContent({
           {page.comparisonCard && <ComparisonCard content={page.comparisonCard} />}
 
           <WhyThisMatters text={page.whyThisMatters} />
+
+          {/* The worked position itself appears in the workspace's
+              Heritage Record tab on save - no duplicate copy here. Sits
+              last, next to the save/continue footer, so it's in view. */}
+          {saved && <SeeRecordLink onClick={onShowRecord} />}
         </>
       )}
     </div>

@@ -11,8 +11,8 @@ import {
   BackButton,
   CompareToggle,
   PredictionFeedback,
+  SeeRecordLink,
   WhyThisMatters,
-  cardClassName,
   primaryButton,
 } from "@/components/course/ActivityElements";
 import { useCourseState } from "@/lib/course/heritage-course-store";
@@ -49,6 +49,7 @@ export function ChapterActivity({
   const { heritageRecord, setHeritageRecord, completedChapters, markChapterComplete } =
     useCourseState();
   const [prediction, setPrediction] = useState<number | null>(null);
+  const [recordRevision, setRecordRevision] = useState(0);
 
   const saved = completedChapters.includes(content.chapterNumber);
 
@@ -65,6 +66,7 @@ export function ChapterActivity({
   function handleSave() {
     setHeritageRecord(content.recordAfter);
     markChapterComplete(content.chapterNumber);
+    setRecordRevision((n) => n + 1);
   }
 
   return (
@@ -83,6 +85,7 @@ export function ChapterActivity({
         />
       }
       heritageRecord={saved ? content.recordAfter : heritageRecord}
+      recordRevision={recordRevision}
       footer={
         <div className="flex flex-wrap items-center justify-between gap-4">
           <BackButton href={previousHref} />
@@ -130,15 +133,6 @@ export function ChapterActivity({
               optionFeedback={content.optionFeedback}
             />
 
-            <div className={cardClassName}>
-              <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-                Added to the Heritage Record
-              </p>
-              <p className="mt-2 text-sm leading-6 text-neutral-900">
-                {content.recordAfter.known}
-              </p>
-            </div>
-
             <CompareToggle label="For comparison: show a worked example">
               <p className="text-sm leading-6 text-neutral-600">{content.workedExample}</p>
             </CompareToggle>
@@ -149,6 +143,10 @@ export function ChapterActivity({
             )}
 
             <WhyThisMatters text={content.whyThisMatters} />
+
+            {/* The saved record appears in the workspace's Heritage
+                Record tab - no duplicate copy here. */}
+            {saved && <SeeRecordLink onClick={() => setRecordRevision((n) => n + 1)} />}
           </>
         )}
       </div>

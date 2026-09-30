@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import type { HeritageRecordState, RecordText } from "@/lib/content/architect-course-module-1";
 
 const SECTIONS = [
@@ -60,52 +57,34 @@ export function HeritageRecordSections({
 /**
  * The persistent, heritage-only accumulating record - deliberately
  * excludes ordinary project-management content (client objectives,
- * budget, programme). Collapsible so it doesn't crowd the working
- * surface, especially on a phone.
+ * budget, programme). Rendered as the second tab of the right-hand
+ * workspace (see LearningScreenShell).
  */
 export function HeritageRecordPanel({ record }: { record: HeritageRecordState }) {
-  const [isOpen, setIsOpen] = useState(true);
-
   return (
-    <div className="border border-neutral-200 bg-white">
-      <button
-        type="button"
-        onClick={() => setIsOpen((v) => !v)}
-        className="flex w-full items-center justify-between px-4 py-3 text-left"
-        aria-expanded={isOpen}
-      >
-        <span className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
-          Heritage Record
-        </span>
-        <span className="text-xs text-neutral-400">{isOpen ? "Hide" : "Show"}</span>
-      </button>
-
-      {isOpen && (
-        <div className="grid gap-4 border-t border-neutral-200 px-4 py-4">
-          {record.status && (
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-neutral-900">
-                {record.status}
-              </p>
-              {record.statusNote && (
-                <p className="mt-1 text-xs leading-5 text-neutral-600">{record.statusNote}</p>
-              )}
-            </div>
+    <div className="grid gap-5 px-5 py-5">
+      {record.status && (
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-neutral-900">
+            {record.status}
+          </p>
+          {record.statusNote && (
+            <p className="mt-1 text-sm leading-6 text-neutral-600">{record.statusNote}</p>
           )}
-
-          {record.completed.length > 0 && (
-            <ul className="grid gap-1">
-              {record.completed.map((item) => (
-                <li key={item} className="text-xs font-medium text-neutral-900">
-                  &#10003; {item}
-                </li>
-              ))}
-            </ul>
-          )}
-
-          <HeritageRecordSections record={record} />
         </div>
       )}
+
+      {record.completed.length > 0 && (
+        <ul className="grid gap-1">
+          {record.completed.map((item) => (
+            <li key={item} className="text-sm font-medium text-neutral-900">
+              &#10003; {item}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <HeritageRecordSections record={record} size="sm" />
     </div>
   );
 }
