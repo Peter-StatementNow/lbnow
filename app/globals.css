@@ -3,11 +3,23 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /*
+   * Course "act here" accent (30 Sep 2026): used only where the learner
+   * has to do something - the task block, the question, the selected
+   * answer and radio, save/continue. Everything read-only stays neutral
+   * so the colour keeps its meaning.
+   */
+  --action: #1f5fa8;
+  --action-hover: #184c87;
+  --action-tint: #eef4fb;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-action: var(--action);
+  --color-action-hover: var(--action-hover);
+  --color-action-tint: var(--action-tint);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

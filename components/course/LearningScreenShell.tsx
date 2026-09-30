@@ -42,6 +42,7 @@ export function LearningScreenShell({
   projectMoment,
   task,
   taskDetail,
+  pageProgress,
   projectMaterial,
   heritageRecord,
   recordRevision = 0,
@@ -56,6 +57,8 @@ export function LearningScreenShell({
   task: string;
   /** Optional second line of the task, shown under the heading. */
   taskDetail?: string;
+  /** Position within a multi-page chapter, e.g. page 2 of 6. */
+  pageProgress?: PageProgressInfo;
   projectMaterial: ReactNode;
   heritageRecord: HeritageRecordState;
   /** Bump after saving to bring the Heritage Record tab to the front. */
@@ -81,37 +84,41 @@ export function LearningScreenShell({
             style={{ width: `${percentComplete}%` }}
           />
         </div>
-        <p className="mt-2 text-xs font-medium uppercase tracking-wide text-neutral-500">
-          {stageLabel}
-        </p>
+        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+            {stageLabel}
+          </p>
+          {pageProgress && <PageProgress {...pageProgress} />}
+        </div>
       </div>
 
-      {/* Project moment and task - held to a reading width rather than
-          running the full page. Project moment may be multiple
-          paragraphs, separated by "\n" in the content. */}
+      {/* Project moment (read: the story so far) and task (act) - held
+          to a reading width rather than running the full page. Project
+          moment may be multiple paragraphs, separated by "\n". */}
       <div className="max-w-3xl">
-        <div className="mt-6">
+        <div className="mt-6 border-l-2 border-neutral-300 bg-neutral-50 px-5 py-4">
           <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
             Project moment
           </p>
-          <div className="mt-1 grid gap-2">
+          <div className="mt-1.5 grid gap-2">
             {projectMoment.split("\n").map((paragraph) => (
-              <p key={paragraph} className="text-sm leading-6 text-neutral-600">
+              <p key={paragraph} className="text-base leading-7 text-neutral-700">
                 {paragraph}
               </p>
             ))}
           </div>
         </div>
 
-        <div className="mt-4">
-          <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+        {/* Accent = "act here" (see --action in globals.css). */}
+        <div className="mt-8 border-l-4 border-action pl-5">
+          <p className="text-xs font-semibold uppercase tracking-wide text-action">
             Your task
           </p>
-          <h1 className="mt-1 text-xl font-semibold tracking-tight text-neutral-900">
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-neutral-900">
             {task}
           </h1>
           {taskDetail && (
-            <p className="mt-1 text-base leading-7 text-neutral-700">{taskDetail}</p>
+            <p className="mt-1.5 text-base leading-7 text-neutral-700">{taskDetail}</p>
           )}
         </div>
       </div>
@@ -138,6 +145,48 @@ export function LearningScreenShell({
 
       {/* Save/continue footer */}
       <div className="mt-8 border-t border-neutral-200 pt-6">{footer}</div>
+    </div>
+  );
+}
+
+type PageProgressInfo = {
+  current: number;
+  total: number;
+  /** The current page's title, e.g. "Verify the listed asset". */
+  title: string;
+  /** How many pages have been saved - drawn as filled markers. */
+  completed: number;
+};
+
+/** "Page 2 of 6 · Verify the listed asset", with a marker per page. */
+function PageProgress({ current, total, title, completed }: PageProgressInfo) {
+  return (
+    <div className="flex items-center gap-3">
+      <ol className="flex gap-1" aria-hidden>
+        {Array.from({ length: total }, (_, index) => {
+          const pageNumber = index + 1;
+          const done = index < completed;
+          const isCurrent = pageNumber === current;
+          return (
+            <li
+              key={pageNumber}
+              className={
+                done
+                  ? "h-2 w-5 bg-neutral-900"
+                  : isCurrent
+                    ? "h-2 w-5 border border-neutral-900 bg-white"
+                    : "h-2 w-5 bg-neutral-200"
+              }
+            />
+          );
+        })}
+      </ol>
+      <p className="text-xs text-neutral-600">
+        <span className="font-medium text-neutral-900">
+          Page {current} of {total}
+        </span>{" "}
+        &middot; {title}
+      </p>
     </div>
   );
 }

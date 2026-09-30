@@ -91,7 +91,7 @@ export function ChapterActivity({
           <BackButton href={previousHref} />
           {saved ? (
             <div className="flex flex-wrap items-center gap-4">
-              <p className="text-sm font-medium text-neutral-900">
+              <p className="text-sm font-medium text-action">
                 &#10003; Saved to Heritage Record
               </p>
               <Link href={nextHref} className={primaryButton}>

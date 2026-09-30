@@ -22,12 +22,13 @@ export function PredictionBlock({
 }) {
   return (
     <div>
-      <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+      {/* Accent = "act here" (see --action in globals.css). */}
+      <p className="text-xs font-semibold uppercase tracking-wide text-action">
         Your initial view
       </p>
-      <p className="mt-1 text-sm font-medium text-neutral-800">{prompt}</p>
+      <p className="mt-1 text-base font-semibold leading-7 text-neutral-900">{prompt}</p>
       {context && (
-        <p className="mt-1 text-sm italic text-neutral-600">{context}</p>
+        <p className="mt-1 text-base italic leading-7 text-neutral-700">{context}</p>
       )}
 
       <div className="mt-3 grid gap-2">
@@ -36,8 +37,8 @@ export function PredictionBlock({
             key={option}
             className={
               selectedIndex === index
-                ? "flex cursor-pointer gap-3 border border-neutral-900 bg-neutral-50 px-4 py-3"
-                : "flex cursor-pointer gap-3 border border-neutral-200 bg-white px-4 py-3 hover:border-neutral-400"
+                ? "flex cursor-pointer gap-3 border-2 border-action bg-action-tint px-4 py-3"
+                : "flex cursor-pointer gap-3 border-2 border-neutral-200 bg-white px-4 py-3 hover:border-neutral-400"
             }
           >
             <input
@@ -46,9 +47,9 @@ export function PredictionBlock({
               checked={selectedIndex === index}
               onChange={() => onSelect(index)}
               disabled={disabled}
-              className="mt-1 h-4 w-4 shrink-0"
+              className="mt-1.5 h-4 w-4 shrink-0 accent-action"
             />
-            <span className="text-sm text-neutral-800">{option}</span>
+            <span className="text-base leading-7 text-neutral-800">{option}</span>
           </label>
         ))}
       </div>

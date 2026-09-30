@@ -91,7 +91,7 @@ export default function ArchitectCoursePage() {
         <div className="mt-8">
           <Link
             href={firstChapter.moduleHref}
-            className="inline-flex items-center justify-center bg-black px-6 py-3 text-sm font-medium text-white hover:bg-neutral-800"
+            className="inline-flex items-center justify-center bg-action px-6 py-3 text-sm font-medium text-white hover:bg-action-hover"
           >
             Start Chapter 1 - {firstChapter.title}
             {firstChapter.estimatedMinutes ? ` · ${firstChapter.estimatedMinutes} minutes` : ""}

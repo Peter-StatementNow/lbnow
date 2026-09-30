@@ -98,6 +98,12 @@ export function Module1Experience() {
       projectMoment={page.projectMoment}
       task={page.task}
       taskDetail={page.taskDetail}
+      pageProgress={{
+        current: page.number,
+        total: pageCount,
+        title: page.title,
+        completed: saved.filter(Boolean).length,
+      }}
       projectMaterial={
         <ProjectMaterialPanel
           items={page.evidence}
@@ -115,7 +121,7 @@ export function Module1Experience() {
           {isSaved ? (
             <div className="flex max-w-xl flex-col items-end gap-3 text-right">
               <p className="text-sm text-neutral-600">
-                <span className="font-medium text-neutral-900">
+                <span className="font-medium text-action">
                   &#10003; Saved to Heritage Record.
                 </span>{" "}
                 {page.continueCue}
