@@ -65,7 +65,7 @@ function EarlierChapter({ group, defaultOpen }: { group: RecordGroup; defaultOpe
         className="flex w-full items-center justify-between gap-3 py-3 text-left"
       >
         <span className="text-sm font-medium text-neutral-800">{group.label}</span>
-        <span className="shrink-0 text-xs text-neutral-400">{open ? "Hide" : "Show"}</span>
+        <span className="shrink-0 text-xs text-neutral-600">{open ? "Hide" : "Show"}</span>
       </button>
       {open && (
         <div className="pb-4">
@@ -104,9 +104,9 @@ export function HeritageRecordPanel({ record }: { record: HeritageRecordView }) 
 
       {earlier.length > 0 && (
         <div>
-          <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+          <h3 className="text-xs font-medium uppercase tracking-wide text-neutral-500">
             Earlier chapters
-          </p>
+          </h3>
           <div className="mt-2">
             {earlier.map((group, index) => (
               <EarlierChapter

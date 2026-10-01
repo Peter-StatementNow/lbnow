@@ -27,7 +27,7 @@ const EMPTY_FORM: FormState = {
 };
 
 const inputClassName =
-  "w-full border border-neutral-300 bg-white px-4 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-500 focus:outline-none";
+  "w-full border border-neutral-300 bg-white px-4 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-500 focus:border-neutral-500";
 const labelClassName = "block text-sm font-medium text-neutral-800";
 
 export function ReferralForm({

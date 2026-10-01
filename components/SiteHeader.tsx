@@ -26,7 +26,7 @@ export default function SiteHeader() {
         <div className="flex min-w-0 items-baseline gap-2">
           <Link
             href="/"
-            className="text-[15px] font-semibold tracking-tight text-neutral-900"
+            className="inline-block py-1 text-[15px] font-semibold tracking-tight text-neutral-900"
           >
             Training
           </Link>
@@ -34,7 +34,7 @@ export default function SiteHeader() {
             href={RECEPT_HERITAGE_WEBSITE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="whitespace-nowrap text-[13px] font-medium text-neutral-500 hover:text-neutral-700"
+            className="inline-block whitespace-nowrap py-1 text-[13px] font-medium text-neutral-600 hover:text-neutral-800"
           >
             by Recept Heritage
           </a>
@@ -45,7 +45,7 @@ export default function SiteHeader() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-neutral-700 hover:text-neutral-900"
+              className="inline-block py-1 text-sm font-medium text-neutral-700 hover:text-neutral-900"
             >
               {link.label}
             </Link>

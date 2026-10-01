@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { StepBadge } from "@/components/course/ActivityElements";
 
 /**
@@ -22,19 +23,24 @@ export function PredictionBlock({
   onSelect: (index: number) => void;
   disabled?: boolean;
 }) {
+  // Names the radio group after the question, so screen readers announce it.
+  const promptId = useId();
+
   return (
     <div>
       {/* Accent = "act here" (see --action in globals.css). */}
-      <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-action">
+      <h2 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-action">
         <StepBadge step={3} />
         Your initial view
+      </h2>
+      <p id={promptId} className="mt-1 text-base font-semibold leading-7 text-neutral-900">
+        {prompt}
       </p>
-      <p className="mt-1 text-base font-semibold leading-7 text-neutral-900">{prompt}</p>
       {context && (
         <p className="mt-1 text-base italic leading-7 text-neutral-700">{context}</p>
       )}
 
-      <div className="mt-3 grid gap-2">
+      <div role="radiogroup" aria-labelledby={promptId} className="mt-3 grid gap-2">
         {options.map((option, index) => (
           <label
             key={option}

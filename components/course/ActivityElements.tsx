@@ -58,12 +58,12 @@ export function AnswerResponse({
   const heading = "text-xs font-semibold uppercase tracking-wide text-action";
   return (
     <div className="border-2 border-action bg-action-tint px-5 py-4">
-      <p className={heading}>Feedback</p>
+      <h3 className={heading}>Feedback</h3>
       <div className="mt-2 grid gap-2">
         <Paragraphs text={feedback} />
       </div>
       <div className="mt-4 border-t border-action/25 pt-4">
-        <p className={heading}>Why this matters</p>
+        <h3 className={heading}>Why this matters</h3>
         <div className="mt-2 grid gap-2">
           <Paragraphs text={whyThisMatters} />
         </div>
@@ -88,14 +88,20 @@ export function SeeRecordLink({ onClick }: { onClick: () => void }) {
         setTimeout(() =>
           document
             .getElementById(WORKSPACE_TABS_ID)
-            ?.scrollIntoView({ behavior: "smooth", block: "nearest" })
+            ?.scrollIntoView({ behavior: scrollBehavior(), block: "nearest" })
         );
       }}
-      className="justify-self-start text-left text-sm font-medium text-action underline underline-offset-4 hover:text-action-hover"
+      className="-my-1.5 justify-self-start py-1.5 text-left text-sm font-medium text-action underline underline-offset-4 hover:text-action-hover"
     >
       See the updated Heritage Record &rarr;
     </button>
   );
+}
+
+/** "smooth", unless the viewer has asked their system to reduce motion. */
+export function scrollBehavior(): ScrollBehavior {
+  if (typeof window === "undefined") return "auto";
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
 }
 
 /** DOM id of the workspace tab bar, for scrolling it into view. */

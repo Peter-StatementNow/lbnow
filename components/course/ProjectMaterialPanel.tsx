@@ -30,12 +30,12 @@ function MaterialList({
               className={
                 itemUnlocked
                   ? "flex w-full items-center justify-between gap-2 py-1.5 text-left text-sm text-neutral-800 hover:text-neutral-900"
-                  : "flex w-full items-center justify-between gap-2 py-1.5 text-left text-sm text-neutral-400"
+                  : "flex w-full items-center justify-between gap-2 py-1.5 text-left text-sm text-neutral-500"
               }
             >
               <span>{item.label}</span>
               {itemUnlocked && (
-                <span className="text-xs text-neutral-400">{isOpen ? "Hide" : "Open"}</span>
+                <span className="text-xs text-neutral-600">{isOpen ? "Hide" : "Open"}</span>
               )}
             </button>
             {isOpen && (
@@ -68,7 +68,7 @@ function EarlierGroup({ group }: { group: MaterialGroup }) {
         className="flex w-full items-center justify-between gap-3 py-3 text-left"
       >
         <span className="text-sm font-medium text-neutral-800">{group.label}</span>
-        <span className="shrink-0 text-xs text-neutral-400">{open ? "Hide" : "Show"}</span>
+        <span className="shrink-0 text-xs text-neutral-600">{open ? "Hide" : "Show"}</span>
       </button>
       {open && (
         <div className="pb-3 pl-3">
@@ -130,9 +130,9 @@ export function ProjectMaterialPanel({
 
       {earlier.length > 0 && (
         <div>
-          <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+          <h3 className="text-xs font-medium uppercase tracking-wide text-neutral-500">
             Earlier project material
-          </p>
+          </h3>
           <div className="mt-2">
             {earlier.map((group) => (
               <EarlierGroup key={group.label} group={group} />

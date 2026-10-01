@@ -7,6 +7,9 @@ import { StepBadge, WORKSPACE_TABS_ID } from "@/components/course/ActivityElemen
 
 type WorkspaceTab = "material" | "record";
 
+/** The task heading - focused when the learner moves to a new page. */
+export const PAGE_TASK_ID = "page-task";
+
 const WORKSPACE_TABS: { key: WorkspaceTab; label: string }[] = [
   { key: "material", label: "Project Material" },
   { key: "record", label: "Heritage Record" },
@@ -80,7 +83,7 @@ export function LearningScreenShell({
             {percentComplete}% complete &middot; about {minutesLeft} min left
           </span>
         </div>
-        <div className="mt-2 h-1.5 w-full bg-action/15">
+        <div className="mt-2 h-1.5 w-full bg-action/15" aria-hidden>
           <div
             className="h-1.5 bg-action"
             style={{ width: `${percentComplete}%` }}
@@ -92,6 +95,12 @@ export function LearningScreenShell({
           </p>
           {pageProgress && <PageProgress {...pageProgress} />}
         </div>
+        {/* The page's main heading, for screen readers: where you are. */}
+        <h1 className="sr-only">
+          {stageLabel}
+          {pageProgress &&
+            `, page ${pageProgress.current} of ${pageProgress.total}: ${pageProgress.title}`}
+        </h1>
       </div>
 
       {/* Project moment (read: the story so far) and task (act) - held
@@ -99,10 +108,10 @@ export function LearningScreenShell({
           moment may be multiple paragraphs, separated by "\n". */}
       <div className="max-w-3xl">
         <div className="mt-6 border-l-2 border-neutral-300 bg-neutral-50 px-5 py-4">
-          <p className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-neutral-500">
+          <h2 className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-neutral-500">
             <StepBadge step={1} />
             Project moment
-          </p>
+          </h2>
           <div className="mt-1.5 grid gap-2">
             {projectMoment.split("\n").map((paragraph) => (
               <p key={paragraph} className="text-base leading-7 text-neutral-700">
@@ -118,9 +127,13 @@ export function LearningScreenShell({
             <StepBadge step={2} />
             Your task
           </p>
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-neutral-900">
+          <h2
+            id={PAGE_TASK_ID}
+            tabIndex={-1}
+            className="mt-1 text-2xl font-semibold tracking-tight text-neutral-900 focus:outline-none"
+          >
             {task}
-          </h1>
+          </h2>
           {taskDetail && (
             <p className="mt-1.5 text-base leading-7 text-neutral-700">{taskDetail}</p>
           )}
@@ -225,11 +238,31 @@ function WorkspaceTabs({
 
   return (
     <div className="border border-neutral-200 bg-white">
+      {/* Standard tabs keyboard pattern: only the selected tab is in the
+          Tab order; Left/Right/Home/End move between tabs. */}
       <div
         role="tablist"
         id={WORKSPACE_TABS_ID}
         aria-label="Project workspace"
         className="flex scroll-mt-6 border-b border-neutral-200"
+        onKeyDown={(event) => {
+          const keys = ["ArrowLeft", "ArrowRight", "Home", "End"];
+          if (!keys.includes(event.key)) return;
+          event.preventDefault();
+          const index = WORKSPACE_TABS.findIndex((tab) => tab.key === active);
+          const last = WORKSPACE_TABS.length - 1;
+          const nextIndex =
+            event.key === "Home"
+              ? 0
+              : event.key === "End"
+                ? last
+                : event.key === "ArrowRight"
+                  ? (index + 1) % WORKSPACE_TABS.length
+                  : (index + last) % WORKSPACE_TABS.length;
+          const next = WORKSPACE_TABS[nextIndex].key;
+          setActive(next);
+          document.getElementById(`workspace-tab-${next}`)?.focus();
+        }}
       >
         {WORKSPACE_TABS.map((tab) => {
           const selected = active === tab.key;
@@ -241,11 +274,12 @@ function WorkspaceTabs({
               id={`workspace-tab-${tab.key}`}
               aria-selected={selected}
               aria-controls={`workspace-panel-${tab.key}`}
+              tabIndex={selected ? 0 : -1}
               onClick={() => setActive(tab.key)}
               className={
                 selected
                   ? "-mb-px flex-1 border-b-2 border-neutral-900 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-neutral-900"
-                  : "-mb-px flex-1 border-b-2 border-transparent px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-neutral-400 hover:text-neutral-700"
+                  : "-mb-px flex-1 border-b-2 border-transparent px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-neutral-500 hover:text-neutral-800"
               }
             >
               <span className="flex items-center gap-2">

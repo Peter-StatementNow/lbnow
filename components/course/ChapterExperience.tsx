@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { LearningScreenShell } from "@/components/course/LearningScreenShell";
+import { LearningScreenShell, PAGE_TASK_ID } from "@/components/course/LearningScreenShell";
 import { PredictionBlock } from "@/components/course/PredictionBlock";
 import { ProjectMaterialPanel } from "@/components/course/ProjectMaterialPanel";
 import { ComparisonCard } from "@/components/course/ComparisonCard";
@@ -10,6 +10,7 @@ import {
   BackButton,
   AnswerResponse,
   SeeRecordLink,
+  scrollBehavior,
   StepBadge,
   type Step,
   primaryButton,
@@ -65,7 +66,10 @@ export function ChapterExperience({ chapterNumber }: { chapterNumber: number }) 
   function goTo(index: number) {
     setPageIndex(index);
     if (typeof window !== "undefined") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: scrollBehavior() });
+      // Take keyboard and screen-reader focus to the new page's task,
+      // rather than leaving it on the button that has just gone.
+      setTimeout(() => document.getElementById(PAGE_TASK_ID)?.focus({ preventScroll: true }));
     }
   }
 
@@ -208,7 +212,7 @@ function WelcomeNote() {
         <button
           type="button"
           onClick={dismiss}
-          className="shrink-0 text-xs font-medium text-action underline hover:text-action-hover"
+          className="-my-1.5 shrink-0 px-2 py-1.5 text-xs font-medium text-action underline hover:text-action-hover"
         >
           Got it
         </button>
@@ -268,12 +272,18 @@ function PageContent({
         disabled={saved}
       />
 
-      {prediction !== null && (
-        <>
+      {/* Announced to screen readers when it appears after answering. */}
+      <div aria-live="polite">
+        {prediction !== null && (
           <AnswerResponse
             feedback={page.optionFeedback[prediction]}
             whyThisMatters={page.whyThisMatters}
           />
+        )}
+      </div>
+
+      {prediction !== null && (
+        <>
 
           {/* Step 4 - further analysis: reading that deepens the answer,
               grouped in one box (neutral, like step 1, because it is
@@ -285,9 +295,9 @@ function PageContent({
             </h2>
 
             <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+              <h3 className="text-xs font-medium uppercase tracking-wide text-neutral-500">
                 Worked example
-              </p>
+              </h3>
               <div className="mt-2 grid gap-3">
                 {page.workedExample.paragraphs.map((paragraph) => (
                   <p key={paragraph} className="text-sm leading-6 text-neutral-700">
@@ -317,9 +327,9 @@ function PageContent({
 
             {page.resourcePrompt && (
               <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+                <h3 className="text-xs font-medium uppercase tracking-wide text-neutral-500">
                   Guidance and resources
-                </p>
+                </h3>
                 <p className="mt-2 text-sm leading-6 text-neutral-700">{page.resourcePrompt}</p>
               </div>
             )}

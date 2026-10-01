@@ -16,7 +16,7 @@ export default function SiteFooter() {
           className="flex flex-wrap gap-4 text-sm text-neutral-600"
         >
           {FOOTER_LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className="hover:text-neutral-900">
+            <Link key={link.href} href={link.href} className="inline-block py-1 hover:text-neutral-900">
               {link.label}
             </Link>
           ))}
@@ -28,7 +28,7 @@ export default function SiteFooter() {
             href={RECEPT_HERITAGE_WEBSITE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline hover:text-neutral-700"
+            className="inline-block py-1 underline hover:text-neutral-700"
           >
             Recept Heritage
           </a>

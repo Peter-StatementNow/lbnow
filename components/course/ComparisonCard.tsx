@@ -23,14 +23,14 @@ export function ComparisonCard({ content }: { content: ComparisonCardContent }) 
   return (
     <div>
       <div className="flex items-baseline justify-between gap-3">
-        <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+        <h3 className="text-xs font-medium uppercase tracking-wide text-neutral-500">
           Other heritage options
-        </p>
+        </h3>
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          className="shrink-0 text-xs font-medium text-neutral-600 underline hover:text-neutral-900"
+          className="-my-1.5 shrink-0 px-2 py-1.5 text-xs font-medium text-neutral-600 underline hover:text-neutral-900"
         >
           {open ? "Hide" : "Show"}
         </button>
