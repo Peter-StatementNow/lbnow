@@ -8,12 +8,11 @@ import { ProjectMaterialPanel } from "@/components/course/ProjectMaterialPanel";
 import { ComparisonCard } from "@/components/course/ComparisonCard";
 import {
   BackButton,
-  CompareToggle,
   PredictionFeedback,
   SeeRecordLink,
   StepBadge,
+  type Step,
   WhyThisMatters,
-  cardClassName,
   primaryButton,
 } from "@/components/course/ActivityElements";
 import { useCourseState } from "@/lib/course/heritage-course-store";
@@ -145,7 +144,7 @@ export function ChapterExperience({ chapterNumber }: { chapterNumber: number }) 
             </div>
           ) : (
             <div className="flex items-center gap-3">
-              <StepBadge step={4} />
+              <StepBadge step={5} />
               <button
                 type="button"
                 onClick={save}
@@ -174,7 +173,7 @@ export function ChapterExperience({ chapterNumber }: { chapterNumber: number }) 
 const WELCOME_DISMISSED_KEY = "lbnow-course-welcome-dismissed";
 
 /**
- * One-off orientation on the course's first page: how the four numbered
+ * One-off orientation on the course's first page: how the five numbered
  * steps work and where the Heritage Record lives. Dismissal is a
  * per-viewer convenience, so it lives in localStorage (and the note
  * simply shows again if storage is unavailable).
@@ -225,13 +224,14 @@ function WelcomeNote() {
             3,
             "Choose the answer you think is strongest. Any answer is fine - each one gets its own feedback explaining the reasoning.",
           ],
+          [4, "Read the further analysis - a worked example and, where useful, a comparison."],
           [
-            4,
+            5,
             "Save to your Heritage Record. It opens in the Heritage Record tab and builds up chapter by chapter - it is what you take away from the course.",
           ],
         ].map(([step, text]) => (
           <li key={step} className="flex gap-3 text-sm leading-6 text-neutral-700">
-            <StepBadge step={step as 1 | 2 | 3 | 4} />
+            <StepBadge step={step as Step} />
             <span>{text}</span>
           </li>
         ))}
@@ -277,46 +277,59 @@ function PageContent({
             optionFeedback={page.optionFeedback}
           />
 
-          <CompareToggle label="For comparison: show a worked example">
-            <div className="grid gap-3">
-              {page.workedExample.paragraphs.map((paragraph) => (
-                <p key={paragraph} className="text-sm leading-6 text-neutral-600">
-                  {paragraph}
-                </p>
-              ))}
-              {page.workedExample.groups && (
-                <div className="mt-1 grid gap-4 sm:grid-cols-2">
-                  {page.workedExample.groups.map((group) => (
-                    <div key={group.heading}>
-                      <p className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
-                        {group.heading}
-                      </p>
-                      <ul className="mt-2 grid gap-1.5">
-                        {group.items.map((line) => (
-                          <li key={line} className="text-xs leading-5 text-neutral-600">
-                            - {line}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </CompareToggle>
-
-          {page.resourcePrompt && (
-            <div className={cardClassName}>
-              <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-                Guidance and resources
-              </p>
-              <p className="mt-2 text-sm leading-6 text-neutral-700">{page.resourcePrompt}</p>
-            </div>
-          )}
-
-          {page.comparisonCard && <ComparisonCard content={page.comparisonCard} />}
-
           <WhyThisMatters text={page.whyThisMatters} />
+
+          {/* Step 4 - further analysis: reading that deepens the answer,
+              grouped in one box (neutral, like step 1, because it is
+              reading rather than acting). */}
+          <section className="grid gap-5 border border-neutral-300 bg-neutral-50 px-5 py-5">
+            <h2 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-neutral-700">
+              <StepBadge step={4} />
+              Further analysis
+            </h2>
+
+            <div>
+              <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+                Worked example
+              </p>
+              <div className="mt-2 grid gap-3">
+                {page.workedExample.paragraphs.map((paragraph) => (
+                  <p key={paragraph} className="text-sm leading-6 text-neutral-700">
+                    {paragraph}
+                  </p>
+                ))}
+                {page.workedExample.groups && (
+                  <div className="mt-1 grid gap-4 sm:grid-cols-2">
+                    {page.workedExample.groups.map((group) => (
+                      <div key={group.heading}>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
+                          {group.heading}
+                        </p>
+                        <ul className="mt-2 grid gap-1.5">
+                          {group.items.map((line) => (
+                            <li key={line} className="text-sm leading-6 text-neutral-700">
+                              - {line}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {page.resourcePrompt && (
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+                  Guidance and resources
+                </p>
+                <p className="mt-2 text-sm leading-6 text-neutral-700">{page.resourcePrompt}</p>
+              </div>
+            )}
+
+            {page.comparisonCard && <ComparisonCard content={page.comparisonCard} />}
+          </section>
 
           {/* The worked position itself appears in the workspace's
               Heritage Record tab on save - no duplicate copy here. Sits

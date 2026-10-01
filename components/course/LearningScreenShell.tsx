@@ -68,24 +68,26 @@ export function LearningScreenShell({
 }) {
   return (
     <div className="mx-auto max-w-6xl px-6 py-10">
-      {/* Course bar - percent/time is a course-level measure, so it
-          pairs with the course name; the chapter label (fixed for the
-          whole chapter) sits below the progress bar. */}
-      <div>
-        <div className="flex items-baseline justify-between gap-3 text-xs text-neutral-500">
-          <span className="font-medium text-neutral-700">{courseName}</span>
+      {/* Course progress band - frames the page. Pale accent tint (the
+          "where you are" chrome) with dark text, so the solid accent stays
+          reserved for things the learner acts on. Percent/time is a
+          course-level measure, so it pairs with the course name; the
+          chapter label and page markers sit below the bar. */}
+      <div className="border border-action/25 bg-action-tint px-5 py-4">
+        <div className="flex items-baseline justify-between gap-3 text-xs text-neutral-600">
+          <span className="font-semibold text-neutral-900">{courseName}</span>
           <span>
             {percentComplete}% complete &middot; about {minutesLeft} min left
           </span>
         </div>
-        <div className="mt-1.5 h-1.5 w-full bg-neutral-200">
+        <div className="mt-2 h-1.5 w-full bg-action/15">
           <div
-            className="h-1.5 bg-neutral-900"
+            className="h-1.5 bg-action"
             style={{ width: `${percentComplete}%` }}
           />
         </div>
-        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2">
-          <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <p className="text-xs font-medium uppercase tracking-wide text-neutral-700">
             {stageLabel}
           </p>
           {pageProgress && <PageProgress {...pageProgress} />}
@@ -185,7 +187,7 @@ function PageProgress({ current, total, title, completed }: PageProgressInfo) {
                   ? "h-2 w-5 bg-neutral-900"
                   : isCurrent
                     ? "h-2 w-5 border border-neutral-900 bg-white"
-                    : "h-2 w-5 bg-neutral-200"
+                    : "h-2 w-5 bg-action/20"
               }
             />
           );

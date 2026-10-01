@@ -1,29 +1,30 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 
 export const primaryButton =
   "inline-flex items-center justify-center bg-action px-6 py-3 text-sm font-medium text-white hover:bg-action-hover disabled:cursor-not-allowed disabled:bg-neutral-300";
 export const secondaryButton =
   "inline-flex items-center justify-center border border-neutral-300 px-6 py-3 text-sm font-medium text-neutral-800 hover:border-neutral-500";
-export const cardClassName = "border border-neutral-200 bg-white p-6";
 
-/** Small shared pieces used by every activity screen (Chapter 1 and the chapter framework). */
+/** Small shared pieces used by every chapter page. */
 
 /**
- * The page's four-step rhythm, numbered on every learning page and
+ * The page's five-step rhythm, numbered on every learning page and
  * explained on the course overview ("How the course works"):
- * 1 project moment, 2 task + project material, 3 your initial view,
- * 4 save to the Heritage Record. Step 1 is reading, so it stays
- * neutral; 2-4 are actions, so they take the accent.
+ * 1 project moment, 2 task + project material, 3 your initial view
+ * (with feedback), 4 further analysis, 5 save to the Heritage Record.
+ * Reading steps (1, 4) stay neutral; action steps (2, 3, 5) take the
+ * accent.
  */
-export function StepBadge({ step }: { step: 1 | 2 | 3 | 4 }) {
+export type Step = 1 | 2 | 3 | 4 | 5;
+
+export function StepBadge({ step }: { step: Step }) {
   return (
     <span
       aria-hidden
       className={
-        step === 1
+        step === 1 || step === 4
           ? "inline-flex h-5 w-5 shrink-0 items-center justify-center border border-neutral-400 text-[11px] font-semibold text-neutral-600"
           : "inline-flex h-5 w-5 shrink-0 items-center justify-center border border-action text-[11px] font-semibold text-action"
       }
@@ -37,6 +38,7 @@ export function StepBadge({ step }: { step: 1 | 2 | 3 | 4 }) {
 export function FeedbackNote({ text }: { text: string }) {
   return (
     <div className="grid gap-2 border border-neutral-300 bg-neutral-50 px-5 py-4">
+      <p className="text-xs font-semibold uppercase tracking-wide text-neutral-600">Feedback</p>
       {text.split("\n").map((paragraph) => (
         <p key={paragraph} className="text-sm leading-6 text-neutral-700">
           {paragraph}
@@ -143,34 +145,5 @@ export function BackButton({ onClick, href }: { onClick?: () => void; href?: str
     <button type="button" onClick={onClick} className={secondaryButton}>
       &larr; Back
     </button>
-  );
-}
-
-export function CompareToggle({
-  label,
-  open: openProp,
-  onToggle,
-  children,
-}: {
-  label: string;
-  open?: boolean;
-  onToggle?: () => void;
-  children: React.ReactNode;
-}) {
-  const [localOpen, setLocalOpen] = useState(false);
-  const open = openProp ?? localOpen;
-  const toggle = onToggle ?? (() => setLocalOpen((v) => !v));
-
-  return (
-    <div>
-      <button
-        type="button"
-        onClick={toggle}
-        className="text-sm font-medium text-neutral-700 underline hover:text-neutral-900"
-      >
-        {open ? "Hide worked example" : label}
-      </button>
-      {open && <div className="mt-3 border border-neutral-200 bg-neutral-50 p-4">{children}</div>}
-    </div>
   );
 }

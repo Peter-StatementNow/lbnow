@@ -4,7 +4,7 @@ import { COURSES } from "@/lib/content/courses";
 import { ARCHITECT_COURSE_CHAPTERS } from "@/lib/content/architect-course";
 import { CHAPTER_MINUTES, TOTAL_COURSE_MINUTES } from "@/lib/content/architect-course-chapters";
 import { CourseRouteMap } from "@/components/course/CourseRouteMap";
-import { StepBadge } from "@/components/course/ActivityElements";
+import { StepBadge, type Step } from "@/components/course/ActivityElements";
 
 const course = COURSES.find(
   (entry) => entry.slug === "heritage-design-risk-for-architects"
@@ -18,11 +18,11 @@ export const metadata: Metadata = {
 };
 
 /**
- * The four steps every learning page follows - kept in step with the
+ * The five steps every learning page follows - kept in step with the
  * numbered sections on the pages themselves (LearningScreenShell,
- * PredictionBlock, ChapterExperience's save button).
+ * PredictionBlock, ChapterExperience).
  */
-const HOW_IT_WORKS: { step: 1 | 2 | 3 | 4; title: string; body: string }[] = [
+const HOW_IT_WORKS: { step: Step; title: string; body: string }[] = [
   {
     step: 1,
     title: "Read the project moment",
@@ -36,10 +36,15 @@ const HOW_IT_WORKS: { step: 1 | 2 | 3 | 4; title: string; body: string }[] = [
   {
     step: 3,
     title: "Answer the question",
-    body: "Choose the answer you think is strongest. Any answer is fine - each one gets its own feedback explaining the reasoning, followed by a worked example.",
+    body: "Choose the answer you think is strongest. Any answer is fine - each one gets its own feedback explaining the reasoning, followed by why it matters.",
   },
   {
     step: 4,
+    title: "Read the further analysis",
+    body: "A worked example and, where useful, how the approach would change for a different heritage trigger such as a conservation area or local listing.",
+  },
+  {
+    step: 5,
     title: "Save to your Heritage Record",
     body: "A working record of what is known, what needs establishing and which decisions must not harden too early. It builds up chapter by chapter - it is what you take away from the course.",
   },
@@ -91,7 +96,7 @@ export default function ArchitectCoursePage() {
       <h2 className="mt-14 text-xl font-semibold text-neutral-900">How the course works</h2>
       <p className="mt-2 text-sm leading-6 text-neutral-600">
         You follow one case - alterations to The Old Vicarage, a Grade II listed house - from
-        the client&rsquo;s first email to handover. Every page follows the same four steps:
+        the client&rsquo;s first email to handover. Every page follows the same five steps:
       </p>
       <ol className="mt-5 grid gap-4">
         {HOW_IT_WORKS.map((item) => (
