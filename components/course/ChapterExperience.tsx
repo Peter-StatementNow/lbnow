@@ -120,6 +120,7 @@ export function ChapterExperience({ chapterNumber }: { chapterNumber: number }) 
       projectMaterial={
         <ProjectMaterialPanel
           items={page.evidence}
+          earlier={page.earlierEvidence}
           unlocked={prediction !== null}
           unlockHint={UNLOCK_HINT}
           alwaysAvailableIds={page.alwaysAvailableEvidenceIds}

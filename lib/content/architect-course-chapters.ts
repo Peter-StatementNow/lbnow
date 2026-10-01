@@ -16,7 +16,8 @@
  * are revisited as an open question in Chapter 7.
  */
 
-import type { CoursePage } from "@/lib/content/course-model";
+import type { CoursePage, EvidenceItem, MaterialGroup } from "@/lib/content/course-model";
+import { ARCHITECT_COURSE_CHAPTERS } from "@/lib/content/architect-course";
 import { CHAPTER_1_PAGES } from "@/lib/content/architect-course-chapter-1";
 import { CHAPTER_2_PAGES } from "@/lib/content/architect-course-chapter-2";
 import { CHAPTER_3_PAGES } from "@/lib/content/architect-course-chapter-3";
@@ -25,15 +26,60 @@ import { CHAPTER_5_PAGES } from "@/lib/content/architect-course-chapter-5";
 import { CHAPTER_6_PAGES } from "@/lib/content/architect-course-chapter-6";
 import { CHAPTER_7_PAGES } from "@/lib/content/architect-course-chapter-7";
 
-export const CHAPTER_PAGES: Record<number, CoursePage[]> = {
-  1: CHAPTER_1_PAGES,
-  2: CHAPTER_2_PAGES,
-  3: CHAPTER_3_PAGES,
-  4: CHAPTER_4_PAGES,
-  5: CHAPTER_5_PAGES,
-  6: CHAPTER_6_PAGES,
-  7: CHAPTER_7_PAGES,
-};
+const PAGES_BY_CHAPTER: CoursePage[][] = [
+  CHAPTER_1_PAGES,
+  CHAPTER_2_PAGES,
+  CHAPTER_3_PAGES,
+  CHAPTER_4_PAGES,
+  CHAPTER_5_PAGES,
+  CHAPTER_6_PAGES,
+  CHAPTER_7_PAGES,
+];
+
+/** Each document once, in the order first introduced. */
+function uniqueItems(pages: CoursePage[]): EvidenceItem[] {
+  const seen = new Map<string, EvidenceItem>();
+  for (const page of pages) {
+    for (const item of page.evidence) if (!seen.has(item.id)) seen.set(item.id, item);
+  }
+  return [...seen.values()];
+}
+
+/**
+ * Project Material is cumulative (Peter, 1 Oct 2026): every page keeps
+ * the documents introduced before it - first this chapter's earlier
+ * pages, then each earlier chapter, newest first. A document already on
+ * the current page isn't repeated.
+ */
+function withEarlierEvidence(chapters: CoursePage[][]): CoursePage[][] {
+  const chapterGroups: MaterialGroup[] = [];
+  return chapters.map((pages, chapterIndex) => {
+    const chapter = ARCHITECT_COURSE_CHAPTERS[chapterIndex];
+    const result = pages.map((page, pageIndex) => {
+      const onThisPage = new Set(page.evidence.map((item) => item.id));
+      const notHere = (group: MaterialGroup): MaterialGroup => ({
+        ...group,
+        items: group.items.filter((item) => !onThisPage.has(item.id)),
+      });
+      const groups = [
+        { label: "Earlier in this chapter", items: uniqueItems(pages.slice(0, pageIndex)) },
+        ...chapterGroups,
+      ]
+        .map(notHere)
+        .filter((group) => group.items.length > 0);
+      return { ...page, earlierEvidence: groups };
+    });
+    chapterGroups.unshift({
+      label: `Chapter ${chapter.chapterNumber} · ${chapter.title}`,
+      items: uniqueItems(pages),
+    });
+    return result;
+  });
+}
+
+export const CHAPTER_PAGES: Record<number, CoursePage[]> = Object.fromEntries(
+  withEarlierEvidence(PAGES_BY_CHAPTER).map((pages, index) => [index + 1, pages])
+);
 
 function sumMinutes(pages: CoursePage[]) {
   return pages.reduce((sum, page) => sum + page.minutes, 0);

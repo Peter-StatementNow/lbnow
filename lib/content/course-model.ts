@@ -126,9 +126,18 @@ export type PageContent = {
   continueCue: string;
 };
 
+/** A labelled set of earlier Project Material, e.g. one chapter's documents. */
+export type MaterialGroup = { label: string; items: EvidenceItem[] };
+
 export type CoursePage = PageContent & {
   recordBefore: HeritageRecordView;
   recordAfter: HeritageRecordView;
+  /**
+   * Project Material is cumulative (Peter, 1 Oct 2026): documents from
+   * earlier pages and chapters stay available, grouped by chapter,
+   * newest first. Filled in by lib/content/architect-course-chapters.ts.
+   */
+  earlierEvidence?: MaterialGroup[];
 };
 
 /** A Chapter 2-7 page as authored: the record entries it adds, as written in the source. */
