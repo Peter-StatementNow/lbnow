@@ -5,8 +5,7 @@
  *
  * Every chapter is built as a sequence of pages (see
  * lib/content/architect-course-chapters.ts and
- * components/course/ChapterExperience.tsx). Chapters 2-7 are a revised
- * draft (1 Oct 2026) still in content review (`inReview: true`).
+ * components/course/ChapterExperience.tsx).
  */
 
 export type CourseChapter = {
@@ -17,8 +16,6 @@ export type CourseChapter = {
   heritageAddition: string;
   chapterHref: string | null;
   estimatedMinutes: number | null;
-  /** True while the chapter's content is still a draft in review. */
-  inReview?: boolean;
 };
 
 export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
@@ -39,7 +36,6 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     heritageAddition: "Establish significance, evidence and uncertainty",
     chapterHref: "/courses/heritage-design-risk-for-architects/chapter-2",
     estimatedMinutes: 9,
-    inReview: true,
   },
   {
     chapterNumber: 3,
@@ -49,7 +45,6 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     heritageAddition: "Test options against what matters",
     chapterHref: "/courses/heritage-design-risk-for-architects/chapter-3",
     estimatedMinutes: 8,
-    inReview: true,
   },
   {
     chapterNumber: 4,
@@ -59,7 +54,6 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     heritageAddition: "Build in consent, evidence and decision gates",
     chapterHref: "/courses/heritage-design-risk-for-architects/chapter-4",
     estimatedMinutes: 7,
-    inReview: true,
   },
   {
     chapterNumber: 5,
@@ -69,7 +63,6 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     heritageAddition: "Explain effects and provide the right information",
     chapterHref: "/courses/heritage-design-risk-for-architects/chapter-5",
     estimatedMinutes: 8,
-    inReview: true,
   },
   {
     chapterNumber: 6,
@@ -79,7 +72,6 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     heritageAddition: "Protect fabric and manage site change",
     chapterHref: "/courses/heritage-design-risk-for-architects/chapter-6",
     estimatedMinutes: 9,
-    inReview: true,
   },
   {
     chapterNumber: 7,
@@ -89,6 +81,5 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     heritageAddition: "Keep records for care and future work",
     chapterHref: "/courses/heritage-design-risk-for-architects/chapter-7",
     estimatedMinutes: 8,
-    inReview: true,
   },
 ];

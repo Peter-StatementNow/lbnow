@@ -98,7 +98,8 @@ const DRAFTS: PageDraft[] = [
           "The development, condition and contribution of the rear range and the fabric likely to be affected by proposed openings, services and internal changes.",
           "The significance and condition of internal doors and other fabric likely to be affected.",
           "The condition of roof-space fabric and existing insulation/service interventions relevant to energy work.",
-          "The relevant relationship of house, garden, wall and coach house.",
+          "The status of the former coach house and boundary wall before future alteration is assumed.",
+          "Their contribution, together with the garden and gate piers, to the significance and setting of the principal listed building.",
         ],
       },
     ],
@@ -150,7 +151,6 @@ const DRAFTS: PageDraft[] = [
         heading: "To establish",
         entries: [
           "The contribution of the rear range, internal doors, altered openings and surviving fabric to the significance of the principal house.",
-          "The contribution of the garden, boundary wall, gate piers and coach-house relationship to the setting and historic character of the site.",
           "Which elements are likely to be materially affected by each credible option.",
         ],
       },
@@ -159,6 +159,7 @@ const DRAFTS: PageDraft[] = [
         entries: [
           "Whether emerging design choices affect significant fabric, spaces, setting or relationships.",
           "Whether further survey, opening-up or specialist input is proportionate before a preferred option is selected.",
+          "Whether the developing proposal affects those relationships, access, boundary treatment or future options for the coach house.",
         ],
       },
     ],

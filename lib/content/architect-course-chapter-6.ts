@@ -118,7 +118,7 @@ const DRAFTS: PageDraft[] = [
     ],
     workedExample: {
       paragraphs: [
-        "The project may conclude that local lime-based repair is appropriate, that a later incompatible patch needs careful removal, or that a moisture issue must be addressed first. It should not specify gypsum simply because it is the familiar default without understanding the existing fabric and cause of failure.",
+        "The project may conclude that local lime-based repair is appropriate, that a later incompatible patch needs careful removal, or that a moisture issue must be addressed first. Lime repair may be appropriate where the existing material, condition and building performance support it; it is not a substitute for identifying the existing fabric and the cause of failure. It should not specify gypsum simply because it is the familiar default without understanding the existing fabric and cause of failure.",
       ],
     },
     resourcePrompt:
@@ -204,7 +204,7 @@ const DRAFTS: PageDraft[] = [
     question: "What should happen before the change is agreed?",
     options: [
       "Move or enlarge the opening immediately if it keeps the programme on track.",
-      "Hold the affected irreversible work; record and assess the discovery and credible responses; compare them with the approved drawings, conditions and consent rationale; obtain suitable design/specialist advice; confirm whether further formal agreement, an amendment, discharge, variation or additional consent is required; then issue a documented instruction.",
+      "Hold the affected irreversible work; record and assess the discovery and credible responses; compare them with the approved drawings, conditions and consent rationale; obtain suitable design/specialist advice; confirm with the relevant authority whether the change can proceed under the existing approval, requires a condition discharge or other formal agreement, or requires a further application or consent; then issue a documented instruction.",
       "Continue the original work because the concealed fabric was not visible when consent was obtained.",
       "Assume every site change requires a new listed building consent and stop the whole project until this is obtained.",
     ],
@@ -221,7 +221,7 @@ const DRAFTS: PageDraft[] = [
         entries: [
           "Discovery or proposed change: Concealed timber member and earlier wall fabric at proposed opening; potential relocation, reduction or larger structural intervention.",
           "Approved position affected: Limited intervention and opening strategy described in approved drawings and supporting heritage rationale.",
-          "To establish: Extent, condition and significance of fabric; revised design options; effect on approved approach; required design/specialist advice; and whether relevant formal agreement, amendment, discharge, variation or additional consent is required.",
+          "To establish: Extent, condition and significance of fabric; revised design options; effect on approved approach; required design/specialist advice; and, with the relevant authority, whether the change can proceed under the existing approval, requires a condition discharge or other formal agreement, or requires a further application or consent.",
           "Decision point: Do not proceed with irreversible work until the project and approval position are confirmed and a documented instruction is issued.",
         ],
       },

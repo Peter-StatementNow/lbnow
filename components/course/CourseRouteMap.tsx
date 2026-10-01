@@ -8,13 +8,6 @@ function badgeFor(chapter: CourseChapter): { label: string; className: string } 
       className: "border border-neutral-200 px-2.5 py-1 text-xs font-medium text-neutral-500",
     };
   }
-  if (chapter.inReview) {
-    return {
-      label: "Draft for review",
-      className:
-        "border border-neutral-300 bg-neutral-100 px-2.5 py-1 text-xs font-medium text-neutral-600",
-    };
-  }
   return {
     label: "Available now",
     className: "border border-neutral-900 bg-neutral-900 px-2.5 py-1 text-xs font-medium text-white",

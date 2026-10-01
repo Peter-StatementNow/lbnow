@@ -25,6 +25,20 @@ const DEVELOPED_PROPOSAL: EvidenceItem = {
   ],
 };
 
+const CONSENT_AND_VALIDATION_CHECK: EvidenceItem = {
+  id: "consent-and-validation-check",
+  label: "Consent and validation check",
+  body: [
+    "CONSENT AND VALIDATION CHECK",
+    "Before preparing supporting material, confirm:",
+    "• The relevant consent or application route(s).",
+    "• Current local validation requirements.",
+    "• Whether the proposal affects any other heritage control or designation.",
+    "• What level of supporting heritage information is proportionate to the proposal, evidence available and local requirements.",
+    "Requirements vary by authority and proposal. Do not assume that one consent, one report or one level of information applies to every project.",
+  ],
+};
+
 const DESIGN_RESPONSE_SCHEDULE: EvidenceItem = {
   id: "design-response-schedule",
   label: "Design response schedule",
@@ -61,8 +75,10 @@ const DRAFTS: PageDraft[] = [
     projectMoment:
       "The compact extension and limited rear-range alteration are now developed. Targeted investigation has informed the opening strategy, and the project needs to submit the right information for the relevant consent route.\nThe supporting material should not be a generic heritage report. It needs to explain this proposal: what matters, what changes and how the design responds.",
     task: "Identify the strongest structure for the heritage explanation.",
-    evidence: [DEVELOPED_PROPOSAL],
-    alwaysAvailableEvidenceIds: [DEVELOPED_PROPOSAL.id],
+    taskDetail:
+      "Before explaining the heritage case, confirm the relevant application route and current local validation requirements.",
+    evidence: [CONSENT_AND_VALIDATION_CHECK, DEVELOPED_PROPOSAL],
+    alwaysAvailableEvidenceIds: [CONSENT_AND_VALIDATION_CHECK.id, DEVELOPED_PROPOSAL.id],
     question: "Which approach best explains the proposal?",
     options: [
       "Describe the client’s desired rooms and say that the extension will improve the house.",

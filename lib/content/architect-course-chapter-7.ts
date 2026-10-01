@@ -18,6 +18,7 @@ const AVAILABLE_INFORMATION: EvidenceItem = {
     "AVAILABLE INFORMATION",
     "• Listing entry and verified asset information.",
     "• Approved drawings and supporting explanation.",
+    "• Consent decision, conditions, evidence of condition discharge or approval where applicable, and relevant authority correspondence.",
     "• Completion drawings, site photographs and change records.",
     "• Notes on retained timber, early doors, plaster repair and revised opening.",
     "• Materials, warranties, maintenance and service information.",
@@ -37,8 +38,9 @@ const FUTURE_CHANGE_PROMPT: EvidenceItem = {
     "EXISTING HERITAGE RECORD",
     "• Verified principal listed asset information.",
     "• Previous evidence, design rationale and consent information.",
+    "• Consent decision, conditions, evidence of condition discharge or approval where applicable, and relevant authority correspondence.",
     "• Completion record and retained-fabric notes.",
-    "• Open questions about coach-house and boundary-wall status/significance.",
+    "• Open questions about the status of the former coach house and boundary wall, and their contribution to the significance and setting of the principal listed building.",
   ],
 };
 
@@ -96,6 +98,7 @@ const DRAFTS: PageDraft[] = [
         entries: [
           "Verified asset and relevant significance information.",
           "Approved proposal, consent information and final built record.",
+          "Consent decision, conditions, evidence of condition discharge or approval where applicable, and relevant authority correspondence retained.",
           "Retained, repaired and altered fabric identified.",
           "Material discoveries and changes recorded.",
           "Care, maintenance, materials and service information included.",

@@ -21,7 +21,6 @@ import { CHAPTER_PAGES, courseProgress } from "@/lib/content/architect-course-ch
 import { COURSE_HREF, COURSE_NAME, type CoursePage } from "@/lib/content/course-model";
 
 const UNLOCK_HINT = "Available after you record your initial view";
-const DRAFT_NOTICE = "Draft content for review - wording may change.";
 
 /**
  * One chapter's pages, rendered in-memory on that chapter's route. Every
@@ -182,12 +181,6 @@ function PageContent({
 }) {
   return (
     <div className="grid gap-6">
-      {page.contentStatus === "draft" && (
-        <div className="border border-dashed border-neutral-300 bg-neutral-50 px-4 py-2">
-          <p className="text-xs text-neutral-500">{DRAFT_NOTICE}</p>
-        </div>
-      )}
-
       <PredictionBlock
         prompt={page.question}
         context={page.questionContext}

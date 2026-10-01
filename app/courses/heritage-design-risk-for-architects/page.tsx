@@ -104,7 +104,6 @@ export default function ArchitectCoursePage() {
       </h2>
       <p className="mt-2 text-sm text-neutral-500">
         All seven chapters follow the same case from first brief to handover.
-        Chapters 2-7 are draft content, still in review - wording may change.
       </p>
 
       <ol className="mt-6 grid gap-4">
@@ -126,10 +125,6 @@ export default function ArchitectCoursePage() {
               {!chapter.chapterHref ? (
                 <span className="border border-neutral-200 px-3 py-1 text-xs font-medium text-neutral-500">
                   Coming soon
-                </span>
-              ) : chapter.inReview ? (
-                <span className="border border-neutral-300 bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600">
-                  Draft for review
                 </span>
               ) : (
                 <span className="border border-neutral-900 bg-neutral-900 px-3 py-1 text-xs font-medium text-white">
