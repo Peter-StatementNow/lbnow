@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { LearningScreenShell } from "@/components/course/LearningScreenShell";
 import { PredictionBlock } from "@/components/course/PredictionBlock";
@@ -11,6 +11,7 @@ import {
   CompareToggle,
   PredictionFeedback,
   SeeRecordLink,
+  StepBadge,
   WhyThisMatters,
   cardClassName,
   primaryButton,
@@ -143,14 +144,17 @@ export function ChapterExperience({ chapterNumber }: { chapterNumber: number }) 
               {continueButton}
             </div>
           ) : (
-            <button
-              type="button"
-              onClick={save}
-              disabled={prediction === null}
-              className={primaryButton}
-            >
-              {page.saveLabel}
-            </button>
+            <div className="flex items-center gap-3">
+              <StepBadge step={4} />
+              <button
+                type="button"
+                onClick={save}
+                disabled={prediction === null}
+                className={primaryButton}
+              >
+                {page.saveLabel}
+              </button>
+            </div>
           )}
         </div>
       }
@@ -161,8 +165,78 @@ export function ChapterExperience({ chapterNumber }: { chapterNumber: number }) 
         onPredict={predict}
         saved={isSaved}
         onShowRecord={() => setRecordRevision((n) => n + 1)}
+        showWelcome={chapterNumber === 1 && pageIndex === 0}
       />
     </LearningScreenShell>
+  );
+}
+
+const WELCOME_DISMISSED_KEY = "lbnow-course-welcome-dismissed";
+
+/**
+ * One-off orientation on the course's first page: how the four numbered
+ * steps work and where the Heritage Record lives. Dismissal is a
+ * per-viewer convenience, so it lives in localStorage (and the note
+ * simply shows again if storage is unavailable).
+ */
+function WelcomeNote() {
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    try {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      if (window.localStorage.getItem(WELCOME_DISMISSED_KEY)) setDismissed(true);
+    } catch {
+      // Storage blocked - keep showing the note.
+    }
+  }, []);
+
+  if (dismissed) return null;
+
+  function dismiss() {
+    setDismissed(true);
+    try {
+      window.localStorage.setItem(WELCOME_DISMISSED_KEY, "1");
+    } catch {
+      // Storage blocked - dismissed for this visit only.
+    }
+  }
+
+  return (
+    <div className="border border-action bg-action-tint px-5 py-4">
+      <div className="flex items-start justify-between gap-4">
+        <p className="text-sm font-semibold text-neutral-900">How each page works</p>
+        <button
+          type="button"
+          onClick={dismiss}
+          className="shrink-0 text-xs font-medium text-action underline hover:text-action-hover"
+        >
+          Got it
+        </button>
+      </div>
+      <ol className="mt-3 grid gap-2">
+        {[
+          [1, "Read the project moment - where the Old Vicarage project has got to."],
+          [
+            2,
+            "Read your task, then check the Project Material. The client’s enquiry is already open for you.",
+          ],
+          [
+            3,
+            "Choose the answer you think is strongest. Any answer is fine - each one gets its own feedback explaining the reasoning.",
+          ],
+          [
+            4,
+            "Save to your Heritage Record. It opens in the Heritage Record tab and builds up chapter by chapter - it is what you take away from the course.",
+          ],
+        ].map(([step, text]) => (
+          <li key={step} className="flex gap-3 text-sm leading-6 text-neutral-700">
+            <StepBadge step={step as 1 | 2 | 3 | 4} />
+            <span>{text}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }
 
@@ -172,15 +246,19 @@ function PageContent({
   onPredict,
   saved,
   onShowRecord,
+  showWelcome,
 }: {
   page: CoursePage;
   prediction: number | null;
   onPredict: (index: number) => void;
   saved: boolean;
   onShowRecord: () => void;
+  showWelcome: boolean;
 }) {
   return (
     <div className="grid gap-6">
+      {showWelcome && <WelcomeNote />}
+
       <PredictionBlock
         prompt={page.question}
         context={page.questionContext}

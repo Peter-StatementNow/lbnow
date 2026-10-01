@@ -11,6 +11,28 @@ export const cardClassName = "border border-neutral-200 bg-white p-6";
 
 /** Small shared pieces used by every activity screen (Chapter 1 and the chapter framework). */
 
+/**
+ * The page's four-step rhythm, numbered on every learning page and
+ * explained on the course overview ("How the course works"):
+ * 1 project moment, 2 task + project material, 3 your initial view,
+ * 4 save to the Heritage Record. Step 1 is reading, so it stays
+ * neutral; 2-4 are actions, so they take the accent.
+ */
+export function StepBadge({ step }: { step: 1 | 2 | 3 | 4 }) {
+  return (
+    <span
+      aria-hidden
+      className={
+        step === 1
+          ? "inline-flex h-5 w-5 shrink-0 items-center justify-center border border-neutral-400 text-[11px] font-semibold text-neutral-600"
+          : "inline-flex h-5 w-5 shrink-0 items-center justify-center border border-action text-[11px] font-semibold text-action"
+      }
+    >
+      {step}
+    </span>
+  );
+}
+
 /** Paragraphs in `text` are separated by "\n". */
 export function FeedbackNote({ text }: { text: string }) {
   return (

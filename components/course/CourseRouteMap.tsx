@@ -1,31 +1,25 @@
 import Link from "next/link";
 import type { CourseChapter } from "@/lib/content/architect-course";
 
-function badgeFor(chapter: CourseChapter): { label: string; className: string } {
-  if (!chapter.chapterHref) {
-    return {
-      label: "Coming soon",
-      className: "border border-neutral-200 px-2.5 py-1 text-xs font-medium text-neutral-500",
-    };
-  }
-  return {
-    label: "Available now",
-    className: "border border-neutral-900 bg-neutral-900 px-2.5 py-1 text-xs font-medium text-white",
-  };
-}
-
 /**
- * The course's project-route map - a Recept-original graphic, not a
- * reproduction of RIBA's Plan of Work diagram (licensing/attribution
- * unconfirmed for that). Each stage pairs the chapter with the one
- * thing heritage adds at that point in an ordinary project.
+ * The course's chapter list - a Recept-original project-route graphic,
+ * not a reproduction of RIBA's Plan of Work diagram (licensing/
+ * attribution unconfirmed for that). Each stage pairs the chapter with
+ * the one thing heritage adds at that point in an ordinary project.
+ * This is the only chapter list on the course overview.
  */
-export function CourseRouteMap({ chapters }: { chapters: CourseChapter[] }) {
+export function CourseRouteMap({
+  chapters,
+  minutes,
+}: {
+  chapters: CourseChapter[];
+  /** Minutes per chapter, keyed by chapter number. */
+  minutes: Record<number, number>;
+}) {
   return (
     <ol className="border-t border-neutral-200">
       {chapters.map((chapter, index) => {
         const isLast = index === chapters.length - 1;
-        const badge = badgeFor(chapter);
 
         const row = (
           <div className="flex gap-4 py-5">
@@ -36,9 +30,12 @@ export function CourseRouteMap({ chapters }: { chapters: CourseChapter[] }) {
               {!isLast && <span className="mt-1 w-px flex-1 bg-neutral-200" />}
             </div>
             <div className="flex-1 pb-1">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-sm font-semibold text-neutral-900">{chapter.title}</p>
-                <span className={`shrink-0 ${badge.className}`}>{badge.label}</span>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                <p className="text-base font-semibold text-neutral-900">{chapter.title}</p>
+                <span className="shrink-0 text-xs text-neutral-500">
+                  about {minutes[chapter.chapterNumber]} min
+                  {chapter.chapterHref && <span aria-hidden> &rarr;</span>}
+                </span>
               </div>
               <p className="mt-1 text-sm leading-6 text-neutral-600">{chapter.heritageAddition}</p>
             </div>

@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { COURSES } from "@/lib/content/courses";
 import { ARCHITECT_COURSE_CHAPTERS } from "@/lib/content/architect-course";
-import { TOTAL_COURSE_MINUTES } from "@/lib/content/architect-course-chapters";
+import { CHAPTER_MINUTES, TOTAL_COURSE_MINUTES } from "@/lib/content/architect-course-chapters";
 import { CourseRouteMap } from "@/components/course/CourseRouteMap";
 import { ScopeBoundaryCard } from "@/components/course/ScopeBoundaryCard";
+import { StepBadge } from "@/components/course/ActivityElements";
 
 const course = COURSES.find(
   (entry) => entry.slug === "heritage-design-risk-for-architects"
@@ -16,6 +17,47 @@ export const metadata: Metadata = {
   title: `${course.title} | Training by Recept Heritage`,
   description: course.strapline,
 };
+
+/**
+ * The four steps every learning page follows - kept in step with the
+ * numbered sections on the pages themselves (LearningScreenShell,
+ * PredictionBlock, ChapterExperience's save button).
+ */
+const HOW_IT_WORKS: { step: 1 | 2 | 3 | 4; title: string; body: string }[] = [
+  {
+    step: 1,
+    title: "Read the project moment",
+    body: "Where the Old Vicarage project has got to.",
+  },
+  {
+    step: 2,
+    title: "Read your task and check the Project Material",
+    body: "The documents beside the question - the client’s email, the listing entry, site notes and other evidence.",
+  },
+  {
+    step: 3,
+    title: "Answer the question",
+    body: "Choose the answer you think is strongest. Any answer is fine - each one gets its own feedback explaining the reasoning, followed by a worked example.",
+  },
+  {
+    step: 4,
+    title: "Save to your Heritage Record",
+    body: "A working record of what is known, what needs establishing and which decisions must not harden too early. It builds up chapter by chapter - it is what you take away from the course.",
+  },
+];
+
+function StartButton() {
+  if (!firstChapter.chapterHref) return null;
+  return (
+    <Link
+      href={firstChapter.chapterHref}
+      className="inline-flex items-center justify-center bg-action px-6 py-3 text-sm font-medium text-white hover:bg-action-hover"
+    >
+      Start Chapter 1 - {firstChapter.title} &middot; about{" "}
+      {CHAPTER_MINUTES[firstChapter.chapterNumber]} minutes
+    </Link>
+  );
+}
 
 export default function ArchitectCoursePage() {
   return (
@@ -41,20 +83,46 @@ export default function ArchitectCoursePage() {
         &middot; a working Heritage Record you build as you go
       </p>
 
-      <div className="mt-10">
-        <CourseRouteMap chapters={ARCHITECT_COURSE_CHAPTERS} />
+      <div className="mt-8">
+        <StartButton />
       </div>
 
-      <p className="mt-6 text-sm leading-6 text-neutral-600">
-        Follow a familiar project route - from first instruction to handover - and see what
-        heritage adds at each decision point.
+      {/* How the course works - the same four numbered steps learners
+          see on every page. */}
+      <h2 className="mt-14 text-xl font-semibold text-neutral-900">How the course works</h2>
+      <p className="mt-2 text-sm leading-6 text-neutral-600">
+        You follow one case - alterations to The Old Vicarage, a Grade II listed house - from
+        the client&rsquo;s first email to handover. Every page follows the same four steps:
       </p>
-      <p className="mt-2 text-xs text-neutral-500">
-        The structure reflects the stages most architects already use to organise projects;
-        the course does not teach a separate process.
+      <ol className="mt-5 grid gap-4">
+        {HOW_IT_WORKS.map((item) => (
+          <li key={item.step} className="flex gap-3">
+            <span className="mt-0.5">
+              <StepBadge step={item.step} />
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-neutral-900">{item.title}</p>
+              <p className="mt-0.5 text-sm leading-6 text-neutral-600">{item.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <p className="mt-5 text-xs leading-5 text-neutral-500">
+        Completed chapters are remembered in this browser, so you can stop between chapters.
       </p>
 
-      <h2 className="mt-12 text-xl font-semibold text-neutral-900">
+      {/* The one chapter list. */}
+      <h2 className="mt-14 text-xl font-semibold text-neutral-900">The seven chapters</h2>
+      <p className="mt-2 text-sm leading-6 text-neutral-600">
+        A familiar project route - from first instruction to handover - showing what heritage
+        adds at each decision point. The structure reflects the stages most architects already
+        use; the course does not teach a separate process.
+      </p>
+      <div className="mt-6">
+        <CourseRouteMap chapters={ARCHITECT_COURSE_CHAPTERS} minutes={CHAPTER_MINUTES} />
+      </div>
+
+      <h2 className="mt-14 text-xl font-semibold text-neutral-900">
         What you will be able to do
       </h2>
       <ul className="mt-4 grid gap-2">
@@ -87,72 +155,9 @@ export default function ArchitectCoursePage() {
         />
       </div>
 
-      {firstChapter.chapterHref && (
-        <div className="mt-8">
-          <Link
-            href={firstChapter.chapterHref}
-            className="inline-flex items-center justify-center bg-action px-6 py-3 text-sm font-medium text-white hover:bg-action-hover"
-          >
-            Start Chapter 1 - {firstChapter.title}
-            {firstChapter.estimatedMinutes ? ` · ${firstChapter.estimatedMinutes} minutes` : ""}
-          </Link>
-        </div>
-      )}
-
-      <h2 className="mt-16 text-xl font-semibold text-neutral-900">
-        Course chapters
-      </h2>
-      <p className="mt-2 text-sm text-neutral-500">
-        All seven chapters follow the same case from first brief to handover.
-      </p>
-
-      <ol className="mt-6 grid gap-4">
-        {ARCHITECT_COURSE_CHAPTERS.map((chapter) => (
-          <li
-            key={chapter.chapterNumber}
-            className="border border-neutral-200 bg-white px-6 py-5"
-          >
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-                  Chapter {chapter.chapterNumber}
-                </p>
-                <p className="mt-1 text-base font-semibold text-neutral-900">
-                  {chapter.title}
-                </p>
-              </div>
-
-              {!chapter.chapterHref ? (
-                <span className="border border-neutral-200 px-3 py-1 text-xs font-medium text-neutral-500">
-                  Coming soon
-                </span>
-              ) : (
-                <span className="border border-neutral-900 bg-neutral-900 px-3 py-1 text-xs font-medium text-white">
-                  Preview available
-                </span>
-              )}
-            </div>
-
-            <p className="mt-3 text-sm leading-6 text-neutral-600">
-              {chapter.question}
-            </p>
-
-            {chapter.chapterHref && (
-              <div className="mt-4">
-                <Link
-                  href={chapter.chapterHref}
-                  className="text-sm font-medium text-neutral-900 underline hover:text-neutral-600"
-                >
-                  Preview this chapter
-                  {chapter.estimatedMinutes
-                    ? ` (about ${chapter.estimatedMinutes} minutes)`
-                    : ""}
-                </Link>
-              </div>
-            )}
-          </li>
-        ))}
-      </ol>
+      <div className="mt-10">
+        <StartButton />
+      </div>
 
       <div className="mt-10 flex flex-wrap gap-4">
         <Link

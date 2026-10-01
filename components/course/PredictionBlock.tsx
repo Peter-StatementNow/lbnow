@@ -1,3 +1,5 @@
+import { StepBadge } from "@/components/course/ActivityElements";
+
 /**
  * "Your initial view" - template item 4: one low-stakes judgement
  * before the fuller evidence is opened. Answering (regardless of
@@ -23,7 +25,8 @@ export function PredictionBlock({
   return (
     <div>
       {/* Accent = "act here" (see --action in globals.css). */}
-      <p className="text-xs font-semibold uppercase tracking-wide text-action">
+      <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-action">
+        <StepBadge step={3} />
         Your initial view
       </p>
       <p className="mt-1 text-base font-semibold leading-7 text-neutral-900">{prompt}</p>

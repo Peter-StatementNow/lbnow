@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { HeritageRecordView } from "@/lib/content/course-model";
 import { HeritageRecordPanel } from "@/components/course/HeritageRecordPanel";
-import { WORKSPACE_TABS_ID } from "@/components/course/ActivityElements";
+import { StepBadge, WORKSPACE_TABS_ID } from "@/components/course/ActivityElements";
 
 type WorkspaceTab = "material" | "record";
 
@@ -97,7 +97,8 @@ export function LearningScreenShell({
           moment may be multiple paragraphs, separated by "\n". */}
       <div className="max-w-3xl">
         <div className="mt-6 border-l-2 border-neutral-300 bg-neutral-50 px-5 py-4">
-          <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+          <p className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-neutral-500">
+            <StepBadge step={1} />
             Project moment
           </p>
           <div className="mt-1.5 grid gap-2">
@@ -111,7 +112,8 @@ export function LearningScreenShell({
 
         {/* Accent = "act here" (see --action in globals.css). */}
         <div className="mt-8 border-l-4 border-action pl-5">
-          <p className="text-xs font-semibold uppercase tracking-wide text-action">
+          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-action">
+            <StepBadge step={2} />
             Your task
           </p>
           <h1 className="mt-1 text-2xl font-semibold tracking-tight text-neutral-900">
@@ -120,6 +122,14 @@ export function LearningScreenShell({
           {taskDetail && (
             <p className="mt-1.5 text-base leading-7 text-neutral-700">{taskDetail}</p>
           )}
+          {/* How to approach every task - the workspace sits beside the
+              question on large screens and above it on a phone. */}
+          <p className="mt-3 text-sm font-medium text-action">
+            <span className="hidden lg:inline">
+              Use the Project Material on the right, then answer below. &rarr;
+            </span>
+            <span className="lg:hidden">Use the Project Material above, then answer below.</span>
+          </p>
         </div>
       </div>
 
@@ -236,7 +246,10 @@ function WorkspaceTabs({
                   : "-mb-px flex-1 border-b-2 border-transparent px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-neutral-400 hover:text-neutral-700"
               }
             >
-              {tab.label}
+              <span className="flex items-center gap-2">
+                {tab.key === "material" && <StepBadge step={2} />}
+                {tab.label}
+              </span>
             </button>
           );
         })}
