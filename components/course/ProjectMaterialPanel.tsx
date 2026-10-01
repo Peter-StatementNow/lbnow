@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { EvidenceItem } from "@/lib/content/architect-course-chapter-1";
+import type { EvidenceItem } from "@/lib/content/course-model";
 
 /**
  * The "what evidence exists" panel - the first tab of the right-hand

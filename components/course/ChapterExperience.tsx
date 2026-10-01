@@ -12,52 +12,57 @@ import {
   PredictionFeedback,
   SeeRecordLink,
   WhyThisMatters,
+  cardClassName,
   primaryButton,
 } from "@/components/course/ActivityElements";
 import { useCourseState } from "@/lib/course/heritage-course-store";
-import {
-  COURSE_NAME,
-  CHAPTER_1_PAGES,
-  STAGE_LABEL,
-  TOTAL_COURSE_MINUTES,
-  type Chapter1Page,
-} from "@/lib/content/architect-course-chapter-1";
+import { ARCHITECT_COURSE_CHAPTERS } from "@/lib/content/architect-course";
+import { CHAPTER_PAGES, courseProgress } from "@/lib/content/architect-course-chapters";
+import { COURSE_HREF, COURSE_NAME, type CoursePage } from "@/lib/content/course-model";
 
 const UNLOCK_HINT = "Available after you record your initial view";
-const NEXT_CHAPTER_HREF = "/courses/heritage-design-risk-for-architects/chapter-2";
 const DRAFT_NOTICE = "Draft content for review - wording may change.";
 
 /**
- * Chapter 1's six pages, rendered in-memory as one route. Every page
- * follows the same sequence: initial view -> option-specific feedback
- * -> worked example -> optional comparison -> why this matters -> save
- * (the workspace's Heritage Record tab then shows the page's worked
- * position) -> fixed continue. Any answer
- * unlocks the rest of the page; the Heritage Record moves to the
- * page's worked position on save, whatever was chosen (no answer-
- * dependent route, score or record state - per the source document).
+ * One chapter's pages, rendered in-memory on that chapter's route. Every
+ * page follows the same sequence: initial view -> option-specific
+ * feedback -> worked example -> (resources) -> optional comparison ->
+ * why this matters -> save (the workspace's Heritage Record tab then
+ * shows the page's worked position) -> fixed continue. Any answer
+ * unlocks the rest of the page; the Heritage Record moves to the page's
+ * worked position on save, whatever was chosen (no answer-dependent
+ * route, score or record state - per the source documents).
  */
-export function Chapter1Experience() {
-  const pageCount = CHAPTER_1_PAGES.length;
+export function ChapterExperience({ chapterNumber }: { chapterNumber: number }) {
+  const pages = CHAPTER_PAGES[chapterNumber];
+  const chapter = ARCHITECT_COURSE_CHAPTERS.find((c) => c.chapterNumber === chapterNumber)!;
+  const previousChapter = ARCHITECT_COURSE_CHAPTERS.find(
+    (c) => c.chapterNumber === chapterNumber - 1
+  );
+  const nextChapter = ARCHITECT_COURSE_CHAPTERS.find(
+    (c) => c.chapterNumber === chapterNumber + 1
+  );
+
+  const pageCount = pages.length;
   const [pageIndex, setPageIndex] = useState(0);
   const [predictions, setPredictions] = useState<(number | null)[]>(() =>
     Array(pageCount).fill(null)
   );
   const [saved, setSaved] = useState<boolean[]>(() => Array(pageCount).fill(false));
   const [recordRevision, setRecordRevision] = useState(0);
-  const { setHeritageRecord, markChapterComplete } = useCourseState();
+  const { completedChapters, markChapterComplete } = useCourseState();
 
-  const page = CHAPTER_1_PAGES[pageIndex];
+  const page = pages[pageIndex];
   const prediction = predictions[pageIndex];
   const isSaved = saved[pageIndex];
   const isLastPage = pageIndex === pageCount - 1;
 
-  const completedMinutes = CHAPTER_1_PAGES.reduce(
-    (sum, p, index) => sum + (saved[index] ? p.minutes : 0),
-    0
+  const savedMinutes = pages.reduce((sum, p, index) => sum + (saved[index] ? p.minutes : 0), 0);
+  const { percentComplete, minutesLeft } = courseProgress(
+    completedChapters,
+    chapterNumber,
+    savedMinutes
   );
-  const percentComplete = Math.round((completedMinutes / TOTAL_COURSE_MINUTES) * 100);
-  const minutesLeft = TOTAL_COURSE_MINUTES - completedMinutes;
 
   function goTo(index: number) {
     setPageIndex(index);
@@ -71,28 +76,38 @@ export function Chapter1Experience() {
   }
 
   function save() {
-    setHeritageRecord(page.recordAfter);
     setSaved((current) => current.map((v, i) => (i === pageIndex ? true : v)));
     setRecordRevision((n) => n + 1);
-    if (isLastPage) markChapterComplete(1);
+    if (isLastPage) markChapterComplete(chapterNumber);
   }
 
-  const continueButton = isLastPage ? (
-    <Link href={NEXT_CHAPTER_HREF} className={primaryButton}>
-      {page.continueLabel} &rarr;
-    </Link>
-  ) : (
+  // The last page continues to the next chapter (or, at the end of the
+  // course, back to the course overview).
+  const continueButton = !isLastPage ? (
     <button type="button" onClick={() => goTo(pageIndex + 1)} className={primaryButton}>
       {page.continueLabel} &rarr;
     </button>
+  ) : (
+    <Link href={nextChapter?.chapterHref ?? COURSE_HREF} className={primaryButton}>
+      {page.continueLabel} &rarr;
+    </Link>
   );
+
+  const backButton =
+    pageIndex > 0 ? (
+      <BackButton onClick={() => goTo(pageIndex - 1)} />
+    ) : previousChapter?.chapterHref ? (
+      <BackButton href={previousChapter.chapterHref} />
+    ) : (
+      <span />
+    );
 
   return (
     <LearningScreenShell
       // Remount per page so collapsible panels reset to their defaults.
       key={page.number}
       courseName={COURSE_NAME}
-      stageLabel={STAGE_LABEL}
+      stageLabel={`${chapter.chapterNumber}. ${chapter.title}`}
       percentComplete={percentComplete}
       minutesLeft={minutesLeft}
       projectMoment={page.projectMoment}
@@ -117,7 +132,7 @@ export function Chapter1Experience() {
       recordRevision={recordRevision}
       footer={
         <div className="flex flex-wrap items-center justify-between gap-4">
-          {pageIndex > 0 ? <BackButton onClick={() => goTo(pageIndex - 1)} /> : <span />}
+          {backButton}
           {isSaved ? (
             <div className="flex max-w-xl flex-col items-end gap-3 text-right">
               <p className="text-sm text-neutral-600">
@@ -159,7 +174,7 @@ function PageContent({
   saved,
   onShowRecord,
 }: {
-  page: Chapter1Page;
+  page: CoursePage;
   prediction: number | null;
   onPredict: (index: number) => void;
   saved: boolean;
@@ -191,7 +206,6 @@ function PageContent({
             optionFeedback={page.optionFeedback}
           />
 
-
           <CompareToggle label="For comparison: show a worked example">
             <div className="grid gap-3">
               {page.workedExample.paragraphs.map((paragraph) => (
@@ -219,6 +233,15 @@ function PageContent({
               )}
             </div>
           </CompareToggle>
+
+          {page.resourcePrompt && (
+            <div className={cardClassName}>
+              <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+                Guidance and resources
+              </p>
+              <p className="mt-2 text-sm leading-6 text-neutral-700">{page.resourcePrompt}</p>
+            </div>
+          )}
 
           {page.comparisonCard && <ComparisonCard content={page.comparisonCard} />}
 

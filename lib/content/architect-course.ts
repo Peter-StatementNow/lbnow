@@ -3,15 +3,10 @@
  * curriculum structure, named in normal architectural language rather
  * than "heritage stages" (owner instruction, 23 Sep 2026).
  *
- * Chapter 1 ("Receiving the brief") is the fully realised, six-page
- * build - see lib/content/architect-course-chapter-1.ts and
- * components/course/Chapter1Experience.tsx.
- *
- * Chapters 2-7 (24 Sep 2026) are a content-light, one-activity-per-
- * chapter framework - see lib/content/architect-course-chapters.ts and
- * components/course/ChapterActivity.tsx - built to preserve the
- * seven-stage structure and test it end to end. Placeholder wording
- * throughout (`isPrototype: true`); not final heritage guidance.
+ * Every chapter is built as a sequence of pages (see
+ * lib/content/architect-course-chapters.ts and
+ * components/course/ChapterExperience.tsx). Chapters 2-7 are a revised
+ * draft (1 Oct 2026) still in content review (`inReview: true`).
  */
 
 export type CourseChapter = {
@@ -22,8 +17,8 @@ export type CourseChapter = {
   heritageAddition: string;
   chapterHref: string | null;
   estimatedMinutes: number | null;
-  /** True for the content-light framework chapters (2-7) - not yet final content. */
-  isPrototype?: boolean;
+  /** True while the chapter's content is still a draft in review. */
+  inReview?: boolean;
 };
 
 export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
@@ -44,7 +39,7 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     heritageAddition: "Establish significance, evidence and uncertainty",
     chapterHref: "/courses/heritage-design-risk-for-architects/chapter-2",
     estimatedMinutes: 9,
-    isPrototype: true,
+    inReview: true,
   },
   {
     chapterNumber: 3,
@@ -54,7 +49,7 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     heritageAddition: "Test options against what matters",
     chapterHref: "/courses/heritage-design-risk-for-architects/chapter-3",
     estimatedMinutes: 8,
-    isPrototype: true,
+    inReview: true,
   },
   {
     chapterNumber: 4,
@@ -64,7 +59,7 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     heritageAddition: "Build in consent, evidence and decision gates",
     chapterHref: "/courses/heritage-design-risk-for-architects/chapter-4",
     estimatedMinutes: 7,
-    isPrototype: true,
+    inReview: true,
   },
   {
     chapterNumber: 5,
@@ -74,7 +69,7 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     heritageAddition: "Explain effects and provide the right information",
     chapterHref: "/courses/heritage-design-risk-for-architects/chapter-5",
     estimatedMinutes: 8,
-    isPrototype: true,
+    inReview: true,
   },
   {
     chapterNumber: 6,
@@ -84,7 +79,7 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     heritageAddition: "Protect fabric and manage site change",
     chapterHref: "/courses/heritage-design-risk-for-architects/chapter-6",
     estimatedMinutes: 9,
-    isPrototype: true,
+    inReview: true,
   },
   {
     chapterNumber: 7,
@@ -94,6 +89,6 @@ export const ARCHITECT_COURSE_CHAPTERS: CourseChapter[] = [
     heritageAddition: "Keep records for care and future work",
     chapterHref: "/courses/heritage-design-risk-for-architects/chapter-7",
     estimatedMinutes: 8,
-    isPrototype: true,
+    inReview: true,
   },
 ];

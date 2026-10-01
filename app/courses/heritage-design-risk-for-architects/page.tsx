@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { COURSES } from "@/lib/content/courses";
 import { ARCHITECT_COURSE_CHAPTERS } from "@/lib/content/architect-course";
-import { TOTAL_COURSE_MINUTES } from "@/lib/content/architect-course-chapter-1";
+import { TOTAL_COURSE_MINUTES } from "@/lib/content/architect-course-chapters";
 import { CourseRouteMap } from "@/components/course/CourseRouteMap";
 import { ScopeBoundaryCard } from "@/components/course/ScopeBoundaryCard";
 
@@ -103,9 +103,8 @@ export default function ArchitectCoursePage() {
         Course chapters
       </h2>
       <p className="mt-2 text-sm text-neutral-500">
-        Chapter 1 is a fully worked prototype. Chapters 2-7 are a lighter
-        framework build, walking the same case through the rest of the
-        project - content and wording are still placeholder.
+        All seven chapters follow the same case from first brief to handover.
+        Chapters 2-7 are draft content, still in review - wording may change.
       </p>
 
       <ol className="mt-6 grid gap-4">
@@ -128,9 +127,9 @@ export default function ArchitectCoursePage() {
                 <span className="border border-neutral-200 px-3 py-1 text-xs font-medium text-neutral-500">
                   Coming soon
                 </span>
-              ) : chapter.isPrototype ? (
+              ) : chapter.inReview ? (
                 <span className="border border-neutral-300 bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600">
-                  Prototype
+                  Draft for review
                 </span>
               ) : (
                 <span className="border border-neutral-900 bg-neutral-900 px-3 py-1 text-xs font-medium text-white">

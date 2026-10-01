@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import type { HeritageRecordState } from "@/lib/content/architect-course-chapter-1";
+import type { HeritageRecordView } from "@/lib/content/course-model";
 import { HeritageRecordPanel } from "@/components/course/HeritageRecordPanel";
 import { WORKSPACE_TABS_ID } from "@/components/course/ActivityElements";
 
@@ -60,7 +60,7 @@ export function LearningScreenShell({
   /** Position within a multi-page chapter, e.g. page 2 of 6. */
   pageProgress?: PageProgressInfo;
   projectMaterial: ReactNode;
-  heritageRecord: HeritageRecordState;
+  heritageRecord: HeritageRecordView;
   /** Bump after saving to bring the Heritage Record tab to the front. */
   recordRevision?: number;
   children: ReactNode;
@@ -197,7 +197,7 @@ function WorkspaceTabs({
   recordRevision,
 }: {
   projectMaterial: ReactNode;
-  heritageRecord: HeritageRecordState;
+  heritageRecord: HeritageRecordView;
   recordRevision: number;
 }) {
   const [active, setActive] = useState<WorkspaceTab>("material");

@@ -26,28 +26,18 @@
  * lib/course/heritage-course-store.ts (localStorage).
  */
 
-import type { ComparisonCardContent } from "@/components/course/ComparisonCard";
-
-/**
- * Short form of the course title, used consistently across the
- * course-taking chrome (not the longer marketing title used on the
- * catalogue/detail pages).
- */
-export const COURSE_NAME = "Heritage Design Risk for Architects";
-
-/** Persists across the whole chapter - all six pages share it. */
-export const STAGE_LABEL = "1. Receiving the brief";
-
-/** Illustrative only. */
-export const TOTAL_COURSE_MINUTES = 56;
+import {
+  type CoursePage,
+  type EvidenceItem,
+  type PageContent,
+  type RecordGroup,
+  type RecordText,
+} from "@/lib/content/course-model";
 
 // --- Heritage Record (the persistent, heritage-only accumulating record) --
 
-/** A record section: a list of entries, or a single line such as "Not yet set". */
-export type RecordText = string | string[];
-
-export type HeritageRecordState = {
-  completed: string[];
+/** Chapter 1's record: the four core sections, given in full on every page by the source. */
+type HeritageRecordState = {
   known: RecordText;
   toEstablish: RecordText;
   keepUnderReview: RecordText;
@@ -58,14 +48,9 @@ export type HeritageRecordState = {
   statusNote?: string;
 };
 
-export function recordTextToString(text: RecordText): string {
-  return Array.isArray(text) ? text.join(" ") : text;
-}
-
 const REVIEW_REQUIRED = "Review required";
 
-export const HERITAGE_RECORD_INITIAL: HeritageRecordState = {
-  completed: [],
+const HERITAGE_RECORD_INITIAL: HeritageRecordState = {
   status: REVIEW_REQUIRED,
   statusNote:
     "Initial information indicates that heritage may affect this project. Verify the trigger and record the proportionate heritage considerations.",
@@ -80,7 +65,6 @@ export const HERITAGE_RECORD_INITIAL: HeritageRecordState = {
 };
 
 const RECORD_AFTER_PAGE_1: HeritageRecordState = {
-  completed: [],
   status: REVIEW_REQUIRED,
   known: [
     "Client identifies The Old Vicarage as Grade II listed.",
@@ -105,7 +89,6 @@ const KNOWN_AFTER_LISTING_ENTRY = [
 ];
 
 const RECORD_AFTER_PAGE_2: HeritageRecordState = {
-  completed: [],
   status: REVIEW_REQUIRED,
   known: [
     ...KNOWN_AFTER_LISTING_ENTRY,
@@ -126,7 +109,6 @@ const KNOWN_FROM_PAGE_3 = [
 ];
 
 const RECORD_AFTER_PAGE_3: HeritageRecordState = {
-  completed: [],
   status: REVIEW_REQUIRED,
   known: KNOWN_FROM_PAGE_3,
   toEstablish: [
@@ -156,7 +138,6 @@ const KEEP_UNDER_REVIEW_FROM_PAGE_4 = [
 ];
 
 const RECORD_AFTER_PAGE_4: HeritageRecordState = {
-  completed: [],
   status: REVIEW_REQUIRED,
   known: KNOWN_FROM_PAGE_3,
   toEstablish: TO_ESTABLISH_FROM_PAGE_4,
@@ -173,14 +154,12 @@ const RECORD_AFTER_PAGE_5: HeritageRecordState = {
 };
 
 /** The Heritage Record at the end of Chapter 1 - the starting point for Chapter 2. */
-export const HERITAGE_RECORD_CHAPTER_1_COMPLETE: HeritageRecordState = {
+const HERITAGE_RECORD_CHAPTER_1_COMPLETE: HeritageRecordState = {
   ...RECORD_AFTER_PAGE_5,
   status: "Chapter 1 complete: receiving the brief",
 };
 
 // --- Project Material -------------------------------------------------------
-
-export type EvidenceItem = { id: string; label: string; body: string[] };
 
 const CLIENT_ENQUIRY: EvidenceItem = {
   id: "client-enquiry",
@@ -339,58 +318,17 @@ const CHAPTER_1_OUTPUTS: EvidenceItem = {
   ],
 };
 
-/** A one-line summary of a record, used as Project Material in later chapters. */
-export function initialHeritagePositionEvidence(record: HeritageRecordState): EvidenceItem {
-  return {
-    id: "initial-heritage-position",
-    label: "Heritage Record so far",
-    body: [
-      `Known: ${recordTextToString(record.known)}`,
-      `To establish: ${recordTextToString(record.toEstablish)}`,
-    ],
-  };
-}
-
 // --- Pages -------------------------------------------------------------------
 
-export type WorkedExample = {
-  paragraphs: string[];
-  groups?: { heading: string; items: string[] }[];
-};
-
-export type Chapter1Page = {
-  number: number;
-  title: string;
-  /** Editorial status from the source document - "draft" pages show a review notice. */
-  contentStatus: "agreed" | "draft";
-  minutes: number;
-  /** Paragraphs separated by "\n". */
-  projectMoment: string;
-  task: string;
-  taskDetail: string;
-  evidence: EvidenceItem[];
-  /** Material readable before the learner answers; everything else unlocks on answering. */
-  alwaysAvailableEvidenceIds: string[];
-  question: string;
-  /** A statement the question is about (shown under the question), when there is one. */
-  questionContext?: string;
-  options: string[];
-  expectedIndex: number;
-  /** Bespoke feedback per option, indexed to `options`. Paragraphs separated by "\n". */
-  optionFeedback: string[];
+/** A Chapter 1 page as authored: the source gives the full record before and after each page. */
+type Chapter1PageDraft = PageContent & {
   recordBefore: HeritageRecordState;
   recordAfter: HeritageRecordState;
-  workedExample: WorkedExample;
-  comparisonCard?: ComparisonCardContent;
-  whyThisMatters: string;
-  saveLabel: string;
-  continueLabel: string;
-  continueCue: string;
 };
 
 const SAVE_TO_RECORD = "Save to Heritage Record";
 
-export const CHAPTER_1_PAGES: Chapter1Page[] = [
+const CHAPTER_1_DRAFTS: Chapter1PageDraft[] = [
   // --- Page 1 - Client enquiry received (agreed content) ---
   {
     number: 1,
@@ -696,4 +634,34 @@ export const CHAPTER_1_PAGES: Chapter1Page[] = [
     continueCue:
       "The Heritage Record now provides the starting position for the next stage: understanding the existing building and place, so the outstanding heritage questions can be addressed proportionately.",
   },
+];
+
+// --- Heritage Record views ----------------------------------------------------
+
+const CHAPTER_1_LABEL = "Chapter 1 · Receiving the brief";
+
+function toRecordGroup(record: HeritageRecordState): RecordGroup {
+  const section = (heading: string, entries: RecordText) => ({ heading, entries });
+  return {
+    label: CHAPTER_1_LABEL,
+    status: record.status,
+    statusNote: record.statusNote,
+    sections: [
+      section("Known", record.known),
+      section("To establish", record.toEstablish),
+      section("Keep under review", record.keepUnderReview),
+      section("Decision points", record.decisionPoints),
+    ],
+  };
+}
+
+export const CHAPTER_1_PAGES: CoursePage[] = CHAPTER_1_DRAFTS.map((draft) => ({
+  ...draft,
+  recordBefore: { current: toRecordGroup(draft.recordBefore), earlier: [] },
+  recordAfter: { current: toRecordGroup(draft.recordAfter), earlier: [] },
+}));
+
+/** The Heritage Record handed to Chapter 2. */
+export const RECORD_AFTER_CHAPTER_1: RecordGroup[] = [
+  toRecordGroup(HERITAGE_RECORD_CHAPTER_1_COMPLETE),
 ];

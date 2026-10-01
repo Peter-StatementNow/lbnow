@@ -11,11 +11,11 @@ type CaseComparison = {
   whatStaysSame: string[];
 };
 
-/** An intro line followed by headed checklists (e.g. Verify / Do not assume / Record). */
+/** An intro paragraph, optionally followed by headed checklists (e.g. Verify / Do not assume / Record). */
 type SectionedComparison = {
   heading: string;
   intro: string;
-  sections: { heading: string; items: string[] }[];
+  sections?: { heading: string; items: string[] }[];
 };
 
 export type ComparisonCardContent = CaseComparison | SectionedComparison;
@@ -67,10 +67,10 @@ export function ComparisonCard({ content }: { content: ComparisonCardContent }) 
 
       {open && (
         <div className="grid gap-4 border-t border-neutral-200 px-5 py-4">
-          {"sections" in content ? (
+          {"intro" in content ? (
             <>
               <p className="text-sm leading-6 text-neutral-700">{content.intro}</p>
-              {content.sections.map((section) => (
+              {content.sections?.map((section) => (
                 <div key={section.heading}>
                   <SectionHeading>{section.heading}</SectionHeading>
                   <BulletList items={section.items} />

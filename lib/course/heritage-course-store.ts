@@ -1,20 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import {
-  HERITAGE_RECORD_INITIAL,
-  type HeritageRecordState,
-} from "@/lib/content/architect-course-chapter-1";
 
 const STORAGE_KEY = "lbnow-heritage-design-risk-course-state";
 
 type CourseState = {
-  heritageRecord: HeritageRecordState;
   completedChapters: number[];
 };
 
 const INITIAL_STATE: CourseState = {
-  heritageRecord: HERITAGE_RECORD_INITIAL,
   completedChapters: [],
 };
 
@@ -25,7 +19,6 @@ function readStoredState(): CourseState {
     if (!raw) return INITIAL_STATE;
     const parsed = JSON.parse(raw);
     return {
-      heritageRecord: parsed.heritageRecord ?? HERITAGE_RECORD_INITIAL,
       completedChapters: Array.isArray(parsed.completedChapters)
         ? parsed.completedChapters
         : [],
@@ -45,13 +38,12 @@ function writeStoredState(state: CourseState) {
 }
 
 /**
- * Shared, browser-only course state - carries the Heritage Record and
- * which chapters are complete across the separate chapter routes, so
- * the seven-chapter prototype can be walked through end to end. This
- * is localStorage, not a backend - per the explicit "no backend/
- * persistence architecture" instruction, this only needs to survive
- * navigation between chapter pages in one browser, not across devices
- * or accounts.
+ * Shared, browser-only course state - which chapters are complete, so
+ * course-wide progress carries across the separate chapter routes. (The
+ * Heritage Record itself is fixed per page by the content, so it needs
+ * no storage.) This is localStorage, not a backend - per the explicit
+ * "no backend/persistence architecture" instruction, it only needs to
+ * survive navigation in one browser, not across devices or accounts.
  */
 export function useCourseState() {
   const [state, setState] = useState<CourseState>(INITIAL_STATE);
@@ -61,14 +53,6 @@ export function useCourseState() {
     // than a lazy useState initializer) avoids a client/server render mismatch.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setState(readStoredState());
-  }, []);
-
-  const setHeritageRecord = useCallback((record: HeritageRecordState) => {
-    setState((current) => {
-      const next = { ...current, heritageRecord: record };
-      writeStoredState(next);
-      return next;
-    });
   }, []);
 
   const markChapterComplete = useCallback((chapter: number) => {
@@ -89,9 +73,7 @@ export function useCourseState() {
   }, []);
 
   return {
-    heritageRecord: state.heritageRecord,
     completedChapters: state.completedChapters,
-    setHeritageRecord,
     markChapterComplete,
     resetCourse,
   };
