@@ -180,6 +180,12 @@ const CLIENT_ENQUIRY: EvidenceItem = {
 const EXISTING_HOUSE: EvidenceItem = {
   id: "existing-house",
   label: "Existing house",
+  image: {
+    src: "/course/old-vicarage-from-church-lane.webp",
+    alt: "The Old Vicarage from Church Lane: a two-storey rendered house under a slate roof with brick end chimneys, a symmetrical three-bay front of sash windows around a central arched doorway, a low boundary wall in front and a small single-storey addition to the right.",
+    width: 1200,
+    height: 896,
+  },
   body: [
     "The Old Vicarage from Church Lane. The boundary wall and gate piers are visible; the former coach house is not visible in this view.",
   ],

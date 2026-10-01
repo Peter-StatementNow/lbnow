@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import type { EvidenceItem, MaterialGroup } from "@/lib/content/course-model";
 
 /** A list of documents, each opened and closed in place. */
@@ -40,6 +41,16 @@ function MaterialList({
             </button>
             {isOpen && (
               <div className="mb-2 border border-neutral-200 bg-neutral-50 px-4 py-3">
+                {item.image && (
+                  <Image
+                    src={item.image.src}
+                    alt={item.image.alt}
+                    width={item.image.width}
+                    height={item.image.height}
+                    sizes="(min-width: 1024px) 500px, 100vw"
+                    className="mb-3 h-auto w-full border border-neutral-200"
+                  />
+                )}
                 <div className="grid gap-2">
                   {item.body.map((paragraph, index) => (
                     <p key={index} className="text-sm leading-6 text-neutral-700">

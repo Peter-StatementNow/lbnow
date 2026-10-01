@@ -96,6 +96,8 @@ export type EvidenceItem = {
    * own page only - not carried forward into earlier project material.
    */
   pageAid?: boolean;
+  /** A photograph or drawing shown above the text (served from /public). */
+  image?: { src: string; alt: string; width: number; height: number };
   body: string[];
 };
 
