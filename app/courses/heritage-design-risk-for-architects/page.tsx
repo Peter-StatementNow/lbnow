@@ -4,7 +4,6 @@ import { COURSES } from "@/lib/content/courses";
 import { ARCHITECT_COURSE_CHAPTERS } from "@/lib/content/architect-course";
 import { CHAPTER_MINUTES, TOTAL_COURSE_MINUTES } from "@/lib/content/architect-course-chapters";
 import { CourseRouteMap } from "@/components/course/CourseRouteMap";
-import { ScopeBoundaryCard } from "@/components/course/ScopeBoundaryCard";
 import { StepBadge } from "@/components/course/ActivityElements";
 
 const course = COURSES.find(
@@ -122,38 +121,28 @@ export default function ArchitectCoursePage() {
         <CourseRouteMap chapters={ARCHITECT_COURSE_CHAPTERS} minutes={CHAPTER_MINUTES} />
       </div>
 
-      <h2 className="mt-14 text-xl font-semibold text-neutral-900">
-        What you will be able to do
-      </h2>
-      <ul className="mt-4 grid gap-2">
-        <li className="text-sm leading-6 text-neutral-600">
-          - Add the right heritage considerations to a normal project brief.
-        </li>
-        <li className="text-sm leading-6 text-neutral-600">
-          - Identify the evidence and decision points needed before a design direction hardens.
-        </li>
-        <li className="text-sm leading-6 text-neutral-600">
-          - Manage heritage implications through consent, delivery and handover.
-        </li>
-      </ul>
-
-      <div className="mt-8">
-        <ScopeBoundaryCard
-          content={{
-            heading:
-              "The former coach house and boundary wall are flagged throughout this course, not resolved.",
-            covers: [
-              "Recognising when associated structures and boundary features need heritage/status investigation before future work is assumed.",
-            ],
-            doesNotCover: [
-              "Determining curtilage status.",
-              "Giving legal advice on the status or consent implications of associated structures.",
-            ],
-            nextAction:
-              "Verify and establish their relevant status and significance proportionately before developing proposals that affect them.",
-          }}
-        />
-      </div>
+      {/* Course scope - a general statement, drawn from the "Content
+          boundary" section of the Chapters 2-7 source document. */}
+      <section className="mt-14 border border-neutral-300 px-6 py-5">
+        <h2 className="text-base font-semibold text-neutral-900">
+          What this course covers and does not cover
+        </h2>
+        <p className="mt-3 text-sm leading-6 text-neutral-700">
+          <span className="font-semibold text-neutral-900">Covers: </span>a design and
+          project-decision method, showing where heritage changes an otherwise normal project
+          decision, what needs to be understood before that decision hardens, and what to keep
+          in the Heritage Record.
+        </p>
+        <p className="mt-2 text-sm leading-6 text-neutral-700">
+          <span className="font-semibold text-neutral-900">Does not cover: </span>
+          determining legal status, curtilage or consent requirements, or the right professional
+          appointment, in an individual case.
+        </p>
+        <p className="mt-3 text-sm leading-6 text-neutral-600">
+          Where a project needs technical, conservation, heritage or legal advice, the Heritage
+          Record should make that need visible early enough to obtain appropriate advice.
+        </p>
+      </section>
 
       <div className="mt-10">
         <StartButton />
