@@ -8,11 +8,10 @@ import { ProjectMaterialPanel } from "@/components/course/ProjectMaterialPanel";
 import { ComparisonCard } from "@/components/course/ComparisonCard";
 import {
   BackButton,
-  PredictionFeedback,
+  AnswerResponse,
   SeeRecordLink,
   StepBadge,
   type Step,
-  WhyThisMatters,
   primaryButton,
 } from "@/components/course/ActivityElements";
 import { useCourseState } from "@/lib/course/heritage-course-store";
@@ -270,14 +269,10 @@ function PageContent({
 
       {prediction !== null && (
         <>
-          <PredictionFeedback
-            selectedIndex={prediction}
-            expectedIndex={page.expectedIndex}
-            feedback={page.optionFeedback[page.expectedIndex]}
-            optionFeedback={page.optionFeedback}
+          <AnswerResponse
+            feedback={page.optionFeedback[prediction]}
+            whyThisMatters={page.whyThisMatters}
           />
-
-          <WhyThisMatters text={page.whyThisMatters} />
 
           {/* Step 4 - further analysis: reading that deepens the answer,
               grouped in one box (neutral, like step 1, because it is

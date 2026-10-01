@@ -34,57 +34,46 @@ export function StepBadge({ step }: { step: Step }) {
   );
 }
 
-/** Paragraphs in `text` are separated by "\n". */
-export function FeedbackNote({ text }: { text: string }) {
-  return (
-    <div className="grid gap-2 border border-neutral-300 bg-neutral-50 px-5 py-4">
-      <p className="text-xs font-semibold uppercase tracking-wide text-neutral-600">Feedback</p>
-      {text.split("\n").map((paragraph) => (
-        <p key={paragraph} className="text-sm leading-6 text-neutral-700">
-          {paragraph}
-        </p>
-      ))}
-    </div>
-  );
-}
-
-export function WrongPredictionNudge() {
-  return (
-    <p className="text-sm text-neutral-500">
-      Consider the position again in light of what proportionate professional practice
-      requires - review the other options.
+function Paragraphs({ text }: { text: string }) {
+  return text.split("\n").map((paragraph) => (
+    <p key={paragraph} className="text-sm leading-6 text-neutral-800">
+      {paragraph}
     </p>
-  );
+  ));
 }
 
 /**
- * Feedback for the option the learner selected. When `optionFeedback`
- * is authored (bespoke text per option, not just correct/incorrect),
- * it takes priority - otherwise falls back to the single correct-
- * answer `feedback` string or the generic wrong-answer nudge.
- * `alwaysShowFeedback` is for activities (like Chapter 1's Activity 1)
- * where any answer unlocks the feedback - there's no "wrong" state.
+ * The response to the learner's answer - part of step 3: the bespoke
+ * feedback for the option chosen, then why it matters. Pale accent
+ * tint and border, matching the selected answer above it, so answer
+ * and response read as one unit. Paragraphs are separated by "\n".
  */
-export function PredictionFeedback({
-  selectedIndex,
-  expectedIndex,
+export function AnswerResponse({
   feedback,
-  optionFeedback,
-  alwaysShowFeedback = false,
+  whyThisMatters,
 }: {
-  selectedIndex: number;
-  expectedIndex: number;
   feedback: string;
-  optionFeedback?: string[];
-  alwaysShowFeedback?: boolean;
+  whyThisMatters: string;
 }) {
-  if (optionFeedback) {
-    return <FeedbackNote text={optionFeedback[selectedIndex]} />;
-  }
-  if (alwaysShowFeedback || selectedIndex === expectedIndex) {
-    return <FeedbackNote text={feedback} />;
-  }
-  return <WrongPredictionNudge />;
+  const heading =
+    "flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-action";
+  return (
+    <div className="border-2 border-action bg-action-tint px-5 py-4">
+      <p className={heading}>
+        <StepBadge step={3} />
+        Feedback
+      </p>
+      <div className="mt-2 grid gap-2">
+        <Paragraphs text={feedback} />
+      </div>
+      <div className="mt-4 border-t border-action/25 pt-4">
+        <p className={heading}>Why this matters</p>
+        <div className="mt-2 grid gap-2">
+          <Paragraphs text={whyThisMatters} />
+        </div>
+      </div>
+    </div>
+  );
 }
 
 /**
@@ -115,23 +104,6 @@ export function SeeRecordLink({ onClick }: { onClick: () => void }) {
 
 /** DOM id of the workspace tab bar, for scrolling it into view. */
 export const WORKSPACE_TABS_ID = "workspace-tabs";
-
-export function WhyThisMatters({ text }: { text: string }) {
-  return (
-    <div className="border-t border-neutral-200 pt-4">
-      <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-        Why this matters
-      </p>
-      <div className="mt-1 grid gap-2">
-        {text.split("\n").map((paragraph) => (
-          <p key={paragraph} className="text-sm leading-6 text-neutral-600">
-            {paragraph}
-          </p>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 export function BackButton({ onClick, href }: { onClick?: () => void; href?: string }) {
   if (href) {
