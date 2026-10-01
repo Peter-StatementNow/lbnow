@@ -29,6 +29,7 @@ const INITIAL_VISIT_NOTE: EvidenceItem = {
 const EVIDENCE_SUMMARY: EvidenceItem = {
   id: "evidence-summary",
   label: "Evidence summary",
+  pageAid: true,
   body: [
     "BUILDING AND PLACE",
     "• Grade II listed early C19 principal house with later alterations.",
@@ -48,6 +49,7 @@ const EVIDENCE_SUMMARY: EvidenceItem = {
 const CHAPTER_2_OUTPUTS: EvidenceItem = {
   id: "chapter-2-outputs",
   label: "Chapter 2 outputs",
+  pageAid: true,
   body: [
     "CHAPTER 2 OUTPUTS",
     "• Visible evidence and uncertainty recorded.",

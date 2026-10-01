@@ -57,6 +57,7 @@ const PREFERRED_DIRECTION: EvidenceItem = {
 const CURRENT_IMPLICATIONS: EvidenceItem = {
   id: "current-implications",
   label: "Preferred direction: current implications",
+  pageAid: true,
   body: [
     "CURRENT IMPLICATIONS",
     "• The preferred works may require listed building consent, alongside any other relevant approvals.",

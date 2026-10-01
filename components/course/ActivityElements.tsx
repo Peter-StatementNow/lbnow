@@ -55,14 +55,10 @@ export function AnswerResponse({
   feedback: string;
   whyThisMatters: string;
 }) {
-  const heading =
-    "flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-action";
+  const heading = "text-xs font-semibold uppercase tracking-wide text-action";
   return (
     <div className="border-2 border-action bg-action-tint px-5 py-4">
-      <p className={heading}>
-        <StepBadge step={3} />
-        Feedback
-      </p>
+      <p className={heading}>Feedback</p>
       <div className="mt-2 grid gap-2">
         <Paragraphs text={feedback} />
       </div>

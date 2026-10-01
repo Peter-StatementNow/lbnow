@@ -14,6 +14,7 @@ import { RECORD_AFTER_CHAPTER_3 } from "@/lib/content/architect-course-chapter-3
 const CURRENT_DEPENDENCY: EvidenceItem = {
   id: "current-dependency",
   label: "Current dependency",
+  pageAid: true,
   body: [
     "PREFERRED DIRECTION DEPENDS ON",
     "• Targeted investigation of fabric and structure at the proposed opening.",
@@ -28,6 +29,7 @@ const CURRENT_DEPENDENCY: EvidenceItem = {
 const IDENTIFIED_UNCERTAINTY: EvidenceItem = {
   id: "identified-uncertainty",
   label: "Identified uncertainty",
+  pageAid: true,
   body: [
     "IDENTIFIED UNCERTAINTY",
     "• Structure and fabric at proposed opening not fully visible.",
@@ -41,6 +43,7 @@ const IDENTIFIED_UNCERTAINTY: EvidenceItem = {
 const CHAPTER_4_OUTPUT: EvidenceItem = {
   id: "chapter-4-output",
   label: "Chapter 4 output",
+  pageAid: true,
   body: [
     "CHAPTER 4 OUTPUT",
     "The project has not created a separate heritage process.",

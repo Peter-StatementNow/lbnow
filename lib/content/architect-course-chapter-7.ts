@@ -14,6 +14,7 @@ import { RECORD_AFTER_CHAPTER_6 } from "@/lib/content/architect-course-chapter-6
 const AVAILABLE_INFORMATION: EvidenceItem = {
   id: "available-handover-information",
   label: "Available handover information",
+  pageAid: true,
   body: [
     "AVAILABLE INFORMATION",
     "• Listing entry and verified asset information.",
@@ -29,6 +30,7 @@ const AVAILABLE_INFORMATION: EvidenceItem = {
 const FUTURE_CHANGE_PROMPT: EvidenceItem = {
   id: "future-change-prompt",
   label: "Future change prompt",
+  pageAid: true,
   body: [
     "POSSIBLE FUTURE WORK",
     "• Reuse or conversion of former coach house.",
@@ -47,6 +49,7 @@ const FUTURE_CHANGE_PROMPT: EvidenceItem = {
 const HERITAGE_RECORD_JOURNEY: EvidenceItem = {
   id: "heritage-record-journey",
   label: "Heritage Record journey",
+  pageAid: true,
   body: [
     "THE HERITAGE RECORD",
     "Receiving the brief",

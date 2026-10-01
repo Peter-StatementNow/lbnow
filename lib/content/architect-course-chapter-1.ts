@@ -226,6 +226,7 @@ const LISTING_ENTRY: EvidenceItem = {
 const LISTING_ENTRY_NOTE: EvidenceItem = {
   id: "listing-entry-note",
   label: "Listing-entry note",
+  pageAid: true,
   body: [
     "READING THE ENTRY",
     "The official list entry confirms that The Old Vicarage, Church Lane, Ashcombe, is Grade II listed.",
@@ -250,6 +251,7 @@ const EARLY_CLIENT_PRIORITIES: EvidenceItem = {
 const LISTING_ENTRY_NOTE_EXTRACT: EvidenceItem = {
   id: "listing-entry-note-extract",
   label: "Extract from listing-entry note",
+  pageAid: true,
   body: [
     "WHAT THE ENTRY ESTABLISHES",
     "• Identity of the principal listed asset.",
@@ -267,6 +269,7 @@ const LISTING_ENTRY_NOTE_EXTRACT: EvidenceItem = {
 const CURRENT_PROJECT_INFORMATION: EvidenceItem = {
   id: "current-project-information",
   label: "Current project information",
+  pageAid: true,
   body: [
     "CLIENT ENQUIRY",
     "• Client identifies the house as Grade II listed.",
@@ -293,6 +296,7 @@ const CLIENT_FOLLOW_UP: EvidenceItem = {
 const HERITAGE_RECORD_EXTRACT: EvidenceItem = {
   id: "heritage-record-extract",
   label: "Current Heritage Record extract",
+  pageAid: true,
   body: [
     "TO ESTABLISH",
     "• Significance, condition and contribution of spaces, fabric and features likely to be affected.",
@@ -309,6 +313,7 @@ const HERITAGE_RECORD_EXTRACT: EvidenceItem = {
 const CHAPTER_1_OUTPUTS: EvidenceItem = {
   id: "chapter-1-outputs",
   label: "Chapter 1 outputs",
+  pageAid: true,
   body: [
     "• The commission request and client-held information have been recorded.",
     "• The principal listed asset has been verified against the current official entry.",

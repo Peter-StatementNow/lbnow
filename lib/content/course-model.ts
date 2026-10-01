@@ -87,7 +87,17 @@ function mergeSections(pagesEntries: RecordSection[][]): RecordSection[] {
 
 // --- Pages ------------------------------------------------------------------
 
-export type EvidenceItem = { id: string; label: string; body: string[] };
+export type EvidenceItem = {
+  id: string;
+  label: string;
+  /**
+   * A page aid (a note, extract, checklist or chapter summary written
+   * for one page) rather than a project source document. Shown on its
+   * own page only - not carried forward into earlier project material.
+   */
+  pageAid?: boolean;
+  body: string[];
+};
 
 export type WorkedExample = {
   paragraphs: string[];

@@ -36,11 +36,13 @@ const PAGES_BY_CHAPTER: CoursePage[][] = [
   CHAPTER_7_PAGES,
 ];
 
-/** Each document once, in the order first introduced. */
+/** Each source document once, in the order first introduced (page aids are left out). */
 function uniqueItems(pages: CoursePage[]): EvidenceItem[] {
   const seen = new Map<string, EvidenceItem>();
   for (const page of pages) {
-    for (const item of page.evidence) if (!seen.has(item.id)) seen.set(item.id, item);
+    for (const item of page.evidence) {
+      if (!item.pageAid && !seen.has(item.id)) seen.set(item.id, item);
+    }
   }
   return [...seen.values()];
 }

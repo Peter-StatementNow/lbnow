@@ -28,6 +28,7 @@ const DEVELOPED_PROPOSAL: EvidenceItem = {
 const CONSENT_AND_VALIDATION_CHECK: EvidenceItem = {
   id: "consent-and-validation-check",
   label: "Consent and validation check",
+  pageAid: true,
   body: [
     "CONSENT AND VALIDATION CHECK",
     "Before preparing supporting material, confirm:",
@@ -56,6 +57,7 @@ const DESIGN_RESPONSE_SCHEDULE: EvidenceItem = {
 const CHAPTER_5_OUTPUTS: EvidenceItem = {
   id: "chapter-5-outputs",
   label: "Chapter 5 outputs",
+  pageAid: true,
   body: [
     "CHAPTER 5 OUTPUTS",
     "• Proposal explained through relevant significance, effects and design response.",
