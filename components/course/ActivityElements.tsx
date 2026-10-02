@@ -73,28 +73,40 @@ export function AnswerResponse({
 }
 
 /**
- * Shown once the page is saved: brings the workspace's Heritage Record
- * tab forward (see LearningScreenShell) and, on a phone - where the
- * workspace sits above the question - scrolls up to it.
+ * Shown once the page is saved.
+ *
+ * Large screens: the Heritage Record tab beside the question has already
+ * switched on save, so this is a plain statement pointing to it - not a
+ * link (Peter, 2 Oct 2026: an underlined link that seemed to do nothing
+ * was confusing).
+ *
+ * Phones/narrow tablets: the workspace sits far above the question, so
+ * this is a real button that brings the Heritage Record tab forward and
+ * scrolls up to it.
  */
 export function SeeRecordLink({ onClick }: { onClick: () => void }) {
   return (
-    <button
-      type="button"
-      onClick={() => {
-        onClick();
-        // Wait for the tab switch to render first - otherwise the panel
-        // swapping height mid-scroll makes the browser cancel the scroll.
-        setTimeout(() =>
-          document
-            .getElementById(WORKSPACE_TABS_ID)
-            ?.scrollIntoView({ behavior: scrollBehavior(), block: "nearest" })
-        );
-      }}
-      className="-my-1.5 justify-self-start py-1.5 text-left text-sm font-medium text-action underline underline-offset-4 hover:text-action-hover"
-    >
-      See the updated Heritage Record &rarr;
-    </button>
+    <>
+      <p className="hidden text-sm font-medium text-action lg:block">
+        &#10003; Added to your Heritage Record - see the tab on the right.
+      </p>
+      <button
+        type="button"
+        onClick={() => {
+          onClick();
+          // Wait for the tab switch to render first - otherwise the panel
+          // swapping height mid-scroll makes the browser cancel the scroll.
+          setTimeout(() =>
+            document
+              .getElementById(WORKSPACE_TABS_ID)
+              ?.scrollIntoView({ behavior: scrollBehavior(), block: "start" })
+          );
+        }}
+        className="justify-self-start border border-action bg-white px-4 py-2.5 text-sm font-medium text-action hover:bg-action-tint lg:hidden"
+      >
+        View the updated Heritage Record &uarr;
+      </button>
+    </>
   );
 }
 

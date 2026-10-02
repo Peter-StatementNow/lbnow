@@ -113,6 +113,8 @@ export default function ArchitectCoursePage() {
       </ol>
       <p className="mt-5 text-xs leading-5 text-neutral-500">
         Completed chapters are remembered in this browser, so you can stop between chapters.
+        This course is designed for desktop and laptop screens. On a tablet, use landscape
+        orientation. It works on all devices, but it is not designed for use on a phone.
       </p>
 
       {/* The one chapter list. */}
