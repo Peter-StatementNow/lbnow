@@ -130,6 +130,13 @@ export type PageContent = {
   workedExample: WorkedExample;
   /** Pointer to recognised guidance, shown after the worked example. */
   resourcePrompt?: string;
+  /**
+   * Optional "Myth and misconception" reinforcement card (myths-and-
+   * misconceptions-content-addition.md, 4 Oct 2026). Never part of the
+   * question, feedback, record or continuation - and only on the three
+   * pages that source names.
+   */
+  mythCard?: { title: string; myth: string; remember: string; separate: string };
   comparisonCard?: ComparisonCardContent;
   /** Paragraphs separated by "\n". */
   whyThisMatters: string;

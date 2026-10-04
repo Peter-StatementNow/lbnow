@@ -6,6 +6,7 @@ import { LearningScreenShell, PAGE_TASK_ID } from "@/components/course/LearningS
 import { PredictionBlock } from "@/components/course/PredictionBlock";
 import { ProjectMaterialPanel } from "@/components/course/ProjectMaterialPanel";
 import { ComparisonCard } from "@/components/course/ComparisonCard";
+import { MythCard } from "@/components/course/MythCard";
 import {
   BackButton,
   AnswerResponse,
@@ -333,6 +334,8 @@ function PageContent({
                 <p className="mt-2 text-sm leading-6 text-neutral-700">{page.resourcePrompt}</p>
               </div>
             )}
+
+            {page.mythCard && <MythCard card={page.mythCard} />}
 
             {page.comparisonCard && <ComparisonCard content={page.comparisonCard} />}
           </section>

@@ -348,12 +348,10 @@ const CHAPTER_1_DRAFTS: Chapter1PageDraft[] = [
     minutes: 1,
     projectMoment:
       "A homeowner has asked for a fee proposal for alterations to The Old Vicarage, a house they bought last year. Their enquiry describes a rear extension, ground-floor alterations, energy improvements and window work. They identify the house as Grade II listed, refer to a detached former coach house and boundary wall, and explain that records of earlier work are incomplete.\nThe client’s information is enough to begin a heritage review. It is not enough to define the heritage position, consent route or scope of advice.",
-    task: "Decide whether this brief needs a Heritage Record review.",
-    taskDetail:
-      "If it does, identify the most useful first heritage addition to the brief before scope and fee are defined.",
+    task: "Decide whether the client enquiry is enough to trigger a Heritage Record review, and identify the most useful first entry.",
     evidence: [CLIENT_ENQUIRY, EXISTING_HOUSE, EXISTING_PLAN, LOCATION_CONTEXT_NOTE],
     alwaysAvailableEvidenceIds: [CLIENT_ENQUIRY.id],
-    question: "What is the most useful first heritage addition to this brief?",
+    question: "What is the most useful first Heritage Record position in response to this brief?",
     options: [
       "No further heritage entry is needed at this stage. The client has identified the house as listed, so the architect can address heritage matters when developing the application.",
       "Record that listed building consent will be required for the extension, internal changes, window work and boundary-wall alterations.",
@@ -465,6 +463,15 @@ const CHAPTER_1_DRAFTS: Chapter1PageDraft[] = [
         "The listing entry changes one important part of the record: the listed asset is now verified.",
         "It does not convert an early client enquiry into a complete heritage assessment. The entry is a reliable source for identity, grade and its own wording. It is not evidence that every feature omitted from the description is unimportant, nor a decision about the proposed works.",
       ],
+    },
+    mythCard: {
+      title: "What a list entry does not limit",
+      myth:
+        "“Only the parts described in the list entry — or only the front of the building — are listed.”",
+      remember:
+        "The whole principal listed building is listed, inside and out. A list entry helps identify the asset and records official information, but it is not a comprehensive record of every feature or a boundary of protection.",
+      separate:
+        "A list entry does not settle the significance of every individual feature or space. It also does not settle the status of detached structures, such as a coach house or boundary wall.",
     },
     whyThisMatters:
       "Verifying the listed asset prevents a project from being scoped around an untested client description.\nReading the entry accurately is equally important: record what it establishes, but do not claim that it answers questions about significance, associated structures, earlier work or consent.",

@@ -29,7 +29,6 @@ const INITIAL_VISIT_NOTE: EvidenceItem = {
 const EVIDENCE_SUMMARY: EvidenceItem = {
   id: "evidence-summary",
   label: "Evidence summary",
-  pageAid: true,
   body: [
     "BUILDING AND PLACE",
     "• Grade II listed early C19 principal house with later alterations.",
@@ -102,6 +101,12 @@ const DRAFTS: PageDraft[] = [
           "The condition of roof-space fabric and existing insulation/service interventions relevant to energy work.",
           "The status of the former coach house and boundary wall before future alteration is assumed.",
           "Their contribution, together with the garden and gate piers, to the significance and setting of the principal listed building.",
+        ],
+      },
+      {
+        heading: "Keep under review",
+        entries: [
+          "How the observed fabric, spaces and site relationships contribute to significance in relation to the proposed work.",
         ],
       },
     ],

@@ -49,7 +49,7 @@ const PREFERRED_DIRECTION: EvidenceItem = {
     "• Compact rear extension.",
     "• Limited rear-range alteration.",
     "• Retain exposed timber and identified early doors where possible.",
-    "• Investigate whether adapting the existing rear window is preferable to forming a new opening.",
+    "• Investigate whether adapting the existing rear window, forming a carefully located new opening, or retaining current openings is the most appropriate response.",
     "• Develop garden threshold, access and boundary implications through next design stage.",
   ],
 };
@@ -136,7 +136,7 @@ const DRAFTS: PageDraft[] = [
     contentStatus: "draft",
     minutes: 2,
     projectMoment:
-      "The preferred family-space layout needs a better connection to the garden. One approach forms a new opening through the rear wall. Another converts an existing rear window into a door.\nBoth may be practical. Both may remove historic fabric, alter evidence of development or change the composition of the rear elevation. The opening strategy should be tested before it becomes a fixed instruction.",
+      "Across the emerging options, the project needs to test how the kitchen and family space connect to the garden. One possible approach forms a new opening through the rear wall. Another converts an existing rear window into a door.\nBoth may be practical. Both may remove historic fabric, alter evidence of development or change the composition of the rear elevation. The opening strategy should be tested before it becomes a fixed instruction.",
     task: "Identify the most useful first question before selecting an opening strategy.",
     evidence: [OPENING_OPTIONS],
     alwaysAvailableEvidenceIds: [OPENING_OPTIONS.id],
@@ -181,6 +181,15 @@ const DRAFTS: PageDraft[] = [
       intro:
         "A window-to-door conversion or new opening may affect the building’s contribution to character and appearance, particularly where the elevation is visible or has a clear pattern of openings. Test existing proportions, materials, threshold treatment and relationship to the street or garden rather than assuming that a rear elevation is automatically less sensitive.",
     },
+    mythCard: {
+      title: "Rear does not automatically mean low impact",
+      myth:
+        "“A new opening or a window-to-door conversion at the back of a building is a minor heritage change.”",
+      remember:
+        "A rear opening can remove historic fabric, alter evidence of a building’s development, change the composition of an elevation and create effects at the threshold, access and drainage. Test the actual intervention before treating it as a routine kitchen or circulation decision.",
+      separate:
+        "A rear intervention may be appropriate. The point is not that it cannot happen; it is that its effect depends on the particular fabric, spaces, elevation and relationships affected.",
+    },
     whyThisMatters:
       "New, enlarged or adapted openings often become one of the most consequential heritage decisions in a domestic project. They can trigger investigation, design revision, consent implications and later site discoveries.",
     saveLabel: "Save to Heritage Record",
@@ -196,7 +205,7 @@ const DRAFTS: PageDraft[] = [
     contentStatus: "draft",
     minutes: 2,
     projectMoment:
-      "The client prefers a refined version of Option A: a compact rear extension, limited reworking of the rear range, retention of exposed timber and early doors where possible, and an adapted existing window opening for garden access if investigation confirms that this is appropriate.\nThe decision is useful, but it is not the end of the heritage work. The record needs to distinguish a preferred direction from a settled design and consent position.",
+      "The client prefers a refined version of Option A: a compact rear extension, limited reworking of the rear range, retention of exposed timber and early doors where possible, and further testing of the garden connection.\nThe decision is useful, but it is not the end of the heritage work. The record needs to distinguish a preferred direction from a settled design and consent position.",
     task: "Record the preferred direction in a way that preserves the decisions still to be made.",
     evidence: [PREFERRED_DIRECTION],
     alwaysAvailableEvidenceIds: [PREFERRED_DIRECTION.id],

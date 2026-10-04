@@ -6,6 +6,10 @@
  * document, not paraphrased; edit here only against a newer version of
  * the source. Each page's `recordEntries` are the worked-position
  * entries exactly as the source gives them.
+ *
+ * Correction Pass 2 (course-journey-and-project-material-correction-
+ * pass-2.md, 4 Oct 2026) added Page 1, "Confirm the route and validation
+ * requirements", and renumbered the original pages 1-3 as 2-4.
  */
 
 import { buildChapter, type EvidenceItem, type PageDraft } from "@/lib/content/course-model";
@@ -28,7 +32,6 @@ const DEVELOPED_PROPOSAL: EvidenceItem = {
 const CONSENT_AND_VALIDATION_CHECK: EvidenceItem = {
   id: "consent-and-validation-check",
   label: "Consent and validation check",
-  pageAid: true,
   body: [
     "CONSENT AND VALIDATION CHECK",
     "Before preparing supporting material, confirm:",
@@ -68,19 +71,79 @@ const CHAPTER_5_OUTPUTS: EvidenceItem = {
 };
 
 const DRAFTS: PageDraft[] = [
-  // --- Page 1 - Explain the heritage case ---
+  // --- Page 1 - Confirm the route and validation requirements ---
+  // (Correction Pass 2, 4 Oct 2026: new first page; existing pages renumbered.)
   {
     number: 1,
+    title: "Confirm the route and validation requirements",
+    contentStatus: "draft",
+    minutes: 2,
+    projectMoment:
+      "The compact extension and limited rear-range alteration are now sufficiently developed for the project to prepare the relevant consent material.\nBefore writing the heritage explanation, confirm what route applies and what information the relevant authority currently requires. The answer depends on this proposal, this site and current local requirements; it should not be assumed from listing alone.",
+    task: "Confirm the relevant consent or application route and the proportionate information needed before preparing the heritage case.",
+    evidence: [CONSENT_AND_VALIDATION_CHECK],
+    alwaysAvailableEvidenceIds: [CONSENT_AND_VALIDATION_CHECK.id],
+    question: "Before preparing the heritage explanation, what should the project confirm?",
+    options: [
+      "That listed building consent automatically covers every approval and information requirement connected with the project.",
+      "The relevant consent or application route, current local validation requirements, any other heritage control or designation affected, and the proportionate supporting information needed for this proposal.",
+      "That a full heritage statement and heritage consultant are required for every listed-building project.",
+      "Nothing further: prepare the drawings and allow the authority to request any missing information after submission.",
+    ],
+    expectedIndex: 1,
+    optionFeedback: [
+      "Listed building consent may be relevant, but it should not be assumed to resolve every approval, control or information requirement. Confirm the route for this proposal and site.",
+      "This is the strongest first step. It verifies the route and current requirements before the project prepares supporting material. It also keeps the information proportionate: not every project needs the same report, specialist input or application route.",
+      "Further heritage information or specialist advice may be proportionate, but neither should be treated as automatic. The required scope depends on the proposal, evidence gap, complexity and local requirements.",
+      "A submission can be made incomplete, but that is not a useful project strategy. Confirming the route and requirements early helps the project prepare the right information and avoid avoidable delay or redesign.",
+    ],
+    recordEntries: [
+      {
+        heading: "To establish",
+        entries: [
+          "Relevant consent or application route(s) and current local validation requirements.",
+          "Whether any other heritage control or designation affects the proposal.",
+          "The proportionate supporting information needed to explain significance, effects and design response.",
+        ],
+      },
+      {
+        heading: "Decision point",
+        entries: [
+          "Before submission, confirm that the proposal, route and supporting information are proportionate to the works, affected heritage interests and current local requirements.",
+        ],
+      },
+    ],
+    workedExample: {
+      paragraphs: [
+        "The project does not start by commissioning a standard report. It first confirms what route applies and what the submission must explain. The resulting information should be proportionate to the proposal and the heritage questions it raises.",
+      ],
+    },
+    comparisonCard: {
+      // The source gives no scenario heading for this comparison; this
+      // one names the triggers its text covers. Flagged for review.
+      heading: "If the site were in a conservation area, under an Article 4 direction or locally listed",
+      intro:
+        "If the project is in a conservation area or affected by an Article 4 direction, verify the current boundary, direction wording and relevant restriction before assuming permitted development or a particular planning route. For a locally listed building, check current local policy and validation expectations.",
+    },
+    whyThisMatters:
+      "Consent preparation works best when the project confirms the route and information requirements before it writes the explanation. This is a verification step, not a separate application-administration course.",
+    saveLabel: "Save to Heritage Record",
+    continueLabel: "Continue: Explain the heritage case",
+    continueCue:
+      "The route and requirements are clear enough to prepare the supporting explanation. Next, explain what matters, what changes and how the design responds.",
+  },
+
+  // --- Page 2 - Explain the heritage case ---
+  {
+    number: 2,
     title: "Explain the heritage case",
     contentStatus: "draft",
-    minutes: 3,
+    minutes: 2,
     projectMoment:
-      "The compact extension and limited rear-range alteration are now developed. Targeted investigation has informed the opening strategy, and the project needs to submit the right information for the relevant consent route.\nThe supporting material should not be a generic heritage report. It needs to explain this proposal: what matters, what changes and how the design responds.",
+      "The relevant route and current validation requirements have been checked. The compact extension and limited rear-range alteration are now developed, and targeted investigation has informed the opening strategy.\nThe project can now prepare proportionate supporting information that explains this proposal: what matters, what changes and how the design responds.",
     task: "Identify the strongest structure for the heritage explanation.",
-    taskDetail:
-      "Before explaining the heritage case, confirm the relevant application route and current local validation requirements.",
-    evidence: [CONSENT_AND_VALIDATION_CHECK, DEVELOPED_PROPOSAL],
-    alwaysAvailableEvidenceIds: [CONSENT_AND_VALIDATION_CHECK.id, DEVELOPED_PROPOSAL.id],
+    evidence: [DEVELOPED_PROPOSAL],
+    alwaysAvailableEvidenceIds: [DEVELOPED_PROPOSAL.id],
     question: "Which approach best explains the proposal?",
     options: [
       "Describe the client’s desired rooms and say that the extension will improve the house.",
@@ -124,12 +187,12 @@ const DRAFTS: PageDraft[] = [
       "The explanation is structured. Next, ensure that the drawings and details show the design response rather than merely claiming it.",
   },
 
-  // --- Page 2 - Make the response visible ---
+  // --- Page 3 - Make the response visible ---
   {
-    number: 2,
+    number: 3,
     title: "Make the response visible",
     contentStatus: "draft",
-    minutes: 3,
+    minutes: 2,
     projectMoment:
       "The proposal claims to retain identified timber and early doors, limit intervention in the rear range and reduce effects on the garden relationship. Those claims need to be visible in the submitted drawings and details.",
     task: "Identify what makes the design response credible.",
@@ -181,9 +244,9 @@ const DRAFTS: PageDraft[] = [
       "The heritage case is clear and visible in the proposal. Review what needs to carry forward into technical design and delivery.",
   },
 
-  // --- Page 3 - Chapter 5 complete ---
+  // --- Page 4 - Chapter 5 complete ---
   {
-    number: 3,
+    number: 4,
     title: "Chapter 5 complete",
     contentStatus: "draft",
     minutes: 2,

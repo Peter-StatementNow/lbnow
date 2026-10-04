@@ -128,6 +128,15 @@ const DRAFTS: PageDraft[] = [
       intro:
         "The same principle applies: identify the existing material, condition and cause of failure; consider repair before replacement where appropriate; use compatible methods; and seek suitably experienced advice when the intervention could affect significant fabric or character.",
     },
+    mythCard: {
+      title: "Replacement is not automatically repair",
+      myth:
+        "“Replacing traditional fabric with a modern material that looks similar is the same as repair.”",
+      remember:
+        "Repair starts by identifying the existing material, its condition and the cause of failure. Where repair or local renewal is appropriate, method and material need to be compatible with the retained historic fabric and the building’s performance.",
+      separate:
+        "This is not an automatic rule that every historic plaster repair must use lime, or that replacement is never justified. The project should understand the existing fabric and condition before specifying the intervention.",
+    },
     whyThisMatters:
       "Repair versus renewal is often a heritage decision, not just a specification choice. Small material decisions—such as an incompatible plaster—can have significant consequences for fabric, appearance and building performance.",
     saveLabel: "Save to Heritage Record",
