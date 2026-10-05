@@ -50,7 +50,7 @@ const PREFERRED_DIRECTION: EvidenceItem = {
     "• Limited rear-range alteration.",
     "• Retain exposed timber and identified early doors where possible.",
     "• Investigate whether adapting the existing rear window, forming a carefully located new opening, or retaining current openings is the most appropriate response.",
-    "• Develop garden threshold, access and boundary implications through next design stage.",
+    "• Develop garden threshold, access and landscape implications through next design stage.",
   ],
 };
 
@@ -60,7 +60,7 @@ const CURRENT_IMPLICATIONS: EvidenceItem = {
   pageAid: true,
   body: [
     "CURRENT IMPLICATIONS",
-    "• The preferred works may require listed building consent, alongside any other relevant approvals.",
+    "• The proposed listed-building extension requires planning permission. The project must separately consider whether the extension, opening strategy, internal works and related alterations require Listed Building Consent.",
     "• The exact route is not yet confirmed.",
     "• Targeted investigation and design development are needed to finalise the opening strategy and explain effects.",
     "• Proportionate supporting heritage information may be required.",
@@ -99,8 +99,8 @@ const DRAFTS: PageDraft[] = [
       {
         heading: "Keep under review",
         entries: [
-          "How Options A, B and C meet the client brief and affect the rear range, identified fabric, internal spaces, garden, boundary wall, access and coach-house relationship.",
-          "Whether proposed openings, services, threshold changes, footprint, landscape or boundary treatment can be avoided, reduced or relocated.",
+          "How Options A, B and C meet the client brief and affect the rear range, identified fabric, internal spaces, garden, threshold, access and current site relationships.",
+          "Whether proposed openings, services, threshold changes, footprint or landscape changes can be avoided, reduced or relocated.",
         ],
       },
       {
@@ -240,7 +240,7 @@ const DRAFTS: PageDraft[] = [
         heading: "Keep under review",
         entries: [
           "Retention, repair or alteration of exposed timber, finishes, doors and evidence of earlier openings.",
-          "Opening size, proportion, threshold, access, drainage, garden landscape and boundary-wall implications.",
+          "Opening size, proportion, threshold, access, drainage and garden landscape implications.",
         ],
       },
       {
@@ -282,14 +282,14 @@ const DRAFTS: PageDraft[] = [
     question: "What is the most useful client-facing position at this point?",
     options: [
       "Confirm that listed building consent will be granted once the preferred drawings are complete.",
-      "Explain that the preferred direction may require listed building consent and proportionate supporting information; confirm the route as the design and evidence develop; allow for possible heritage-statement/specialist input, application preparation, determination and potential clarification or refinement before presenting the scope, cost or start date as fixed.",
+      "Explain that planning permission is required for the extension and that Listed Building Consent must be considered separately for the extension, opening strategy, internal works and related alterations. Confirm the detailed Listed Building Consent position and proportionate supporting information as the design and evidence develop; allow for possible heritage-statement/specialist input, application preparation, determination and potential clarification or refinement before presenting the scope, cost or start date as fixed.",
       "Tell the client that heritage approval is likely to be too difficult, so a different project should be chosen now.",
       "Avoid discussing approvals or potential delay until an application is ready to submit.",
     ],
     expectedIndex: 1,
     optionFeedback: [
       "This gives the client a certainty the project does not yet have. A credible preferred direction may support a positive route, but consent outcome and timing should not be promised before the relevant evidence, design and requirements are known.",
-      "This is the strongest client position.\nIt is clear without being alarmist. It explains the likely dependency, what may be needed, what remains to be confirmed and why the project should not yet present price, programme or approval outcome as fixed.",
+      "This is the strongest client position.\nIt is clear without being alarmist. Planning permission is required for the extension, and Listed Building Consent is a separate question for the extension and related works. Supporting information, a heritage statement and specialist advice are allowed for where proportionate, not assumed. Scope, cost, programme and approval outcome are not presented as fixed until the relevant evidence and route are confirmed.",
       "This is unnecessarily pessimistic. The project has a credible direction; it needs proportionate information and a realistic conversation about route, timing and possible refinement.",
       "Waiting until submission preparation makes an important project dependency appear late and unexpected. The client should understand it while the design and commercial assumptions are still adaptable.",
     ],
@@ -297,7 +297,7 @@ const DRAFTS: PageDraft[] = [
       {
         heading: "Client conversation",
         entries: [
-          "The preferred direction may require listed building consent and possibly other relevant approvals; confirm the route as design and evidence develop.",
+          "The extension requires planning permission; consider separately whether the extension and related works require Listed Building Consent, and confirm that position as design and evidence develop.",
           "Allow for proportionate supporting heritage information and, where justified by the evidence gap, complexity or local requirements, a heritage statement and/or specialist heritage advice.",
           "Explain that preparation, determination and possible clarification or design refinement may affect timing.",
         ],
@@ -311,7 +311,7 @@ const DRAFTS: PageDraft[] = [
     ],
     workedExample: {
       paragraphs: [
-        "“The preferred direction is viable, but it may require listed building consent and supporting heritage information. We need to confirm the opening detail, affected fabric and local requirements before we can define the full application scope with confidence. We should allow for preparation and determination, and for the possibility of clarification or refinement.”",
+        "“The preferred direction is viable. The extension requires planning permission, and we need to consider separately whether it and the related works require Listed Building Consent, with supporting heritage information. We need to confirm the opening detail, affected fabric and local requirements before we can define the full application scope with confidence. We should allow for preparation and determination, and for the possibility of clarification or refinement.”",
       ],
     },
     whyThisMatters:

@@ -46,7 +46,23 @@ type HeritageRecordState = {
   status?: string;
   /** One-off explanatory line shown under `status`, e.g. on first arrival. */
   statusNote?: string;
+  /**
+   * Chapter 5 approvals and associated features amendments (5 Oct 2026):
+   * the boundary wall, gate piers and former coach house are noted for
+   * future work, not a live question for the current extension.
+   */
+  associatedFeatures?: RecordText;
+  futureProjectPrompt?: RecordText;
 };
+
+const ASSOCIATED_FEATURES_NOTED = [
+  "The brief identifies a boundary wall, gate piers and detached former coach house.",
+  "No work to these features is proposed in the current phase.",
+];
+
+const FUTURE_PROJECT_PROMPT = [
+  "Before any proposal affecting these features is developed, verify their status, significance and relationship to the listed building.",
+];
 
 const REVIEW_REQUIRED = "Review required";
 
@@ -74,12 +90,13 @@ const RECORD_AFTER_PAGE_1: HeritageRecordState = {
   toEstablish: [
     "The current listing record, entry details and what the entry identifies.",
     "Available consent history for earlier work.",
-    "Whether the former coach house and boundary wall require further heritage/status investigation before future alteration is assumed.",
   ],
   keepUnderReview: [
     "Which parts of the building, fabric, setting and associated features are affected as the proposal becomes more specific.",
   ],
   decisionPoints: "Not yet set.",
+  associatedFeatures: ASSOCIATED_FEATURES_NOTED,
+  futureProjectPrompt: FUTURE_PROJECT_PROMPT,
 };
 
 const KNOWN_AFTER_LISTING_ENTRY = [
@@ -97,10 +114,11 @@ const RECORD_AFTER_PAGE_2: HeritageRecordState = {
   toEstablish: [
     "The significance and condition of the building, including the rear range, later additions and internal fabric affected by the proposal.",
     "Available consent history for earlier work.",
-    "Whether the former coach house and boundary wall require further heritage/status investigation before future alteration is assumed.",
   ],
   keepUnderReview: RECORD_AFTER_PAGE_1.keepUnderReview,
   decisionPoints: "Not yet set.",
+  associatedFeatures: ASSOCIATED_FEATURES_NOTED,
+  futureProjectPrompt: FUTURE_PROJECT_PROMPT,
 };
 
 const KNOWN_FROM_PAGE_3 = [
@@ -114,7 +132,6 @@ const RECORD_AFTER_PAGE_3: HeritageRecordState = {
   toEstablish: [
     "The significance, condition and contribution of the spaces, fabric and features likely to be affected by the proposal.",
     "The nature, extent and approval history of earlier work.",
-    "The status and significance questions raised by the former coach house and boundary wall before future alteration is assumed.",
     "The effect of the developing proposal on the building and its setting.",
   ],
   keepUnderReview: [
@@ -122,12 +139,13 @@ const RECORD_AFTER_PAGE_3: HeritageRecordState = {
     "The proportionate level of heritage information required as the project becomes more specific.",
   ],
   decisionPoints: "Not yet set.",
+  associatedFeatures: ASSOCIATED_FEATURES_NOTED,
+  futureProjectPrompt: FUTURE_PROJECT_PROMPT,
 };
 
 const TO_ESTABLISH_FROM_PAGE_4 = [
   "The significance, condition and contribution of the spaces, fabric and features likely to be affected by the proposal.",
   "The nature, extent and approval history of earlier work.",
-  "The status and significance questions raised by the former coach house and boundary wall before future alteration is assumed.",
   "The information needed to understand the effect of the developing proposal on the building and its setting.",
 ];
 
@@ -143,6 +161,8 @@ const RECORD_AFTER_PAGE_4: HeritageRecordState = {
   toEstablish: TO_ESTABLISH_FROM_PAGE_4,
   keepUnderReview: KEEP_UNDER_REVIEW_FROM_PAGE_4,
   decisionPoints: "Not yet set.",
+  associatedFeatures: ASSOCIATED_FEATURES_NOTED,
+  futureProjectPrompt: FUTURE_PROJECT_PROMPT,
 };
 
 const FIRST_DECISION_POINT =
@@ -307,7 +327,6 @@ const HERITAGE_RECORD_EXTRACT: EvidenceItem = {
     "TO ESTABLISH",
     "• Significance, condition and contribution of spaces, fabric and features likely to be affected.",
     "• Nature, extent and approval history of earlier work.",
-    "• Status and significance questions for the former coach house and boundary wall.",
     "• Information needed to understand the effect of the developing proposal on the building and its setting.",
     "KEEP UNDER REVIEW",
     "• Whether emerging design choices affect significant fabric, spaces, setting or associated features.",
@@ -387,8 +406,20 @@ const CHAPTER_1_DRAFTS: Chapter1PageDraft[] = [
           items: [
             "Current listing record and its limits.",
             "Available approval / consent history.",
-            "Relevant status and significance questions for associated structures.",
             "The proportionate heritage information needed before project assumptions harden.",
+          ],
+        },
+        {
+          heading: "Associated features noted",
+          items: [
+            "The brief identifies a boundary wall, gate piers and detached former coach house.",
+            "No work to these features is proposed in the current phase.",
+          ],
+        },
+        {
+          heading: "Future-project prompt",
+          items: [
+            "Before any proposal affecting these features is developed, verify their status, significance and relationship to the listed building.",
           ],
         },
       ],
@@ -452,7 +483,7 @@ const CHAPTER_1_DRAFTS: Chapter1PageDraft[] = [
     expectedIndex: 0,
     optionFeedback: [
       "This is the strongest verified addition.\nIt records the listed asset’s identity, grade and the limited description provided by the official entry. It does not turn the entry into a complete statement of significance, protection or consent requirements.",
-      "The entry identifies the principal listed building. It does not, on its own, establish the status of detached structures or boundary features.\nKeep the former coach house and boundary wall under “To establish” rather than recording a conclusion.",
+      "The entry identifies the principal listed building. It does not, on its own, establish the status of detached structures or boundary features.\nRecord the former coach house and boundary wall as associated features noted, rather than recording a conclusion about their status.",
       "Later alteration does not settle significance.\nThe entry indicates that parts of the building have changed, but it does not tell you the significance, condition, contribution or consent history of the altered areas. Those remain questions for proportionate investigation.",
       "This reaches a consent conclusion that the entry cannot make.\nA listing entry identifies the listed asset; it does not decide the effect of specific proposed works on character or determine the consent route. Record the verified listing information and retain the proposal-specific questions.",
     ],
@@ -497,7 +528,7 @@ const CHAPTER_1_DRAFTS: Chapter1PageDraft[] = [
     question: "Which statement best records the position after the entry has been checked?",
     options: [
       "The entry settles the heritage position because it identifies the building’s date, form and later alterations. The next step is to develop the preferred design.",
-      "The entry verifies the listed asset, but further work is needed to understand the significance of affected fabric and spaces, earlier changes, associated structures and the effect of the developing proposal.",
+      "The entry verifies the listed asset, but further work is needed to understand the significance of affected fabric and spaces, earlier changes, and the effect of the developing proposal. The former coach house, boundary wall and gate piers are associated features noted for future work. Because the current proposal does not affect them, their status and significance do not need to be resolved before the extension project progresses.",
       "Because the rear range has been altered, the extension and internal changes can be treated as lower-risk work without further investigation.",
       "The entry does not contain enough detail, so no heritage position can be recorded until a full heritage assessment is commissioned.",
     ],
@@ -544,7 +575,7 @@ const CHAPTER_1_DRAFTS: Chapter1PageDraft[] = [
     expectedIndex: 0,
     optionFeedback: [
       "This is the strongest placement.\nThe official entry verifies the identity and Grade II designation of the principal listed asset. Record it as a known fact, while keeping the questions that the entry does not answer elsewhere in the record.",
-      "This has already been verified through the official entry.\n“To establish” is for questions such as the significance of affected fabric, the history of earlier changes and the status of associated structures.",
+      "This has already been verified through the official entry.\n“To establish” is for questions such as the significance of affected fabric, the history of earlier changes and the effect of the developing extension proposal.\nAssociated features are recorded separately as future-project prompts where the current proposal does not affect them.",
       "The listed status itself is not an emerging design question.\nRecord it under “Known”. The effect of evolving proposals on the listed building is the kind of matter that belongs under “Keep under review”.",
       "The designation is an established project fact, not a point at which the project must pause for a future decision.\nDecision points will be added when the project identifies information that must be in place before a concept, scope or route can be treated as settled.",
     ],
@@ -669,6 +700,12 @@ function toRecordGroup(record: HeritageRecordState): RecordGroup {
       section("To establish", record.toEstablish),
       section("Keep under review", record.keepUnderReview),
       section("Decision points", record.decisionPoints),
+      ...(record.associatedFeatures
+        ? [section("Associated features noted", record.associatedFeatures)]
+        : []),
+      ...(record.futureProjectPrompt
+        ? [section("Future-project prompt", record.futureProjectPrompt)]
+        : []),
     ],
   };
 }

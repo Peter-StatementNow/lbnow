@@ -241,9 +241,11 @@ const DRAFTS: PageDraft[] = [
       ],
     },
     comparisonCard: {
-      heading: "If the discovery concerns a boundary wall or external fabric in a conservation area",
+      // Replaced 5 Oct 2026 (associated features amendments): the
+      // boundary wall is not part of the current delivery story.
+      heading: "If a future or amended proposal affects the boundary wall, gate piers or former coach house",
       intro:
-        "Record the condition and proposed response, check whether the change alters the approved external design or relevant control, and confirm the required route before demolition, replacement or alteration proceeds.",
+        "If a future or amended proposal affects the boundary wall, gate piers or former coach house, treat that as a separate project question: record the proposed works, verify relevant status and significance, assess effects and confirm the appropriate approval route before irreversible work proceeds.",
     },
     whyThisMatters:
       "Unexpected fabric is normal in historic buildings. The risk is not discovery itself; it is allowing time pressure to turn discovery into informal, irreversible design drift or an untested departure from the approved position.",

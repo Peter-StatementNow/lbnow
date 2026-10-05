@@ -36,7 +36,7 @@ const FUTURE_CHANGE_PROMPT: EvidenceItem = {
     "• Reuse or conversion of former coach house.",
     "• Further window improvement.",
     "• Additional insulation or ventilation work.",
-    "• Garden access and boundary-wall changes.",
+    "• Garden access and any proposal affecting the boundary wall or gate piers.",
     "EXISTING HERITAGE RECORD",
     "• Verified principal listed asset information.",
     "• Previous evidence, design rationale and consent information.",
@@ -150,12 +150,13 @@ const DRAFTS: PageDraft[] = [
       "Previous decisions are useful evidence, but a new proposal may affect different fabric, structures, controls and questions. They must not be assumed to apply unchanged.",
       "This is the strongest starting point.\nThe Heritage Record provides continuity without pretending that it determines the next project. Verify what remains current and use the record to focus the new investigation.",
       "Existing records should be tested, not ignored. They can show what was previously found, retained, repaired, approved and left unresolved.",
-      "The coach-house question was deliberately flagged, not resolved. Its status and significance need verification before a conversion route or cost is assumed.",
+      "The coach-house and boundary-feature questions were deliberately noted but not resolved by the current extension project. A future proposal affecting them needs its own verification of status, significance, relationship to the listed building and approval route.",
     ],
     recordEntries: [
       {
         heading: "Future-change prompt",
         entries: [
+          "A future coach-house conversion or proposal affecting the boundary wall or gate piers is a new project. Begin by verifying current status, significance, approvals and the relationship to the listed building before assumptions about scope, cost, programme or consent are made.",
           "Revisit the existing Heritage Record before new work begins.",
           "Verify current designations, controls, approvals and building condition.",
           "Identify the new proposal’s affected fabric, spaces, setting and associated structures.",
@@ -188,7 +189,7 @@ const DRAFTS: PageDraft[] = [
     contentStatus: "draft",
     minutes: 2,
     projectMoment:
-      "The Old Vicarage project has moved from client enquiry to completed work and a usable record for future care. Heritage did not create a separate lifecycle. It changed the evidence, options and commitments at the points where they mattered.",
+      "The Old Vicarage project has moved from client enquiry to completed work and a usable record for future care. Heritage did not create a separate lifecycle. It changed the evidence, options and commitments at the points where they mattered.\nAssociated features were noticed and recorded. Because the current project did not propose work to the former coach house, boundary wall or gate piers, their status and significance remain future-project questions rather than unresolved conditions of the completed extension.",
     task: "Identify the central method of the course.",
     evidence: [HERITAGE_RECORD_JOURNEY],
     alwaysAvailableEvidenceIds: [HERITAGE_RECORD_JOURNEY.id],

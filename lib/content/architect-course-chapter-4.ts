@@ -18,7 +18,7 @@ const CURRENT_DEPENDENCY: EvidenceItem = {
     "PREFERRED DIRECTION DEPENDS ON",
     "• Targeted investigation of fabric and structure at the proposed opening.",
     "• Detailed design of rear-range junctions, services and retained timber.",
-    "• Confirmation of garden/access and any boundary-wall implications.",
+    "• Confirmation of garden threshold, access and landscape implications for the extension proposal.",
     "• Verification of the relevant consent route and local requirements.",
     "• Proportionate supporting heritage information.",
     "• Possible heritage consultant/specialist input if evidence, complexity or local requirements indicate that it is needed.",

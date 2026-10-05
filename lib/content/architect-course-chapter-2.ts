@@ -90,7 +90,7 @@ const DRAFTS: PageDraft[] = [
         entries: [
           "The rear range contains lower ceilings, exposed timber, altered finishes and evidence of at least one altered or blocked opening.",
           "Some early or original internal doors appear to survive.",
-          "The main house, garden, boundary wall and former coach house have a physical relationship that may be relevant to the developing proposal.",
+          "The main house, garden, boundary wall, gate piers and former coach house have a physical relationship that may be relevant to the developing proposal.",
         ],
       },
       {
@@ -99,8 +99,7 @@ const DRAFTS: PageDraft[] = [
           "The development, condition and contribution of the rear range and the fabric likely to be affected by proposed openings, services and internal changes.",
           "The significance and condition of internal doors and other fabric likely to be affected.",
           "The condition of roof-space fabric and existing insulation/service interventions relevant to energy work.",
-          "The status of the former coach house and boundary wall before future alteration is assumed.",
-          "Their contribution, together with the garden and gate piers, to the significance and setting of the principal listed building.",
+          "The contribution of the garden and current site relationships to the significance and setting of the principal listed building, where affected by the extension, threshold or access proposal.",
         ],
       },
       {
@@ -166,7 +165,7 @@ const DRAFTS: PageDraft[] = [
         entries: [
           "Whether emerging design choices affect significant fabric, spaces, setting or relationships.",
           "Whether further survey, opening-up or specialist input is proportionate before a preferred option is selected.",
-          "Whether the developing proposal affects those relationships, access, boundary treatment or future options for the coach house.",
+          "Whether the developing extension, garden threshold, access or landscape proposal affects those relationships.",
         ],
       },
     ],
