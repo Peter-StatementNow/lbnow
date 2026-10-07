@@ -16,7 +16,11 @@ import {
   type Step,
   primaryButton,
 } from "@/components/course/ActivityElements";
-import { useCourseState } from "@/lib/course/heritage-course-store";
+import {
+  readChapterProgress,
+  useCourseState,
+  writeChapterProgress,
+} from "@/lib/course/heritage-course-store";
 import { ARCHITECT_COURSE_CHAPTERS } from "@/lib/content/architect-course";
 import { CHAPTER_PAGES, courseProgress } from "@/lib/content/architect-course-chapters";
 import {
@@ -57,6 +61,31 @@ export function ChapterExperience({ chapterNumber }: { chapterNumber: number }) 
   const [saved, setSaved] = useState<boolean[]>(() => Array(pageCount).fill(false));
   const [recordRevision, setRecordRevision] = useState(0);
   const { completedChapters, markChapterComplete } = useCourseState();
+
+  // Resume where the learner left off. localStorage cannot be read during
+  // server rendering, so this restores after mount; nothing is written
+  // back until that has happened, so the initial empty state can never
+  // overwrite stored progress.
+  const [restored, setRestored] = useState(false);
+  useEffect(() => {
+    const stored = readChapterProgress(
+      chapterNumber,
+      pages.map((p) => p.options.length)
+    );
+    if (stored) {
+      /* eslint-disable react-hooks/set-state-in-effect */
+      setPageIndex(stored.pageIndex);
+      setPredictions(stored.predictions);
+      setSaved(stored.saved);
+      /* eslint-enable react-hooks/set-state-in-effect */
+    }
+    setRestored(true);
+  }, [chapterNumber, pages]);
+
+  useEffect(() => {
+    if (!restored) return;
+    writeChapterProgress(chapterNumber, { pageIndex, predictions, saved });
+  }, [restored, chapterNumber, pageIndex, predictions, saved]);
 
   const page = pages[pageIndex];
   const prediction = predictions[pageIndex];
