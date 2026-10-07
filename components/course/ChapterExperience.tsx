@@ -19,7 +19,13 @@ import {
 import { useCourseState } from "@/lib/course/heritage-course-store";
 import { ARCHITECT_COURSE_CHAPTERS } from "@/lib/content/architect-course";
 import { CHAPTER_PAGES, courseProgress } from "@/lib/content/architect-course-chapters";
-import { COURSE_HREF, COURSE_NAME, type CoursePage } from "@/lib/content/course-model";
+import {
+  COURSE_HREF,
+  COURSE_NAME,
+  feedbackWithRecordedPosition,
+  recordAdditions,
+  type CoursePage,
+} from "@/lib/content/course-model";
 
 const UNLOCK_HINT = "Available after you record your initial view";
 
@@ -56,6 +62,12 @@ export function ChapterExperience({ chapterNumber }: { chapterNumber: number }) 
   const prediction = predictions[pageIndex];
   const isSaved = saved[pageIndex];
   const isLastPage = pageIndex === pageCount - 1;
+  const additions = recordAdditions(page.recordBefore.current, page.recordAfter.current);
+  const saveLabel = isLastPage
+    ? `Add the worked position to my Heritage Record and complete ${
+        nextChapter ? `Chapter ${chapterNumber}` : "the course"
+      }`
+    : "Add the worked position to my Heritage Record";
 
   const savedMinutes = pages.reduce((sum, p, index) => sum + (saved[index] ? p.minutes : 0), 0);
   const { percentComplete, minutesLeft } = courseProgress(
@@ -141,23 +153,48 @@ export function ChapterExperience({ chapterNumber }: { chapterNumber: number }) 
             <div className="flex max-w-xl flex-col items-end gap-3 text-right">
               <p className="text-sm text-neutral-600">
                 <span className="font-medium text-action">
-                  &#10003; Saved to Heritage Record.
+                  &#10003; Added to your Heritage Record.
                 </span>{" "}
                 {page.continueCue}
               </p>
               {continueButton}
             </div>
           ) : (
-            <div className="flex items-center gap-3">
-              <StepBadge step={5} />
-              <button
-                type="button"
-                onClick={save}
-                disabled={prediction === null}
-                className={primaryButton}
-              >
-                {page.saveLabel}
-              </button>
+            <div className="flex max-w-xl flex-col items-end gap-3">
+              {prediction !== null && (
+                <div className="w-full border border-neutral-300 bg-neutral-50 px-4 py-3 text-left">
+                  {additions.length > 0 && (
+                    <>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-neutral-600">
+                        This will add to your Heritage Record
+                      </p>
+                      <ul className="mt-2 grid gap-1.5">
+                        {additions.map(({ heading, entries }) =>
+                          entries.map((entry) => (
+                            <li key={`${heading}-${entry}`} className="text-sm leading-6 text-neutral-800">
+                              <span className="font-medium">{heading}:</span> {entry}
+                            </li>
+                          ))
+                        )}
+                      </ul>
+                    </>
+                  )}
+                  <p className={`${additions.length > 0 ? "mt-2 " : ""}text-xs leading-5 text-neutral-600`}>
+                    The Heritage Record holds the strongest position, whichever answer you chose.
+                  </p>
+                </div>
+              )}
+              <div className="flex items-center gap-3">
+                <StepBadge step={5} />
+                <button
+                  type="button"
+                  onClick={save}
+                  disabled={prediction === null}
+                  className={primaryButton}
+                >
+                  {saveLabel}
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -232,7 +269,7 @@ function WelcomeNote() {
           [4, "Read the further analysis - a worked example and, where useful, a comparison."],
           [
             5,
-            "Save to your Heritage Record. It opens in the Heritage Record tab and builds up chapter by chapter - it is what you take away from the course.",
+            "Add the worked position to your Heritage Record. It opens in the Heritage Record tab and builds up chapter by chapter - it is what you take away from the course. Whichever answer you chose, the record holds the strongest position, as shown in the feedback.",
           ],
         ].map(([step, text]) => (
           <li key={step} className="flex gap-3 text-sm leading-6 text-neutral-700">
@@ -277,7 +314,7 @@ function PageContent({
       <div aria-live="polite">
         {prediction !== null && (
           <AnswerResponse
-            feedback={page.optionFeedback[prediction]}
+            feedback={feedbackWithRecordedPosition(page, prediction)}
             whyThisMatters={page.whyThisMatters}
           />
         )}

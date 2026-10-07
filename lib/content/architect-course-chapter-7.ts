@@ -121,7 +121,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "Handover is where project knowledge either becomes useful building information or disappears into disconnected files. The Heritage Record preserves the decisions that a future project would otherwise need to rediscover.",
-    saveLabel: "Save to Heritage Record",
     continueLabel: "Continue: Start the next change better",
     continueCue:
       "The handover record is complete. Next, see how it changes the starting point for future work without assuming past decisions settle new proposals.",
@@ -176,7 +175,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "The Heritage Record does not freeze a historic building. It makes change more informed by ensuring the next project begins with evidence, continuity and clear questions rather than rediscovery and assumption.",
-    saveLabel: "Save to Heritage Record",
     continueLabel: "Continue: Complete the course",
     continueCue:
       "The Heritage Record now supports future care and change. Review the method used across the project lifecycle.",
@@ -229,7 +227,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "Listed buildings, conservation areas, Article 4 directions, locally listed assets and setting issues involve different controls and evidence. The method remains consistent: verify, understand, test, decide, record and carry knowledge forward.",
-    saveLabel: "Save and complete the course",
     continueLabel: "Course complete",
     continueCue: "You have completed Heritage Design Risk for Architects.",
   },

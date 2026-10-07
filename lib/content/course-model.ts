@@ -140,7 +140,6 @@ export type PageContent = {
   comparisonCard?: ComparisonCardContent;
   /** Paragraphs separated by "\n". */
   whyThisMatters: string;
-  saveLabel: string;
   continueLabel: string;
   continueCue: string;
 };
@@ -194,4 +193,48 @@ export function buildChapter(
   }));
 
   return { pages, groupsAfter: [groupAfter(drafts.length), ...earlier] };
+}
+
+// --- Heritage Record updates and feedback ---------------------------------
+
+const PLACEHOLDER_ENTRY = /^not yet (set|recorded|started)\.?$/i;
+
+function entryList(text: RecordText): string[] {
+  return Array.isArray(text) ? text : [text];
+}
+
+/**
+ * The entries a page's save adds to (or changes in) the Heritage Record:
+ * those in the "after" view that were not in the "before" view, by
+ * heading. Placeholders such as "Not yet set." are not shown. Used to tell
+ * the learner exactly what saving will record - the page's fixed, worked
+ * position, whichever answer they chose.
+ */
+export function recordAdditions(
+  before: RecordGroup,
+  after: RecordGroup
+): { heading: string; entries: string[] }[] {
+  const additions: { heading: string; entries: string[] }[] = [];
+  for (const section of after.sections) {
+    const existing = new Set(
+      entryList(before.sections.find((s) => s.heading === section.heading)?.entries ?? [])
+    );
+    const added = entryList(section.entries).filter(
+      (entry) => !existing.has(entry) && !PLACEHOLDER_ENTRY.test(entry.trim())
+    );
+    if (added.length > 0) additions.push({ heading: section.heading, entries: added });
+  }
+  return additions;
+}
+
+/**
+ * The feedback for the chosen option. Any option other than the strongest
+ * ends by stating what the Heritage Record will record, so a learner who
+ * chose differently is never left thinking the record followed their
+ * answer.
+ */
+export function feedbackWithRecordedPosition(page: PageContent, selectedIndex: number): string {
+  const feedback = page.optionFeedback[selectedIndex];
+  if (selectedIndex === page.expectedIndex) return feedback;
+  return `${feedback}\nThe Heritage Record will record the strongest position, which is: ${page.options[page.expectedIndex]}`;
 }

@@ -149,7 +149,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "Planning permission and Listed Building Consent answer different questions. Do not let ‘small’, ‘rear’, ‘listed’, ‘conservation area’ or ‘permitted development’ answer the wrong approval question.",
-    saveLabel: "Save to Heritage Record",
     continueLabel: "Continue: Confirm validation and information",
     continueCue:
       "The planning-permission and Listed Building Consent questions are now distinct. Next, confirm current local validation requirements and the proportionate information needed for the proposal.",
@@ -210,7 +209,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "Consent preparation works best when the project confirms the route and information requirements before it writes the explanation. This is a verification step, not a separate application-administration course.",
-    saveLabel: "Save to Heritage Record",
     continueLabel: "Continue: Explain the heritage case",
     continueCue:
       "The route and current requirements are clear enough to prepare the supporting explanation. Next, explain what matters, what changes and how the design responds.",
@@ -264,7 +262,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "A good heritage explanation is not a separate narrative added at the end. It is the design reasoning made clear enough for a decision-maker to understand.",
-    saveLabel: "Save to Heritage Record",
     continueLabel: "Continue: Make the response visible",
     continueCue:
       "The explanation is structured. Next, ensure that the drawings and details show the design response rather than merely claiming it.",
@@ -321,7 +318,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "The clearest applications let a reviewer see how understanding the asset has shaped the proposal. That makes the decision easier and reduces the risk that the built work later departs from the approved reasoning.",
-    saveLabel: "Save to Heritage Record",
     continueLabel: "Continue: Complete Chapter 5",
     continueCue:
       "The heritage case is clear and visible in the proposal. Review what needs to carry forward into technical design and delivery.",
@@ -373,7 +369,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "The heritage case needs to survive the transition from proposal to built work. Otherwise the project can obtain consent for one rationale and deliver another.",
-    saveLabel: "Save and complete Chapter 5",
     continueLabel: "Begin Chapter 6: Detailing and delivering work",
     continueCue:
       "The approved response now needs to become practical information and managed site decisions. Next, use compatible repair methods, protect fabric and manage material change.",

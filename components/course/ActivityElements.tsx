@@ -13,7 +13,7 @@ export const secondaryButton =
  * The page's five-step rhythm, numbered on every learning page and
  * explained on the course overview ("How the course works"):
  * 1 project moment, 2 task + project material, 3 your initial view
- * (with feedback), 4 further analysis, 5 save to the Heritage Record.
+ * (with feedback), 4 further analysis, 5 add the worked position to the Heritage Record.
  * Reading steps (1, 4) stay neutral; action steps (2, 3, 5) take the
  * accent.
  */

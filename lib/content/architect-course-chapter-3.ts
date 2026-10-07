@@ -123,7 +123,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "Heritage-informed design is not a late check on a finished scheme. It is the process of changing the option while it is still flexible enough to respond to what matters.",
-    saveLabel: "Save to Heritage Record",
     continueLabel: "Continue: Test the opening before fixing it",
     continueCue:
       "The options are clear. Next, examine a new or altered opening before the kitchen layout, extension position or access design makes it difficult to change.",
@@ -192,7 +191,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "New, enlarged or adapted openings often become one of the most consequential heritage decisions in a domestic project. They can trigger investigation, design revision, consent implications and later site discoveries.",
-    saveLabel: "Save to Heritage Record",
     continueLabel: "Continue: Select a preferred direction",
     continueCue:
       "The opening strategy has been tested alongside the wider options. Next, record the preferred direction and the conditions that still need to be addressed.",
@@ -262,7 +260,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "A preferred option often becomes difficult to change because cost, programme and client expectation begin to form around it. The Heritage Record keeps the important conditions visible before that happens.",
-    saveLabel: "Save to Heritage Record",
     continueLabel: "Continue: Complete Chapter 3",
     continueCue:
       "A preferred direction has been selected with its heritage conditions visible. Next, prepare the client for the approval, information, cost and timing implications.",
@@ -316,7 +313,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "This is not a lesson in consent process. It is the point at which a heritage-sensitive proposal changes the client’s understanding of what can be promised, what needs allowing for and when decisions become reliable.",
-    saveLabel: "Save and complete Chapter 3",
     continueLabel: "Begin Chapter 4: Managing client, cost and programme",
     continueCue:
       "The client understands the likely approval dependency. Next, make the targeted implications for fee, contingency and timing visible without creating a separate project lifecycle.",

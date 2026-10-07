@@ -139,7 +139,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "Repair versus renewal is often a heritage decision, not just a specification choice. Small material decisions—such as an incompatible plaster—can have significant consequences for fabric, appearance and building performance.",
-    saveLabel: "Save to Heritage Record",
     continueLabel: "Continue: Keep the rationale in the details",
     continueCue:
       "The repair method has been approached proportionately. Next, translate all retention, protection and repair decisions into practical information for delivery.",
@@ -193,7 +192,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "Technical design is where a heritage response stops being an intention and becomes an instruction. The Heritage Record ensures that reasoning, repair method and protection requirements are not lost between approval and construction.",
-    saveLabel: "Save to Heritage Record",
     continueLabel: "Continue: Respond to a material discovery or change",
     continueCue:
       "The contractor has clear instructions. Next, manage a discovery or proposed change that could alter the approved work and may require further formal agreement.",
@@ -249,7 +247,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "Unexpected fabric is normal in historic buildings. The risk is not discovery itself; it is allowing time pressure to turn discovery into informal, irreversible design drift or an untested departure from the approved position.",
-    saveLabel: "Save to Heritage Record",
     continueLabel: "Continue: Complete Chapter 6",
     continueCue:
       "The material change has been managed. Review what must be recorded at completion so future care and change begin from evidence.",
@@ -300,7 +297,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "Construction creates new knowledge about a historic building. If it is not recorded, the next owner or project team begins again with avoidable uncertainty.",
-    saveLabel: "Save and complete Chapter 6",
     continueLabel: "Begin Chapter 7: Handover and the next change",
     continueCue:
       "The built work is recorded. Next, keep the essential information for care and the next project without turning handover into an archive exercise.",

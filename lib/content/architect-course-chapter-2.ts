@@ -121,7 +121,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "Early design often labels parts of a building “later”, “altered” or “less important” before the evidence supports that conclusion. The Heritage Record keeps those assumptions from becoming design instructions too soon.",
-    saveLabel: "Save to Heritage Record",
     continueLabel: "Continue: What matters for this project?",
     continueCue:
       "The first observations are recorded. Next, identify what matters about the building and place in relation to the work being considered.",
@@ -181,7 +180,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "A proportionate understanding of significance allows the project to target attention where it will change the design decision. It avoids both ignorance and an unworkable assumption that nothing can change.",
-    saveLabel: "Save to Heritage Record",
     continueLabel: "Continue: Complete Chapter 2",
     continueCue:
       "The project now has a focused understanding of what needs to be tested as options develop. Review the Heritage Record before moving into design.",
@@ -227,7 +225,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "Heritage information earns its place when it changes the quality of a design decision. That is the handover from Chapter 2 to Chapter 3.",
-    saveLabel: "Save and complete Chapter 2",
     continueLabel: "Begin Chapter 3: Developing the design",
     continueCue:
       "The building and place are now better understood. Next, test the options against what matters.",

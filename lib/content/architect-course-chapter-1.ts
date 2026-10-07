@@ -356,8 +356,6 @@ type Chapter1PageDraft = PageContent & {
   recordAfter: HeritageRecordState;
 };
 
-const SAVE_TO_RECORD = "Save to Heritage Record";
-
 const CHAPTER_1_DRAFTS: Chapter1PageDraft[] = [
   // --- Page 1 - Client enquiry received (agreed content) ---
   {
@@ -455,7 +453,6 @@ const CHAPTER_1_DRAFTS: Chapter1PageDraft[] = [
     },
     whyThisMatters:
       "A client’s statement that a house is listed is enough to trigger a heritage review, but not enough to define the project route.\nThe first Heritage Record entry identifies what must be verified or established before assumptions about scope, fee, programme, consent or specialist input become fixed.",
-    saveLabel: "Save initial heritage position",
     continueLabel: "Continue: Verify the listed asset",
     continueCue:
       "The client identifies The Old Vicarage as Grade II listed. Next, check the current official listing record and distinguish what it establishes from what still requires investigation.",
@@ -506,7 +503,6 @@ const CHAPTER_1_DRAFTS: Chapter1PageDraft[] = [
     },
     whyThisMatters:
       "Verifying the listed asset prevents a project from being scoped around an untested client description.\nReading the entry accurately is equally important: record what it establishes, but do not claim that it answers questions about significance, associated structures, earlier work or consent.",
-    saveLabel: SAVE_TO_RECORD,
     continueLabel: "Continue: What the entry does not answer",
     continueCue:
       "The asset is now verified. Next, separate the questions the listing entry can answer from the heritage questions it leaves open.",
@@ -549,7 +545,6 @@ const CHAPTER_1_DRAFTS: Chapter1PageDraft[] = [
     },
     whyThisMatters:
       "The most common early error is not failing to find the list entry. It is treating the entry as if it resolves the whole heritage position.\nA proportionate record keeps investigation focused on the actual project: the building, the proposed works and the information needed for the next decision.",
-    saveLabel: SAVE_TO_RECORD,
     continueLabel: "Continue: Build the Heritage Record",
     continueCue:
       "The verified facts and open questions are now clear. Next, organise them into a working Heritage Record that can guide the brief and project decisions.",
@@ -589,7 +584,6 @@ const CHAPTER_1_DRAFTS: Chapter1PageDraft[] = [
     },
     whyThisMatters:
       "When verified facts, assumptions and future questions are mixed together, a project can appear more certain than it is.\nA structured Heritage Record makes it possible to progress the project while showing exactly what remains to be established before important choices are fixed.",
-    saveLabel: SAVE_TO_RECORD,
     continueLabel: "Continue: Set the first decision point",
     continueCue:
       "The Heritage Record now separates verified facts, information gaps and evolving design questions. Next, identify what must be established before the project treats a preferred concept or likely route as settled.",
@@ -632,7 +626,6 @@ const CHAPTER_1_DRAFTS: Chapter1PageDraft[] = [
     },
     whyThisMatters:
       "Early heritage risk often becomes expensive when a project commits to a preferred design, fee allowance or programme before understanding the fabric and significance affected.\nRecording the decision point protects both the client conversation and the design process: it makes clear what can progress now and what must be established before the next commitment.",
-    saveLabel: SAVE_TO_RECORD,
     continueLabel: "Continue: Complete Chapter 1",
     continueCue:
       "The project now has a verified listed asset, a clear record of open heritage questions and its first decision point. Review what has been created and why it matters for the next stage.",
@@ -675,7 +668,6 @@ const CHAPTER_1_DRAFTS: Chapter1PageDraft[] = [
     },
     whyThisMatters:
       "Receiving the brief is the point at which assumptions about cost, scope, timing and project route begin to form.\nThe Heritage Record keeps heritage matters connected to those early decisions without pretending that the available information can answer every later question.",
-    saveLabel: "Save and complete Chapter 1",
     // Source reads "Begin Module 2: Prepare the brief"; Peter chose (30 Sep
     // 2026) to keep the existing Chapter 2 title, so the label and cue are
     // adapted to it. Flagged for content review.

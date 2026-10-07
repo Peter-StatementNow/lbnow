@@ -45,8 +45,8 @@ const HOW_IT_WORKS: { step: Step; title: string; body: string }[] = [
   },
   {
     step: 5,
-    title: "Save to your Heritage Record",
-    body: "A working record of what is known, what needs establishing and which decisions must not harden too early. It builds up chapter by chapter - it is what you take away from the course.",
+    title: "Add to your Heritage Record",
+    body: "A working record of what is known, what needs establishing and which decisions must not harden too early. Each page adds its worked position, whichever answer you chose, and it builds up chapter by chapter - it is what you take away from the course.",
   },
 ];
 

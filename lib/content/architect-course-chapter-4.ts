@@ -101,7 +101,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "A heritage-sensitive project does not need a separate commercial system. It needs the current client proposal to state clearly what must be established before the project’s main promises become reliable.",
-    saveLabel: "Save to Heritage Record",
     continueLabel: "Continue: Use contingency for identified uncertainty",
     continueCue:
       "The next-stage work is defined. Next, explain how identified uncertainty in historic fabric may affect contingency and adaptation without becoming a generic heritage premium.",
@@ -159,7 +158,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "Historic fabric can reveal conditions that require adaptation. A transparent, targeted contingency helps the project manage that possibility without overstating risk or hiding it from the client.",
-    saveLabel: "Save to Heritage Record",
     continueLabel: "Continue: Complete Chapter 4",
     continueCue:
       "The targeted heritage dependencies are now visible in scope, potential specialist input, contingency and timing. Review the handover into consent preparation.",
@@ -205,7 +203,6 @@ const DRAFTS: PageDraft[] = [
     },
     whyThisMatters:
       "The commercial value of the Heritage Record is not complexity. It is preventing a late, expensive surprise by making a small number of material dependencies visible early enough to manage.",
-    saveLabel: "Save and complete Chapter 4",
     continueLabel: "Begin Chapter 5: Gaining consent",
     continueCue:
       "The project has the evidence and design direction to explain the proposal. Next, prepare the information that supports the relevant consent decision.",
